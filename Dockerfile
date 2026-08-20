@@ -15,3 +15,10 @@ RUN pnpm install --frozen-lockfile
 COPY --chown=node:node . .
 
 CMD ["sh"]
+
+FROM development AS e2e
+
+USER root
+ENV PLAYWRIGHT_BROWSERS_PATH=/ms-playwright
+RUN pnpm --filter @chess-ai/web exec playwright install --with-deps chromium
+USER node

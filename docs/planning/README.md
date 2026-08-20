@@ -13,4 +13,3 @@ Planned artifacts:
 - `status/`
 
 Planning artifacts must distinguish intended work from verified current state.
-

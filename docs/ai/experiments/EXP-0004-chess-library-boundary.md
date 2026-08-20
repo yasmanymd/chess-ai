@@ -1,11 +1,11 @@
 # EXP-0004: Chess-Library Boundary
 
-| Field | Value |
-|---|---|
-| Status | Planned |
-| Owner | AI implementation team |
-| Decision owner | Yasmany |
-| Related decision | ADR-0001 |
+| Field            | Value                  |
+| ---------------- | ---------------------- |
+| Status           | Planned                |
+| Owner            | AI implementation team |
+| Decision owner   | Yasmany                |
+| Related decision | ADR-0001               |
 
 ## Hypothesis
 
@@ -21,4 +21,3 @@ The selected chess library can remain behind a domain-facing adapter without lea
 ## Pending Detail
 
 Candidate libraries and contract fixtures will be selected during stack evaluation.
-

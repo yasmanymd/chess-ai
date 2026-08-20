@@ -2,14 +2,14 @@
 
 ## Metadata
 
-| Field | Value |
-|---|---|
-| Status | Proposed |
-| Date | YYYY-MM-DD |
-| Decision owner | Yasmany |
-| AI contributors | |
-| Related session | |
-| Related requirements | |
+| Field                | Value      |
+| -------------------- | ---------- |
+| Status               | Proposed   |
+| Date                 | YYYY-MM-DD |
+| Decision owner       | Yasmany    |
+| AI contributors      |            |
+| Related session      |            |
+| Related requirements |            |
 
 ## Context
 
@@ -42,4 +42,3 @@
 ## Human Approval
 
 ## Follow-up Actions
-

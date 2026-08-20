@@ -2,12 +2,12 @@
 
 ## Document Control
 
-| Field | Value |
-|---|---|
-| Status | Accepted |
-| Version | 1.0 |
-| Decision owner | Yasmany |
-| Source | Session 008 |
+| Field          | Value       |
+| -------------- | ----------- |
+| Status         | Accepted    |
+| Version        | 1.0         |
+| Decision owner | Yasmany     |
+| Source         | Session 008 |
 
 ## Purpose
 
@@ -60,57 +60,57 @@ TypeScript static types alone are insufficient for validating untrusted network 
 
 ## Backend Criteria
 
-| Criterion | Weight |
-|---|---:|
-| Fit with modules, ports, and domain | 22% |
-| Correctness, testing, and concurrency control | 18% |
-| Real-time behavior and recovery | 15% |
-| Maturity and maintenance | 15% |
-| Operational simplicity | 12% |
-| Typing and contracts | 8% |
-| Performance | 5% |
-| Portability | 5% |
+| Criterion                                     | Weight |
+| --------------------------------------------- | -----: |
+| Fit with modules, ports, and domain           |    22% |
+| Correctness, testing, and concurrency control |    18% |
+| Real-time behavior and recovery               |    15% |
+| Maturity and maintenance                      |    15% |
+| Operational simplicity                        |    12% |
+| Typing and contracts                          |     8% |
+| Performance                                   |     5% |
+| Portability                                   |     5% |
 
 ## Web Criteria
 
-| Criterion | Weight |
-|---|---:|
-| Accessibility and internationalization | 20% |
-| Separation from authoritative backend | 15% |
-| Real-time user experience | 15% |
-| Routing and data loading | 12% |
-| Performance and public pages | 12% |
-| Testing | 10% |
-| Simplicity | 10% |
-| Hosting portability | 6% |
+| Criterion                              | Weight |
+| -------------------------------------- | -----: |
+| Accessibility and internationalization |    20% |
+| Separation from authoritative backend  |    15% |
+| Real-time user experience              |    15% |
+| Routing and data loading               |    12% |
+| Performance and public pages           |    12% |
+| Testing                                |    10% |
+| Simplicity                             |    10% |
+| Hosting portability                    |     6% |
 
 ## Runtime Contract Criteria
 
-| Criterion | Weight |
-|---|---:|
-| Runtime validation correctness | 25% |
-| TypeScript types and developer experience | 20% |
-| JSON Schema and OpenAPI capability | 15% |
-| Maturity and ecosystem | 15% |
-| Browser bundle size | 10% |
-| Framework integration | 10% |
-| Portability and maintenance | 5% |
+| Criterion                                 | Weight |
+| ----------------------------------------- | -----: |
+| Runtime validation correctness            |    25% |
+| TypeScript types and developer experience |    20% |
+| JSON Schema and OpenAPI capability        |    15% |
+| Maturity and ecosystem                    |    15% |
+| Browser bundle size                       |    10% |
+| Framework integration                     |    10% |
+| Portability and maintenance               |     5% |
 
 All matrices use a one-to-five relative fit scale. Scores guide decisions but do not replace required experiments.
 
 ## Backend Evaluation
 
-| Criterion | Weight | NestJS + Fastify | Fastify composition | AdonisJS |
-|---|---:|---:|---:|---:|
-| Modules, ports, and domain | 22 | 4 | 5 | 3 |
-| Correctness, testing, concurrency | 18 | 4 | 4 | 4 |
-| Real-time and recovery | 15 | 5 | 4 | 3 |
-| Maturity and maintenance | 15 | 5 | 5 | 4 |
-| Operational simplicity | 12 | 3 | 4 | 4 |
-| Typing and contracts | 8 | 4 | 3 | 4 |
-| Performance | 5 | 4 | 5 | 4 |
-| Portability | 5 | 4 | 5 | 4 |
-| **Weighted score / 100** | **100** | **83.6** | **87.8** | **72.6** |
+| Criterion                         |  Weight | NestJS + Fastify | Fastify composition | AdonisJS |
+| --------------------------------- | ------: | ---------------: | ------------------: | -------: |
+| Modules, ports, and domain        |      22 |                4 |                   5 |        3 |
+| Correctness, testing, concurrency |      18 |                4 |                   4 |        4 |
+| Real-time and recovery            |      15 |                5 |                   4 |        3 |
+| Maturity and maintenance          |      15 |                5 |                   5 |        4 |
+| Operational simplicity            |      12 |                3 |                   4 |        4 |
+| Typing and contracts              |       8 |                4 |                   3 |        4 |
+| Performance                       |       5 |                4 |                   5 |        4 |
+| Portability                       |       5 |                4 |                   5 |        4 |
+| **Weighted score / 100**          | **100** |         **83.6** |            **87.8** | **72.6** |
 
 ### Backend Interpretation
 
@@ -122,17 +122,17 @@ AdonisJS provides an integrated backend and test experience but is more conventi
 
 ## Web Evaluation
 
-| Criterion | Weight | React + Vite SPA | Next.js | React Router Framework |
-|---|---:|---:|---:|---:|
-| Accessibility and i18n | 20 | 4 | 4 | 4 |
-| Backend separation | 15 | 5 | 3 | 4 |
-| Real-time experience | 15 | 5 | 4 | 5 |
-| Routing and data loading | 12 | 3 | 5 | 5 |
-| Performance and public pages | 12 | 3 | 5 | 4 |
-| Testing | 10 | 4 | 4 | 4 |
-| Simplicity | 10 | 4 | 3 | 4 |
-| Hosting portability | 6 | 5 | 3 | 4 |
-| **Weighted score / 100** | **100** | **82.4** | **78.6** | **85.4** |
+| Criterion                    |  Weight | React + Vite SPA |  Next.js | React Router Framework |
+| ---------------------------- | ------: | ---------------: | -------: | ---------------------: |
+| Accessibility and i18n       |      20 |                4 |        4 |                      4 |
+| Backend separation           |      15 |                5 |        3 |                      4 |
+| Real-time experience         |      15 |                5 |        4 |                      5 |
+| Routing and data loading     |      12 |                3 |        5 |                      5 |
+| Performance and public pages |      12 |                3 |        5 |                      4 |
+| Testing                      |      10 |                4 |        4 |                      4 |
+| Simplicity                   |      10 |                4 |        3 |                      4 |
+| Hosting portability          |       6 |                5 |        3 |                      4 |
+| **Weighted score / 100**     | **100** |         **82.4** | **78.6** |               **85.4** |
 
 ### Web Interpretation
 
@@ -144,16 +144,16 @@ Next.js has the strongest integrated server-rendering story, but its full-stack 
 
 ## Runtime Contract Evaluation
 
-| Criterion | Weight | Zod | TypeBox | Valibot |
-|---|---:|---:|---:|---:|
-| Runtime correctness | 25 | 5 | 5 | 5 |
-| TypeScript experience | 20 | 5 | 4 | 5 |
-| JSON Schema and OpenAPI | 15 | 4 | 5 | 3 |
-| Maturity and ecosystem | 15 | 5 | 4 | 3 |
-| Browser bundle size | 10 | 3 | 4 | 5 |
-| Framework integration | 10 | 5 | 5 | 3 |
-| Portability and maintenance | 5 | 5 | 5 | 4 |
-| **Weighted score / 100** | **100** | **93.0** | **91.0** | **83.0** |
+| Criterion                   |  Weight |      Zod |  TypeBox |  Valibot |
+| --------------------------- | ------: | -------: | -------: | -------: |
+| Runtime correctness         |      25 |        5 |        5 |        5 |
+| TypeScript experience       |      20 |        5 |        4 |        5 |
+| JSON Schema and OpenAPI     |      15 |        4 |        5 |        3 |
+| Maturity and ecosystem      |      15 |        5 |        4 |        3 |
+| Browser bundle size         |      10 |        3 |        4 |        5 |
+| Framework integration       |      10 |        5 |        5 |        3 |
+| Portability and maintenance |       5 |        5 |        5 |        4 |
+| **Weighted score / 100**    | **100** | **93.0** | **91.0** | **83.0** |
 
 ### Runtime Contract Interpretation
 

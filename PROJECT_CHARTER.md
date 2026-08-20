@@ -2,17 +2,17 @@
 
 ## Document Control
 
-| Field | Value |
-|---|---|
-| Status | Accepted |
-| Version | 1.0 |
-| Date | 2026-08-16 |
-| Project owner | Yasmany |
-| Human decision authority | Yasmany |
-| AI collaborator | Codex |
-| Visibility | Public |
-| License | To be evaluated |
-| Target repository | To be created |
+| Field                    | Value           |
+| ------------------------ | --------------- |
+| Status                   | Accepted        |
+| Version                  | 1.0             |
+| Date                     | 2026-08-16      |
+| Project owner            | Yasmany         |
+| Human decision authority | Yasmany         |
+| AI collaborator          | Codex           |
+| Visibility               | Public          |
+| License                  | To be evaluated |
+| Target repository        | To be created   |
 
 ## 1. Project Purpose
 
@@ -271,14 +271,14 @@ Approval of this charter establishes the initial direction of the project. It do
 
 Material changes must be documented with their context, rationale, impact, and human approval.
 
-| Role | Name | Decision | Date |
-|---|---|---|---|
-| Project owner | Yasmany | Accepted | 2026-08-16 |
-| AI collaborator | Codex | Draft prepared | 2026-08-16 |
+| Role            | Name    | Decision       | Date       |
+| --------------- | ------- | -------------- | ---------- |
+| Project owner   | Yasmany | Accepted       | 2026-08-16 |
+| AI collaborator | Codex   | Draft prepared | 2026-08-16 |
 
 ## Revision History
 
-| Version | Date | Change | Decision owner |
-|---|---|---|---|
-| 0.1 | 2026-08-16 | Initial draft prepared from the project inception interview. | Yasmany |
-| 1.0 | 2026-08-16 | Charter reviewed and accepted. | Yasmany |
+| Version | Date       | Change                                                       | Decision owner |
+| ------- | ---------- | ------------------------------------------------------------ | -------------- |
+| 0.1     | 2026-08-16 | Initial draft prepared from the project inception interview. | Yasmany        |
+| 1.0     | 2026-08-16 | Charter reviewed and accepted.                               | Yasmany        |

@@ -2,12 +2,12 @@
 
 ## Document Control
 
-| Field | Value |
-|---|---|
-| Status | Draft |
-| Version | 0.1 |
-| Source | Session 000 |
-| Decision owner | Yasmany |
+| Field          | Value       |
+| -------------- | ----------- |
+| Status         | Draft       |
+| Version        | 0.1         |
+| Source         | Session 000 |
+| Decision owner | Yasmany     |
 
 ## Vision Statement
 
@@ -38,4 +38,3 @@ The project itself is also a public learning product: it shows how a human decis
 - Rankings, matchmaking, competitions, and tournaments.
 
 Long-term capabilities are directional and require prioritization before implementation.
-

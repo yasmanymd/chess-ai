@@ -2,14 +2,14 @@
 
 ## Metadata
 
-| Field | Value |
-|---|---|
-| Status | Planned / Running / Completed / Abandoned |
-| Date | YYYY-MM-DD |
-| Owner | |
-| AI contributors | |
-| Related session | |
-| Related decision | |
+| Field            | Value                                     |
+| ---------------- | ----------------------------------------- |
+| Status           | Planned / Running / Completed / Abandoned |
+| Date             | YYYY-MM-DD                                |
+| Owner            |                                           |
+| AI contributors  |                                           |
+| Related session  |                                           |
+| Related decision |                                           |
 
 ## Question
 
@@ -28,4 +28,3 @@
 ## Conclusion
 
 ## Decision Impact
-

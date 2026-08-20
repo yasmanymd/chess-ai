@@ -11,4 +11,3 @@ This area records how humans, AI models, tools, and agents contribute to the pro
 - [`evaluations/`](evaluations/): structured assessments of generated outputs.
 
 Routine conversational noise is not preserved. Records should capture the information necessary to understand decisions, reproduce important work, and learn from mistakes.
-

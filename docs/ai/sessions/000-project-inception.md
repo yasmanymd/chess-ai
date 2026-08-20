@@ -2,14 +2,14 @@
 
 ## Session Metadata
 
-| Field | Value |
-|---|---|
-| Date | 2026-08-16 |
-| Status | Completed |
-| Human participant | Yasmany |
-| AI collaborator | Codex |
-| Working language | Spanish |
-| Artifact language | English |
+| Field             | Value      |
+| ----------------- | ---------- |
+| Date              | 2026-08-16 |
+| Status            | Completed  |
+| Human participant | Yasmany    |
+| AI collaborator   | Codex      |
+| Working language  | Spanish    |
+| Artifact language | English    |
 
 ## Objective
 
@@ -37,22 +37,22 @@ AI will perform implementation work. Yasmany will make final decisions with AI a
 
 ## Decisions
 
-| ID | Decision | Owner | Status |
-|---|---|---|---|
-| S000-D01 | Build a new project from scratch while using `chess-sol` as a reference. | Yasmany | Accepted |
-| S000-D02 | Build a web multiplayer chess platform with future educational capabilities. | Yasmany | Accepted |
-| S000-D03 | Make the repository and development history public. | Yasmany | Accepted |
-| S000-D04 | Conduct working conversations in Spanish and write project documentation in English. | Yasmany | Accepted |
-| S000-D05 | Use structured session summaries and preserve only selected high-value prompts verbatim. | Yasmany | Accepted |
-| S000-D06 | Identify contributing models, tools, and agents when possible. | Yasmany | Accepted |
-| S000-D07 | Document relevant rejected proposals, AI errors, failed experiments, and superseded decisions. | Yasmany | Accepted |
-| S000-D08 | Make meaningful code changes traceable to sessions, tasks, decisions, and verification evidence. | Yasmany | Accepted |
-| S000-D09 | Give Yasmany final decision authority while AI performs implementation. | Yasmany | Accepted |
-| S000-D10 | Organize delivery through milestones without a fixed deadline. | Yasmany | Accepted |
-| S000-D11 | Support English, Spanish, and French in the MVP. | Yasmany | Accepted |
-| S000-D12 | Prefer evaluating an established chess library over developing a complete engine from scratch. | Yasmany | Accepted as evaluation direction |
-| S000-D13 | Adopt the quality principles recorded in the Project Charter. | Yasmany | Accepted |
-| S000-D14 | Use the provisional project name `AI-Assisted Chess Platform`. | Yasmany | Accepted provisionally |
+| ID       | Decision                                                                                         | Owner   | Status                           |
+| -------- | ------------------------------------------------------------------------------------------------ | ------- | -------------------------------- |
+| S000-D01 | Build a new project from scratch while using `chess-sol` as a reference.                         | Yasmany | Accepted                         |
+| S000-D02 | Build a web multiplayer chess platform with future educational capabilities.                     | Yasmany | Accepted                         |
+| S000-D03 | Make the repository and development history public.                                              | Yasmany | Accepted                         |
+| S000-D04 | Conduct working conversations in Spanish and write project documentation in English.             | Yasmany | Accepted                         |
+| S000-D05 | Use structured session summaries and preserve only selected high-value prompts verbatim.         | Yasmany | Accepted                         |
+| S000-D06 | Identify contributing models, tools, and agents when possible.                                   | Yasmany | Accepted                         |
+| S000-D07 | Document relevant rejected proposals, AI errors, failed experiments, and superseded decisions.   | Yasmany | Accepted                         |
+| S000-D08 | Make meaningful code changes traceable to sessions, tasks, decisions, and verification evidence. | Yasmany | Accepted                         |
+| S000-D09 | Give Yasmany final decision authority while AI performs implementation.                          | Yasmany | Accepted                         |
+| S000-D10 | Organize delivery through milestones without a fixed deadline.                                   | Yasmany | Accepted                         |
+| S000-D11 | Support English, Spanish, and French in the MVP.                                                 | Yasmany | Accepted                         |
+| S000-D12 | Prefer evaluating an established chess library over developing a complete engine from scratch.   | Yasmany | Accepted as evaluation direction |
+| S000-D13 | Adopt the quality principles recorded in the Project Charter.                                    | Yasmany | Accepted                         |
+| S000-D14 | Use the provisional project name `AI-Assisted Chess Platform`.                                   | Yasmany | Accepted provisionally           |
 
 ## Rejected or Deferred Proposals
 

@@ -2,13 +2,13 @@
 
 ## Document Control
 
-| Field | Value |
-|---|---|
-| Status | Reference |
-| Version | 0.1 |
+| Field             | Value                    |
+| ----------------- | ------------------------ |
+| Status            | Reference                |
+| Version           | 0.1                      |
 | Assessment method | Static repository review |
-| Reviewed by | Codex |
-| Human context | Yasmany |
+| Reviewed by       | Codex                    |
+| Human context     | Yasmany                  |
 
 ## Purpose
 
@@ -64,4 +64,3 @@ The new project should evaluate:
 - PGN, FEN, and SAN interoperability.
 
 This document records lessons, not final architecture decisions.
-

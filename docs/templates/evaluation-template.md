@@ -2,13 +2,13 @@
 
 ## Metadata
 
-| Field | Value |
-|---|---|
-| Date | YYYY-MM-DD |
-| Evaluated output | |
-| Producing model or agent | |
-| Evaluator | |
-| Related session | |
+| Field                    | Value      |
+| ------------------------ | ---------- |
+| Date                     | YYYY-MM-DD |
+| Evaluated output         |            |
+| Producing model or agent |            |
+| Evaluator                |            |
+| Related session          |            |
 
 ## Evaluation Goal
 
@@ -25,4 +25,3 @@
 ## Decision
 
 ## Required Follow-up
-

@@ -2,12 +2,12 @@
 
 ## Document Control
 
-| Field | Value |
-|---|---|
-| Status | Accepted |
-| Version | 1.0 |
-| Decision owner | Yasmany |
-| Source | Session 004 |
+| Field          | Value       |
+| -------------- | ----------- |
+| Status         | Accepted    |
+| Version        | 1.0         |
+| Decision owner | Yasmany     |
+| Source         | Session 004 |
 
 This document will record business, technical, delivery, legal, financial, and operational constraints that architecture alternatives must respect.
 
@@ -109,14 +109,14 @@ Software licensing, public privacy disclosure, and applicable terms must be inve
 
 ## Approval
 
-| Role | Name | Decision | Date |
-|---|---|---|---|
-| Project owner | Yasmany | Accepted | 2026-08-17 |
-| AI collaborator | Codex | Interviewed and drafted | 2026-08-17 |
+| Role            | Name    | Decision                | Date       |
+| --------------- | ------- | ----------------------- | ---------- |
+| Project owner   | Yasmany | Accepted                | 2026-08-17 |
+| AI collaborator | Codex   | Interviewed and drafted | 2026-08-17 |
 
 ## Revision History
 
-| Version | Date | Change | Decision owner |
-|---|---|---|---|
-| 0.1 | 2026-08-17 | Constraint elicitation opened. | Yasmany |
-| 1.0 | 2026-08-17 | Product-boundary, dependency, delivery, and operational constraints accepted. | Yasmany |
+| Version | Date       | Change                                                                        | Decision owner |
+| ------- | ---------- | ----------------------------------------------------------------------------- | -------------- |
+| 0.1     | 2026-08-17 | Constraint elicitation opened.                                                | Yasmany        |
+| 1.0     | 2026-08-17 | Product-boundary, dependency, delivery, and operational constraints accepted. | Yasmany        |

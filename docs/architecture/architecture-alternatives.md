@@ -2,12 +2,12 @@
 
 ## Document Control
 
-| Field | Value |
-|---|---|
-| Status | Accepted |
-| Version | 1.0 |
-| Decision owner | Yasmany |
-| Source | Session 005 |
+| Field          | Value       |
+| -------------- | ----------- |
+| Status         | Accepted    |
+| Version        | 1.0         |
+| Decision owner | Yasmany     |
+| Source         | Session 005 |
 
 ## Purpose
 
@@ -41,17 +41,17 @@ No candidate is selected. The preliminary expectation that a modular monolith ma
 
 ## Evaluation Criteria
 
-| Criterion | Weight |
-|---|---:|
-| Correctness and state integrity | 20% |
-| Recovery and durability | 18% |
-| Simplicity, maintainability, and testability | 17% |
-| Security and privacy | 15% |
-| Real-time synchronization and performance | 12% |
-| Evolvability | 7% |
-| Accessibility and internationalization | 6% |
-| Scale beyond initial targets | 5% |
-| **Total** | **100%** |
+| Criterion                                    |   Weight |
+| -------------------------------------------- | -------: |
+| Correctness and state integrity              |      20% |
+| Recovery and durability                      |      18% |
+| Simplicity, maintainability, and testability |      17% |
+| Security and privacy                         |      15% |
+| Real-time synchronization and performance    |      12% |
+| Evolvability                                 |       7% |
+| Accessibility and internationalization       |       6% |
+| Scale beyond initial targets                 |       5% |
+| **Total**                                    | **100%** |
 
 ## Scoring Scale
 
@@ -81,17 +81,17 @@ A candidate that cannot satisfy a gate is rejected regardless of weighted score.
 
 ## Weighted Evaluation
 
-| Criterion | Weight | ALT-1 | ALT-2 | ALT-3 | ALT-4 |
-|---|---:|---:|---:|---:|---:|
-| Correctness and state integrity | 20 | 5 | 4 | 3 | 3 |
-| Recovery and durability | 18 | 5 | 4 | 3 | 4 |
-| Simplicity, maintainability, and testability | 17 | 5 | 3 | 1 | 2 |
-| Security and privacy | 15 | 4 | 4 | 3 | 3 |
-| Real-time synchronization and performance | 12 | 4 | 5 | 3 | 3 |
-| Evolvability | 7 | 4 | 4 | 5 | 3 |
-| Accessibility and internationalization | 6 | 4 | 4 | 4 | 4 |
-| Scale beyond initial targets | 5 | 3 | 4 | 5 | 5 |
-| **Weighted score / 100** | **100** | **90.0** | **79.0** | **59.2** | **63.4** |
+| Criterion                                    |  Weight |    ALT-1 |    ALT-2 |    ALT-3 |    ALT-4 |
+| -------------------------------------------- | ------: | -------: | -------: | -------: | -------: |
+| Correctness and state integrity              |      20 |        5 |        4 |        3 |        3 |
+| Recovery and durability                      |      18 |        5 |        4 |        3 |        4 |
+| Simplicity, maintainability, and testability |      17 |        5 |        3 |        1 |        2 |
+| Security and privacy                         |      15 |        4 |        4 |        3 |        3 |
+| Real-time synchronization and performance    |      12 |        4 |        5 |        3 |        3 |
+| Evolvability                                 |       7 |        4 |        4 |        5 |        3 |
+| Accessibility and internationalization       |       6 |        4 |        4 |        4 |        4 |
+| Scale beyond initial targets                 |       5 |        3 |        4 |        5 |        5 |
+| **Weighted score / 100**                     | **100** | **90.0** | **79.0** | **59.2** | **63.4** |
 
 All four candidates are theoretically capable of passing the gates with sufficient design and engineering. The scores reflect relative MVP risk and effort.
 
@@ -235,7 +235,7 @@ Yasmany selected ALT-1, Modular Monolith, as the initial MVP architecture style 
 
 ## Revision History
 
-| Version | Date | Change | Decision owner |
-|---|---|---|---|
-| 0.1 | 2026-08-17 | Candidate and evaluation draft opened. | Yasmany |
-| 1.0 | 2026-08-17 | Evaluation accepted and modular monolith selected. | Yasmany |
+| Version | Date       | Change                                             | Decision owner |
+| ------- | ---------- | -------------------------------------------------- | -------------- |
+| 0.1     | 2026-08-17 | Candidate and evaluation draft opened.             | Yasmany        |
+| 1.0     | 2026-08-17 | Evaluation accepted and modular monolith selected. | Yasmany        |

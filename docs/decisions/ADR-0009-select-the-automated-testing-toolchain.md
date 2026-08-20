@@ -2,14 +2,14 @@
 
 ## Metadata
 
-| Field | Value |
-|---|---|
-| Status | Accepted, subject to repository validation |
-| Date | 2026-08-19 |
-| Decision owner | Yasmany |
-| AI contributor | Codex |
-| Related session | Session 008 |
-| Related decisions | ADR-0001 through ADR-0008 |
+| Field             | Value                                      |
+| ----------------- | ------------------------------------------ |
+| Status            | Accepted, subject to repository validation |
+| Date              | 2026-08-19                                 |
+| Decision owner    | Yasmany                                    |
+| AI contributor    | Codex                                      |
+| Related session   | Session 008                                |
+| Related decisions | ADR-0001 through ADR-0008                  |
 
 ## Context
 

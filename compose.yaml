@@ -6,12 +6,12 @@ services:
       POSTGRES_USER: ${POSTGRES_USER:-chess_ai}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-change-me-for-local-use}
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U $$POSTGRES_USER -d $$POSTGRES_DB"]
+      test: ['CMD-SHELL', 'pg_isready -U $$POSTGRES_USER -d $$POSTGRES_DB']
       interval: 3s
       timeout: 3s
       retries: 20
     ports:
-      - "5432:5432"
+      - '5432:5432'
     volumes:
       - postgres-data:/var/lib/postgresql
 
@@ -41,7 +41,7 @@ services:
       migrate:
         condition: service_completed_successfully
     ports:
-      - "3000:3000"
+      - '3000:3000'
     volumes:
       - ./apps/server/src:/workspace/apps/server/src
 
@@ -54,9 +54,36 @@ services:
       SERVER_PORT: 5173
       VITE_API_URL: http://localhost:3000
     ports:
-      - "5173:5173"
+      - '5173:5173'
     volumes:
       - ./apps/web/app:/workspace/apps/web/app
+
+  integration:
+    profiles: ['quality']
+    user: root
+    build:
+      context: .
+      target: development
+    command: pnpm --filter @chess-ai/server test:integration
+    environment:
+      DOCKER_HOST: unix:///var/run/docker.sock
+      TESTCONTAINERS_RYUK_DISABLED: 'true'
+      TESTCONTAINERS_HOST_OVERRIDE: host.docker.internal
+    volumes:
+      - ./apps/server/src:/workspace/apps/server/src
+      - /var/run/docker.sock:/var/run/docker.sock
+
+  e2e:
+    profiles: ['quality']
+    build:
+      context: .
+      target: e2e
+    command: sh -c "sleep 2 && pnpm --filter @chess-ai/web test:e2e"
+    environment:
+      PLAYWRIGHT_BROWSERS_PATH: /ms-playwright
+    depends_on:
+      web:
+        condition: service_started
 
 volumes:
   postgres-data:

@@ -19,6 +19,13 @@ const app = await NestFactory.create<NestFastifyApplication>(AppModule, new Fast
 });
 const fastify = app.getHttpAdapter().getInstance();
 
+fastify.addHook(
+  'onRequest',
+  async (request: { id: string }, reply: { header: (name: string, value: string) => void }) => {
+    reply.header('x-request-id', request.id);
+  },
+);
+
 fastify.get('/health', async () => ({ status: 'ok' }));
 fastify.get('/ready', async (_request: unknown, reply: { code: (status: number) => unknown }) => {
   try {
@@ -29,8 +36,24 @@ fastify.get('/ready', async (_request: unknown, reply: { code: (status: number) 
     return reply.code(503);
   }
 });
+fastify.setErrorHandler(
+  (
+    error: Error,
+    request: { id: string; method: string; url: string },
+    reply: { code: (status: number) => { send: (payload: unknown) => unknown } },
+  ) => {
+    logger.error(
+      { error, requestId: request.id, method: request.method, url: request.url },
+      'Unhandled request error',
+    );
+    return reply.code(500).send({ error: { code: 'INTERNAL_ERROR', requestId: request.id } });
+  },
+);
 
 app.enableShutdownHooks();
-app.getHttpAdapter().getInstance().addHook('onClose', async () => database.destroy());
+app
+  .getHttpAdapter()
+  .getInstance()
+  .addHook('onClose', async () => database.destroy());
 await app.listen({ port, host: '0.0.0.0' });
 logger.info({ port }, 'Server listening');

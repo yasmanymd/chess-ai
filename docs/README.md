@@ -4,15 +4,15 @@ This directory is the source of truth for product, architecture, planning, and A
 
 ## Artifact map
 
-| Area | Purpose | Current state |
-|---|---|---|
-| [`ai/`](ai/) | Human–AI rules, sessions, prompts, experiments, and evaluations | Started |
-| [`product/`](product/) | Vision, scope, requirements, and product decisions | Started |
-| [`architecture/`](architecture/) | System context, domain model, quality attributes, and diagrams | Pending |
-| [`decisions/`](decisions/) | Architecture Decision Records | Template ready |
-| [`planning/`](planning/) | Roadmap, milestones, backlog, risks, and status | Pending |
-| [`reference/`](reference/) | Analysis of predecessor systems and external references | Started |
-| [`templates/`](templates/) | Reusable documentation templates | Ready |
+| Area                             | Purpose                                                         | Current state  |
+| -------------------------------- | --------------------------------------------------------------- | -------------- |
+| [`ai/`](ai/)                     | Human–AI rules, sessions, prompts, experiments, and evaluations | Started        |
+| [`product/`](product/)           | Vision, scope, requirements, and product decisions              | Started        |
+| [`architecture/`](architecture/) | System context, domain model, quality attributes, and diagrams  | Pending        |
+| [`decisions/`](decisions/)       | Architecture Decision Records                                   | Template ready |
+| [`planning/`](planning/)         | Roadmap, milestones, backlog, risks, and status                 | Pending        |
+| [`reference/`](reference/)       | Analysis of predecessor systems and external references         | Started        |
+| [`templates/`](templates/)       | Reusable documentation templates                                | Ready          |
 
 ## Documentation rules
 
@@ -30,4 +30,3 @@ This directory is the source of truth for product, architecture, planning, and A
 - **Accepted:** approved by the human decision authority.
 - **Superseded:** replaced by a later artifact or decision.
 - **Rejected:** considered and explicitly not adopted.
-

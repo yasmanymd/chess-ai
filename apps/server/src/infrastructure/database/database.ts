@@ -1,7 +1,7 @@
 import { Kysely, PostgresDialect, sql } from 'kysely';
 import { Pool } from 'pg';
 
-export interface DatabaseSchema {}
+export type DatabaseSchema = Record<never, never>;
 
 export function createDatabase(connectionString: string): Kysely<DatabaseSchema> {
   return new Kysely<DatabaseSchema>({

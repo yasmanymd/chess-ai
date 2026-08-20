@@ -1,11 +1,11 @@
 # EXP-0003: Active-Game Restart Recovery
 
-| Field | Value |
-|---|---|
-| Status | Planned |
-| Owner | AI implementation team |
-| Decision owner | Yasmany |
-| Related decision | ADR-0001 |
+| Field            | Value                  |
+| ---------------- | ---------------------- |
+| Status           | Planned                |
+| Owner            | AI implementation team |
+| Decision owner   | Yasmany                |
+| Related decision | ADR-0001               |
 
 ## Hypothesis
 
@@ -21,4 +21,3 @@ The selected architecture can restore active sessions, positions, moves, turns, 
 ## Pending Detail
 
 Failure injection and recovery procedure will be refined after persistence and clock design.
-

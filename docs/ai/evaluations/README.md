@@ -13,4 +13,3 @@ Possible subjects include:
 - Documentation claims.
 
 Use [`../../templates/evaluation-template.md`](../../templates/evaluation-template.md).
-

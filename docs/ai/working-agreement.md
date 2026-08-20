@@ -2,13 +2,13 @@
 
 ## Document Control
 
-| Field | Value |
-|---|---|
-| Status | Accepted |
-| Version | 1.0 |
-| Owner | Yasmany |
-| Drafted by | Codex |
-| Approval | Accepted by Yasmany on 2026-08-16 |
+| Field      | Value                             |
+| ---------- | --------------------------------- |
+| Status     | Accepted                          |
+| Version    | 1.0                               |
+| Owner      | Yasmany                           |
+| Drafted by | Codex                             |
+| Approval   | Accepted by Yasmany on 2026-08-16 |
 
 ## Established Rules
 
@@ -89,9 +89,9 @@ AI must also request approval for an unlisted decision when its impact is reason
 
 No reusable decision authority has been delegated yet.
 
-| ID | Category | Scope | Constraints | Granted in | Notification | Status |
-|---|---|---|---|---|---|---|
-| — | — | — | — | — | — | None |
+| ID  | Category | Scope | Constraints | Granted in | Notification | Status |
+| --- | -------- | ----- | ----------- | ---------- | ------------ | ------ |
+| —   | —        | —     | —           | —          | —            | None   |
 
 ## Implementation Autonomy
 
@@ -253,8 +253,8 @@ Yasmany reviewed and accepted this agreement on 2026-08-16. Any later material a
 
 ## Revision History
 
-| Version | Date | Change | Decision owner |
-|---|---|---|---|
-| 0.1 | 2026-08-16 | Initial rules collected from the project inception interview. | Yasmany |
-| 0.9 | 2026-08-16 | Full agreement proposed after the dedicated governance interview. | Yasmany |
-| 1.0 | 2026-08-16 | Complete agreement reviewed and accepted. | Yasmany |
+| Version | Date       | Change                                                            | Decision owner |
+| ------- | ---------- | ----------------------------------------------------------------- | -------------- |
+| 0.1     | 2026-08-16 | Initial rules collected from the project inception interview.     | Yasmany        |
+| 0.9     | 2026-08-16 | Full agreement proposed after the dedicated governance interview. | Yasmany        |
+| 1.0     | 2026-08-16 | Complete agreement reviewed and accepted.                         | Yasmany        |

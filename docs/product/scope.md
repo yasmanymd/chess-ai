@@ -2,12 +2,12 @@
 
 ## Document Control
 
-| Field | Value |
-|---|---|
-| Status | Draft |
-| Version | 0.1 |
-| Source | Session 000 and Project Charter 1.0 |
-| Decision owner | Yasmany |
+| Field          | Value                               |
+| -------------- | ----------------------------------- |
+| Status         | Draft                               |
+| Version        | 0.1                                 |
+| Source         | Session 000 and Project Charter 1.0 |
+| Decision owner | Yasmany                             |
 
 ## MVP Outcome
 
@@ -49,4 +49,3 @@ An item moving into or out of MVP scope must include:
 2. Its impact on milestones, architecture, risk, and verification.
 3. The alternatives considered.
 4. Explicit approval from Yasmany.
-

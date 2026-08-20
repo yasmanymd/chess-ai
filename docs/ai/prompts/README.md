@@ -13,4 +13,3 @@ Complete conversational transcripts are not stored by default. Each preserved pr
 - The outcome it influenced.
 
 Use [`../../templates/prompt-record-template.md`](../../templates/prompt-record-template.md).
-

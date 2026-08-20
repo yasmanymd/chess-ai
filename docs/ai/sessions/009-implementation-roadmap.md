@@ -2,14 +2,14 @@
 
 ## Session Metadata
 
-| Field | Value |
-|---|---|
-| Date | 2026-08-19 |
-| Status | In Progress |
-| Human participant | Yasmany |
-| AI collaborator | Codex |
-| Working language | Spanish |
-| Artifact language | English |
+| Field             | Value       |
+| ----------------- | ----------- |
+| Date              | 2026-08-19  |
+| Status            | In Progress |
+| Human participant | Yasmany     |
+| AI collaborator   | Codex       |
+| Working language  | Spanish     |
+| Artifact language | English     |
 
 ## Objective
 
@@ -17,14 +17,14 @@ Define an incremental, evidence-driven implementation roadmap for the accepted M
 
 ## Decisions
 
-| ID | Decision | Owner | Status |
-|---|---|---|---|
-| S009-D01 | Milestone 0 is complete only after a clean checkout can start the full environment through Docker Compose, execute required checks, and demonstrate frontend and backend hot reload. | Yasmany | Accepted |
-| S009-D02 | The public repository will be hosted on GitHub. The CI provider and workflow design remain deferred. | Yasmany | Accepted |
-| S009-D03 | Deliver a visible site and the temporary-identity/lobby experience before validating chess moves. | Yasmany | Accepted |
-| S009-D04 | Adopt the proposed sequence from reproducible bootstrap through release readiness as the initial implementation roadmap. | Yasmany | Accepted |
+| ID       | Decision                                                                                                                                                                                                                | Owner   | Status   |
+| -------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------- | -------- |
+| S009-D01 | Milestone 0 is complete only after a clean checkout can start the full environment through Docker Compose, execute required checks, and demonstrate frontend and backend hot reload.                                    | Yasmany | Accepted |
+| S009-D02 | The public repository will be hosted on GitHub. The CI provider and workflow design remain deferred.                                                                                                                    | Yasmany | Accepted |
+| S009-D03 | Deliver a visible site and the temporary-identity/lobby experience before validating chess moves.                                                                                                                       | Yasmany | Accepted |
+| S009-D04 | Adopt the proposed sequence from reproducible bootstrap through release readiness as the initial implementation roadmap.                                                                                                | Yasmany | Accepted |
 | S009-D05 | Automatically run idempotent migrations against an initially empty PostgreSQL database during Compose startup; keep seed data opt-in, preserve ordinary local data, and require an explicit reset command for deletion. | Yasmany | Accepted |
-| S009-D06 | Copy the contents of the portable planning folder into the root of the new repository so that `PROJECT_CHARTER.md` and `docs/` are root-level paths. | Yasmany | Accepted |
+| S009-D06 | Copy the contents of the portable planning folder into the root of the new repository so that `PROJECT_CHARTER.md` and `docs/` are root-level paths.                                                                    | Yasmany | Accepted |
 
 ## Current Assumptions
 

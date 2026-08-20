@@ -2,12 +2,12 @@
 
 ## Document Control
 
-| Field | Value |
-|---|---|
-| Status | Accepted |
-| Version | 1.0 |
-| Decision owner | Yasmany |
-| Source | Session 004 |
+| Field          | Value       |
+| -------------- | ----------- |
+| Status         | Accepted    |
+| Version        | 1.0         |
+| Decision owner | Yasmany     |
+| Source         | Session 004 |
 
 This document will define the people, external systems, trust boundaries, and principal information flows surrounding the MVP.
 
@@ -150,14 +150,14 @@ flowchart LR
 
 ## Approval
 
-| Role | Name | Decision | Date |
-|---|---|---|---|
-| Project owner | Yasmany | Accepted | 2026-08-17 |
-| AI collaborator | Codex | Interviewed and drafted | 2026-08-17 |
+| Role            | Name    | Decision                | Date       |
+| --------------- | ------- | ----------------------- | ---------- |
+| Project owner   | Yasmany | Accepted                | 2026-08-17 |
+| AI collaborator | Codex   | Interviewed and drafted | 2026-08-17 |
 
 ## Revision History
 
-| Version | Date | Change | Decision owner |
-|---|---|---|---|
-| 0.1 | 2026-08-17 | System-context elicitation opened. | Yasmany |
-| 1.0 | 2026-08-17 | Actors, external systems, responsibilities, trust boundary, and context diagram accepted. | Yasmany |
+| Version | Date       | Change                                                                                    | Decision owner |
+| ------- | ---------- | ----------------------------------------------------------------------------------------- | -------------- |
+| 0.1     | 2026-08-17 | System-context elicitation opened.                                                        | Yasmany        |
+| 1.0     | 2026-08-17 | Actors, external systems, responsibilities, trust boundary, and context diagram accepted. | Yasmany        |

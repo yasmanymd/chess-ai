@@ -2,14 +2,14 @@
 
 ## Metadata
 
-| Field | Value |
-|---|---|
-| Date | YYYY-MM-DD |
-| Session | |
-| Human author or initiating role | |
-| Model | |
-| Tool or agent | |
-| Completeness | Complete / Excerpted |
+| Field                           | Value                |
+| ------------------------------- | -------------------- |
+| Date                            | YYYY-MM-DD           |
+| Session                         |                      |
+| Human author or initiating role |                      |
+| Model                           |                      |
+| Tool or agent                   |                      |
+| Completeness                    | Complete / Excerpted |
 
 ## Selection Rationale
 
@@ -30,4 +30,3 @@ Include only the context required to understand the prompt. Remove secrets and u
 ## Outcome
 
 ## Related Decisions and Artifacts
-

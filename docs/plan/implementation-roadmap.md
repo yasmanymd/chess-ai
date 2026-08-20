@@ -2,13 +2,13 @@
 
 ## Document Control
 
-| Field | Value |
-|---|---|
-| Status | Accepted |
-| Version | 1.0 |
-| Decision owner | Yasmany |
-| Source | Session 009 |
-| Date | 2026-08-19 |
+| Field          | Value       |
+| -------------- | ----------- |
+| Status         | Accepted    |
+| Version        | 1.0         |
+| Decision owner | Yasmany     |
+| Source         | Session 009 |
+| Date           | 2026-08-19  |
 
 ## Purpose
 

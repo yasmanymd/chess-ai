@@ -5,5 +5,6 @@ export default defineConfig({
   plugins: [reactRouter()],
   server: {
     host: '0.0.0.0',
+    allowedHosts: ['web'],
   },
 });

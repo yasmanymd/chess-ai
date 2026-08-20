@@ -2,12 +2,12 @@
 
 ## Document Control
 
-| Field | Value |
-|---|---|
-| Status | Accepted |
-| Version | 1.0 |
-| Decision owner | Yasmany |
-| Source | Session 006 and ADR-0001 |
+| Field          | Value                    |
+| -------------- | ------------------------ |
+| Status         | Accepted                 |
+| Version        | 1.0                      |
+| Decision owner | Yasmany                  |
+| Source         | Session 006 and ADR-0001 |
 
 ## Purpose
 
@@ -55,13 +55,13 @@ The separately delivered Web Client has its own internal boundaries and consumes
 
 A single physical transactional database may be used, but each module owns its tables or logical schema.
 
-| Module | Owned data |
-|---|---|
-| Temporary Identity | Name claims, private temporary sessions, expiration and release state |
-| Lobby | Waiting games and player-participation admission reservations |
-| Game | Started games, participants, moves, positions, clocks, draw and connection state, termination and result |
-| Game Archive | Public query and search projections derived from completed authoritative games |
-| Chess Interchange | No automatically persisted visitor-imported PGN |
+| Module             | Owned data                                                                                               |
+| ------------------ | -------------------------------------------------------------------------------------------------------- |
+| Temporary Identity | Name claims, private temporary sessions, expiration and release state                                    |
+| Lobby              | Waiting games and player-participation admission reservations                                            |
+| Game               | Started games, participants, moves, positions, clocks, draw and connection state, termination and result |
+| Game Archive       | Public query and search projections derived from completed authoritative games                           |
+| Chess Interchange  | No automatically persisted visitor-imported PGN                                                          |
 
 A module must not directly read or modify another module's tables. Cross-module behavior uses documented public contracts.
 
@@ -217,14 +217,14 @@ Arrows indicate allowed dependency or message direction. They do not authorize a
 
 ## Approval
 
-| Role | Name | Decision | Date |
-|---|---|---|---|
-| Project owner | Yasmany | Accepted | 2026-08-17 |
-| AI collaborator | Codex | Interviewed and drafted | 2026-08-17 |
+| Role            | Name    | Decision                | Date       |
+| --------------- | ------- | ----------------------- | ---------- |
+| Project owner   | Yasmany | Accepted                | 2026-08-17 |
+| AI collaborator | Codex   | Interviewed and drafted | 2026-08-17 |
 
 ## Revision History
 
-| Version | Date | Change | Decision owner |
-|---|---|---|---|
-| 0.1 | 2026-08-17 | Module-boundary elicitation opened. | Yasmany |
-| 1.0 | 2026-08-17 | Modules, ownership, transactions, dependencies, cross-cutting rules, and extraction criteria accepted. | Yasmany |
+| Version | Date       | Change                                                                                                 | Decision owner |
+| ------- | ---------- | ------------------------------------------------------------------------------------------------------ | -------------- |
+| 0.1     | 2026-08-17 | Module-boundary elicitation opened.                                                                    | Yasmany        |
+| 1.0     | 2026-08-17 | Modules, ownership, transactions, dependencies, cross-cutting rules, and extraction criteria accepted. | Yasmany        |

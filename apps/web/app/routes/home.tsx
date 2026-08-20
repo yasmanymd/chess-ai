@@ -1,8 +1,12 @@
+import { useTranslation } from 'react-i18next';
+
 export default function Home() {
+  const { t } = useTranslation();
+
   return (
     <main>
-      <h1>Chess AI</h1>
-      <p>Milestone 0 bootstrap is running.</p>
+      <h1>{t('title')}</h1>
+      <p>{t('bootstrapMessage')}</p>
     </main>
   );
 }

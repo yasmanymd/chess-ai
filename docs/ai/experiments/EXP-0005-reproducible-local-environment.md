@@ -1,11 +1,11 @@
 # EXP-0005: Reproducible Local Environment
 
-| Field | Value |
-|---|---|
-| Status | Planned |
-| Owner | AI implementation team |
-| Decision owner | Yasmany |
-| Related decision | ADR-0001 |
+| Field            | Value                  |
+| ---------------- | ---------------------- |
+| Status           | Planned                |
+| Owner            | AI implementation team |
+| Decision owner   | Yasmany                |
+| Related decision | ADR-0001               |
 
 ## Hypothesis
 
@@ -21,4 +21,3 @@ A clean supported workstation can start the application and principal verificati
 ## Pending Detail
 
 Supported workstation assumptions and exact commands will be defined after stack selection.
-

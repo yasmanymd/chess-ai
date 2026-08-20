@@ -2,15 +2,15 @@
 
 ## Metadata
 
-| Field | Value |
-|---|---|
-| Status | Accepted |
-| Date | 2026-08-17 |
-| Decision owner | Yasmany |
-| AI contributor | Codex |
-| Related session | Session 005 |
-| Related requirements | Product Requirements 1.0 |
-| Related drivers | Quality Attributes and Architecture Drivers 1.0 |
+| Field                | Value                                           |
+| -------------------- | ----------------------------------------------- |
+| Status               | Accepted                                        |
+| Date                 | 2026-08-17                                      |
+| Decision owner       | Yasmany                                         |
+| AI contributor       | Codex                                           |
+| Related session      | Session 005                                     |
+| Related requirements | Product Requirements 1.0                        |
+| Related drivers      | Quality Attributes and Architecture Drivers 1.0 |
 
 ## Context
 
@@ -127,4 +127,3 @@ Yasmany explicitly accepted the modular-monolith architecture on 2026-08-17.
 3. Refine and execute the five mandatory experiments.
 4. Define data and transaction boundaries.
 5. Define runtime and deployment views.
-

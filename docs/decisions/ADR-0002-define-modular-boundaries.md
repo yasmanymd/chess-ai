@@ -2,14 +2,14 @@
 
 ## Metadata
 
-| Field | Value |
-|---|---|
-| Status | Accepted |
-| Date | 2026-08-17 |
-| Decision owner | Yasmany |
-| AI contributor | Codex |
-| Related session | Session 006 |
-| Related decision | ADR-0001 |
+| Field            | Value       |
+| ---------------- | ----------- |
+| Status           | Accepted    |
+| Date             | 2026-08-17  |
+| Decision owner   | Yasmany     |
+| AI contributor   | Codex       |
+| Related session  | Session 006 |
+| Related decision | ADR-0001    |
 
 ## Context
 
@@ -75,4 +75,3 @@ Yasmany accepted the module boundaries and dependency rules on 2026-08-17.
 2. Select technologies capable of enforcing these boundaries.
 3. Implement automated architecture tests.
 4. Refine transactional-outbox behavior during persistence design.
-

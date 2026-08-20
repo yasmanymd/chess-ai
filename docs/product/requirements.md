@@ -2,11 +2,11 @@
 
 ## Document Control
 
-| Field | Value |
-|---|---|
-| Status | Accepted |
-| Version | 1.1 |
-| Decision owner | Yasmany |
+| Field          | Value    |
+| -------------- | -------- |
+| Status         | Accepted |
+| Version        | 1.1      |
+| Decision owner | Yasmany  |
 
 These functional and non-functional requirements were elicited and approved in Session 002.
 
@@ -16,12 +16,12 @@ Material changes require recorded context, impact, rationale, and human approval
 
 ### PR-ID-001 — Player-selected display name
 
-| Field | Value |
-|---|---|
-| Type | Functional |
-| Priority | Must |
-| Status | Accepted |
-| Source | S002-D01 |
+| Field    | Value      |
+| -------- | ---------- |
+| Type     | Functional |
+| Priority | Must       |
+| Status   | Accepted   |
+| Source   | S002-D01   |
 
 Before entering the public game lobby, a person must choose a freely entered display name.
 
@@ -38,12 +38,12 @@ Before entering the public game lobby, a person must choose a freely entered dis
 
 ### PR-ID-002 — Display-name uniqueness
 
-| Field | Value |
-|---|---|
-| Type | Business rule |
-| Priority | Must |
-| Status | Accepted |
-| Source | S002-D05 and S002-D06 |
+| Field    | Value                 |
+| -------- | --------------------- |
+| Type     | Business rule         |
+| Priority | Must                  |
+| Status   | Accepted              |
+| Source   | S002-D05 and S002-D06 |
 
 A normalized temporary display name must be globally unique across the platform while its identity reservation remains active.
 
@@ -62,12 +62,12 @@ The temporary display name acts as the platform-wide username during the account
 
 ### PR-ID-003 — No identity-based self-play prevention
 
-| Field | Value |
-|---|---|
-| Type | Business rule |
-| Priority | Must |
-| Status | Accepted |
-| Source | S002-D04 |
+| Field    | Value         |
+| -------- | ------------- |
+| Type     | Business rule |
+| Priority | Must          |
+| Status   | Accepted      |
+| Source   | S002-D04      |
 
 The MVP will not attempt to determine whether two temporary players are controlled by the same person. Two browsers may join the same game using different valid display names.
 
@@ -77,12 +77,12 @@ Temporary identities do not provide a reliable basis for detecting a real person
 
 ### PR-ID-004 — Display-name validation
 
-| Field | Value |
-|---|---|
-| Type | Business rule |
-| Priority | Must |
-| Status | Accepted |
-| Source | S002-D06 |
+| Field    | Value         |
+| -------- | ------------- |
+| Type     | Business rule |
+| Priority | Must          |
+| Status   | Accepted      |
+| Source   | S002-D06      |
 
 A normalized display name must contain between 2 and 30 characters. It may contain international letters, numbers, spaces, hyphens, and underscores. Leading and trailing whitespace must be removed before validation. Empty and whitespace-only names must be rejected.
 
@@ -90,12 +90,12 @@ Automated offensive-word filtering is not required for the MVP and remains a kno
 
 ### PR-ID-005 — Temporary identity lifecycle
 
-| Field | Value |
-|---|---|
-| Type | Functional and security |
-| Priority | Must |
-| Status | Accepted |
-| Source | S002-D07 |
+| Field    | Value                   |
+| -------- | ----------------------- |
+| Type     | Functional and security |
+| Priority | Must                    |
+| Status   | Accepted                |
+| Source   | S002-D07                |
 
 Claiming an available display name must create a temporary private session that allows the same browser session to recover the identity after a reload or eligible reconnection.
 
@@ -120,12 +120,12 @@ Claiming an available display name must create a temporary private session that 
 
 ### PR-GAME-001 — Public available-game list
 
-| Field | Value |
-|---|---|
-| Type | Functional |
-| Priority | Must |
-| Status | Accepted |
-| Source | S002-D02 |
+| Field    | Value      |
+| -------- | ---------- |
+| Type     | Functional |
+| Priority | Must       |
+| Status   | Accepted   |
+| Source   | S002-D02   |
 
 A temporary player must be able to view a public list of games that are available to join.
 
@@ -137,23 +137,23 @@ A temporary player must be able to view a public list of games that are availabl
 
 ### PR-GAME-002 — Spectators excluded from MVP
 
-| Field | Value |
-|---|---|
-| Type | Scope constraint |
-| Priority | Must |
-| Status | Accepted |
-| Source | S002-D03 |
+| Field    | Value            |
+| -------- | ---------------- |
+| Type     | Scope constraint |
+| Priority | Must             |
+| Status   | Accepted         |
+| Source   | S002-D03         |
 
 The MVP will not provide a spectator role or spectator entry flow.
 
 ### PR-GAME-003 — Create a public game
 
-| Field | Value |
-|---|---|
-| Type | Functional |
-| Priority | Must |
-| Status | Accepted |
-| Source | S002-D08 |
+| Field    | Value      |
+| -------- | ---------- |
+| Type     | Functional |
+| Priority | Must       |
+| Status   | Accepted   |
+| Source   | S002-D08   |
 
 A player without another open or active game must be able to create a public game with an optional title, a color preference, and a predefined time control.
 
@@ -167,23 +167,23 @@ A player without another open or active game must be able to create a public gam
 
 ### PR-GAME-004 — Available-game information
 
-| Field | Value |
-|---|---|
-| Type | Functional |
-| Priority | Must |
-| Status | Accepted |
-| Source | S002-D09 |
+| Field    | Value      |
+| -------- | ---------- |
+| Type     | Functional |
+| Priority | Must       |
+| Status   | Accepted   |
+| Source   | S002-D09   |
 
 Each public waiting game must display its title, creator display name, color preference or random assignment, time control, and elapsed waiting time.
 
 ### PR-GAME-005 — Atomic game joining
 
-| Field | Value |
-|---|---|
-| Type | Functional and concurrency |
-| Priority | Must |
-| Status | Accepted |
-| Source | S002-D10 |
+| Field    | Value                      |
+| -------- | -------------------------- |
+| Type     | Functional and concurrency |
+| Priority | Must                       |
+| Status   | Accepted                   |
+| Source   | S002-D10                   |
 
 Joining a waiting game must be atomic. If multiple eligible players attempt to join the same game concurrently, only the first successfully confirmed request may become the opponent.
 
@@ -196,23 +196,23 @@ Joining a waiting game must be atomic. If multiple eligible players attempt to j
 
 ### PR-GAME-006 — Cancel a waiting game
 
-| Field | Value |
-|---|---|
-| Type | Functional |
-| Priority | Must |
-| Status | Accepted |
-| Source | S002-D11 |
+| Field    | Value      |
+| -------- | ---------- |
+| Type     | Functional |
+| Priority | Must       |
+| Status   | Accepted   |
+| Source   | S002-D11   |
 
 The creator may cancel a game while it is waiting for an opponent. A game that has already accepted an opponent can no longer use the waiting-game cancellation flow.
 
 ### PR-GAME-007 — Automatic game start
 
-| Field | Value |
-|---|---|
-| Type | Functional |
-| Priority | Must |
-| Status | Accepted |
-| Source | S002-D12 |
+| Field    | Value      |
+| -------- | ---------- |
+| Type     | Functional |
+| Priority | Must       |
+| Status   | Accepted   |
+| Source   | S002-D12   |
 
 The game must start automatically after the second player is successfully confirmed and colors are assigned.
 
@@ -222,13 +222,13 @@ Both players must receive the same authoritative initial position, player-color 
 
 ### PR-PLAY-001 — Server-authoritative legal play
 
-| Field | Value |
-|---|---|
-| Type | Functional and integrity |
-| Priority | Must |
-| Status | Accepted |
-| Source | S002-D13 |
-| Implementation risk | High |
+| Field               | Value                    |
+| ------------------- | ------------------------ |
+| Type                | Functional and integrity |
+| Priority            | Must                     |
+| Status              | Accepted                 |
+| Source              | S002-D13                 |
+| Implementation risk | High                     |
 
 The server must be authoritative for turn order, legal moves, game state, and game outcome.
 
@@ -251,34 +251,34 @@ An illegal or out-of-turn request must not change authoritative state and must r
 
 ### PR-PLAY-002 — Board interaction and legal destinations
 
-| Field | Value |
-|---|---|
-| Type | Functional |
-| Priority | Must |
-| Status | Accepted |
-| Source | S002-D14 |
+| Field    | Value      |
+| -------- | ---------- |
+| Type     | Functional |
+| Priority | Must       |
+| Status   | Accepted   |
+| Source   | S002-D14   |
 
 Selecting a piece controlled by the current player must display its currently legal destination squares. Selecting a destination submits a move request for authoritative validation.
 
 ### PR-PLAY-003 — Pawn promotion
 
-| Field | Value |
-|---|---|
-| Type | Functional |
-| Priority | Must |
-| Status | Accepted |
-| Source | S002-D15 |
+| Field    | Value      |
+| -------- | ---------- |
+| Type     | Functional |
+| Priority | Must       |
+| Status   | Accepted   |
+| Source   | S002-D15   |
 
 When a pawn reaches its promotion rank, the player must choose Queen, Rook, Bishop, or Knight. The move is not complete and play cannot continue until a valid promotion piece is confirmed.
 
 ### PR-PLAY-004 — Player game actions
 
-| Field | Value |
-|---|---|
-| Type | Functional |
-| Priority | Must |
-| Status | Accepted |
-| Source | S002-D16 |
+| Field    | Value      |
+| -------- | ---------- |
+| Type     | Functional |
+| Priority | Must       |
+| Status   | Accepted   |
+| Source   | S002-D16   |
 
 During an active game, a player may resign or offer a draw. The opponent may accept or reject an outstanding draw offer. Move takeback is not supported in the MVP.
 
@@ -286,24 +286,24 @@ A player with the move may claim a draw under the applicable threefold-repetitio
 
 ### PR-PLAY-005 — Authoritative move confirmation
 
-| Field | Value |
-|---|---|
-| Type | Functional and real-time |
-| Priority | Must |
-| Status | Accepted |
-| Source | S002-D17 |
-| Implementation risk | High |
+| Field               | Value                    |
+| ------------------- | ------------------------ |
+| Type                | Functional and real-time |
+| Priority            | Must                     |
+| Status              | Accepted                 |
+| Source              | S002-D17                 |
+| Implementation risk | High                     |
 
 After every accepted move, both players must receive the authoritative position, last move, side to move, game status, and applicable clock values. A rejected request must leave state unchanged and provide a rejection reason.
 
 ### PR-PLAY-006 — Move notation and position representation
 
-| Field | Value |
-|---|---|
-| Type | Data and interoperability |
-| Priority | Must |
-| Status | Accepted |
-| Source | S002-D18 |
+| Field    | Value                     |
+| -------- | ------------------------- |
+| Type     | Data and interoperability |
+| Priority | Must                      |
+| Status   | Accepted                  |
+| Source   | S002-D18                  |
 
 Each accepted move must be recorded in Standard Algebraic Notation (SAN) and with sufficient structured information to reconstruct the game. Forsyth–Edwards Notation (FEN) must be retained or derivable where required for recovery and interoperability.
 
@@ -311,12 +311,12 @@ Each accepted move must be recorded in Standard Algebraic Notation (SAN) and wit
 
 ### PR-TIME-001 — Initial time controls
 
-| Field | Value |
-|---|---|
-| Type | Functional |
-| Priority | Must |
-| Status | Accepted |
-| Source | S002-D19 |
+| Field    | Value      |
+| -------- | ---------- |
+| Type     | Functional |
+| Priority | Must       |
+| Status   | Accepted   |
+| Source   | S002-D19   |
 
 The MVP must offer these predefined controls:
 
@@ -327,25 +327,25 @@ The MVP must offer these predefined controls:
 
 ### PR-TIME-002 — Server-authoritative clock
 
-| Field | Value |
-|---|---|
-| Type | Functional and integrity |
-| Priority | Must |
-| Status | Accepted |
-| Source | S002-D20 |
-| Implementation risk | High |
+| Field               | Value                    |
+| ------------------- | ------------------------ |
+| Type                | Functional and integrity |
+| Priority            | Must                     |
+| Status              | Accepted                 |
+| Source              | S002-D20                 |
+| Implementation risk | High                     |
 
 The server must maintain official remaining time. Clients may render a smooth local estimate but must reconcile it with authoritative server updates.
 
 ### PR-TIME-003 — Timeout outcome
 
-| Field | Value |
-|---|---|
-| Type | Business rule |
-| Priority | Must |
-| Status | Accepted |
-| Source | S002-D21 |
-| Implementation risk | High |
+| Field               | Value         |
+| ------------------- | ------------- |
+| Type                | Business rule |
+| Priority            | Must          |
+| Status              | Accepted      |
+| Source              | S002-D21      |
+| Implementation risk | High          |
 
 A player whose official clock expires loses on time unless the opponent cannot checkmate that player through any possible series of legal moves, in which case the result is a draw.
 
@@ -353,24 +353,24 @@ A player whose official clock expires loses on time unless the opponent cannot c
 
 ### PR-REC-001 — Disconnection visibility
 
-| Field | Value |
-|---|---|
-| Type | Functional and real-time |
-| Priority | Must |
-| Status | Accepted |
-| Source | S002-D22 |
+| Field    | Value                    |
+| -------- | ------------------------ |
+| Type     | Functional and real-time |
+| Priority | Must                     |
+| Status   | Accepted                 |
+| Source   | S002-D22                 |
 
 When a player's connection is lost, the opponent must receive a visible disconnected status. A transient connection loss is not immediately treated as resignation.
 
 ### PR-REC-002 — Authoritative reconnection recovery
 
-| Field | Value |
-|---|---|
-| Type | Functional and recovery |
-| Priority | Must |
-| Status | Accepted |
-| Source | S002-D23 |
-| Implementation risk | High |
+| Field               | Value                   |
+| ------------------- | ----------------------- |
+| Type                | Functional and recovery |
+| Priority            | Must                    |
+| Status              | Accepted                |
+| Source              | S002-D23                |
+| Implementation risk | High                    |
 
 Reconnecting with the valid private session credential must restore the player's active game, assigned color, authoritative position, move history, side to move, outstanding draw state, game status, and official clock values.
 
@@ -378,13 +378,13 @@ The recovered authoritative state replaces uncertain or stale local client state
 
 ### PR-REC-003 — Timed-game disconnection
 
-| Field | Value |
-|---|---|
-| Type | Business rule |
-| Priority | Must |
-| Status | Accepted |
-| Source | S002-D24 |
-| Implementation risk | High |
+| Field               | Value         |
+| ------------------- | ------------- |
+| Type                | Business rule |
+| Priority            | Must          |
+| Status              | Accepted      |
+| Source              | S002-D24      |
+| Implementation risk | High          |
 
 In a timed game, the authoritative clock continues during a player's disconnection. If the active clock expires, the standard timeout outcome applies.
 
@@ -392,13 +392,13 @@ If both players disconnect, the clock belonging to the side to move continues.
 
 ### PR-REC-004 — No-clock disconnection grace period
 
-| Field | Value |
-|---|---|
-| Type | Business rule |
-| Priority | Must |
-| Status | Accepted |
-| Source | S002-D25 |
-| Implementation risk | High |
+| Field               | Value         |
+| ------------------- | ------------- |
+| Type                | Business rule |
+| Priority            | Must          |
+| Status              | Accepted      |
+| Source              | S002-D25      |
+| Implementation risk | High          |
 
 In a no-clock game, a disconnected player has 15 minutes to reconnect. Failure to return produces a loss by abandonment.
 
@@ -406,36 +406,36 @@ If both players remain disconnected for 15 minutes, the game ends as abandoned w
 
 ### PR-REC-005 — Explicit active-game exit
 
-| Field | Value |
-|---|---|
-| Type | Business rule |
-| Priority | Must |
-| Status | Accepted |
-| Source | S002-D26 |
+| Field    | Value         |
+| -------- | ------------- |
+| Type     | Business rule |
+| Priority | Must          |
+| Status   | Accepted      |
+| Source   | S002-D26      |
 
 Explicitly leaving or abandoning an active game is treated as resignation. Closing or losing the network connection alone is governed by disconnection rules instead.
 
 ### PR-REC-006 — Active-game durability
 
-| Field | Value |
-|---|---|
-| Type | Reliability and recovery |
-| Priority | Must |
-| Status | Accepted |
-| Source | S002-D27 |
-| Implementation risk | High |
+| Field               | Value                    |
+| ------------------- | ------------------------ |
+| Type                | Reliability and recovery |
+| Priority            | Must                     |
+| Status              | Accepted                 |
+| Source              | S002-D27                 |
+| Implementation risk | High                     |
 
 Authoritative active-game state must survive a game-server process restart for the duration required by clock, reconnection, and abandonment rules.
 
 ### PR-REC-007 — Multiple tabs and action serialization
 
-| Field | Value |
-|---|---|
-| Type | Concurrency and integrity |
-| Priority | Must |
-| Status | Accepted |
-| Source | S002-D28 |
-| Implementation risk | High |
+| Field               | Value                     |
+| ------------------- | ------------------------- |
+| Type                | Concurrency and integrity |
+| Priority            | Must                      |
+| Status              | Accepted                  |
+| Source              | S002-D28                  |
+| Implementation risk | High                      |
 
 A temporary session may be presented by multiple browser tabs. The server must serialize competing actions against authoritative state and reject actions that are no longer valid.
 
@@ -443,13 +443,13 @@ A temporary session may be presented by multiple browser tabs. The server must s
 
 ### PR-HIST-001 — Completed-game persistence
 
-| Field | Value |
-|---|---|
-| Type | Data and functional |
-| Priority | Must |
-| Status | Accepted |
-| Source | S002-D29 |
-| Implementation risk | High |
+| Field               | Value               |
+| ------------------- | ------------------- |
+| Type                | Data and functional |
+| Priority            | Must                |
+| Status              | Accepted            |
+| Source              | S002-D29            |
+| Implementation risk | High                |
 
 Every started game that reaches a terminal outcome must be persisted, including checkmate, draw, resignation, abandonment, and timeout.
 
@@ -467,23 +467,23 @@ The persisted record must include:
 
 ### PR-HIST-002 — Public completed-game history
 
-| Field | Value |
-|---|---|
-| Type | Functional |
-| Priority | Must |
-| Status | Accepted |
-| Source | S002-D30 |
+| Field    | Value      |
+| -------- | ---------- |
+| Type     | Functional |
+| Priority | Must       |
+| Status   | Accepted   |
+| Source   | S002-D30   |
 
 Any visitor must be able to browse completed public games without claiming a temporary player identity.
 
 ### PR-HIST-003 — History search and filters
 
-| Field | Value |
-|---|---|
-| Type | Functional |
-| Priority | Must |
-| Status | Accepted |
-| Source | S002-D31 |
+| Field    | Value      |
+| -------- | ---------- |
+| Type     | Functional |
+| Priority | Must       |
+| Status   | Accepted   |
+| Source   | S002-D31   |
 
 Completed games must be searchable or filterable by player display name, result, termination reason, time control, and date range.
 
@@ -491,23 +491,23 @@ Display-name search does not establish real-person identity because temporary na
 
 ### PR-HIST-004 — Completed-game detail
 
-| Field | Value |
-|---|---|
-| Type | Functional |
-| Priority | Must |
-| Status | Accepted |
-| Source | S002-D32 |
+| Field    | Value      |
+| -------- | ---------- |
+| Type     | Functional |
+| Priority | Must       |
+| Status   | Accepted   |
+| Source   | S002-D32   |
 
 A completed-game detail view must show players and colors, result, termination reason, completion date, time control, and ordered move notation.
 
 ### PR-HIST-005 — Move-by-move replay
 
-| Field | Value |
-|---|---|
-| Type | Functional |
-| Priority | Must |
-| Status | Accepted |
-| Source | S002-D33 |
+| Field    | Value      |
+| -------- | ---------- |
+| Type     | Functional |
+| Priority | Must       |
+| Status   | Accepted   |
+| Source   | S002-D33   |
 
 A visitor must be able to replay a completed game on a board synchronized with its notation.
 
@@ -521,12 +521,12 @@ Replay controls must support:
 
 ### PR-HIST-006 — MVP retention
 
-| Field | Value |
-|---|---|
-| Type | Data lifecycle |
-| Priority | Must |
-| Status | Accepted |
-| Source | S002-D34 |
+| Field    | Value          |
+| -------- | -------------- |
+| Type     | Data lifecycle |
+| Priority | Must           |
+| Status   | Accepted       |
+| Source   | S002-D34       |
 
 Completed games are retained indefinitely during the MVP. Administrative deletion and a mature retention policy are deferred.
 
@@ -534,12 +534,12 @@ Completed games are retained indefinitely during the MVP. Administrative deletio
 
 ### PR-PGN-001 — Completed-game export
 
-| Field | Value |
-|---|---|
-| Type | Functional and interoperability |
-| Priority | Must |
-| Status | Accepted |
-| Source | S002-D35 |
+| Field    | Value                           |
+| -------- | ------------------------------- |
+| Type     | Functional and interoperability |
+| Priority | Must                            |
+| Status   | Accepted                        |
+| Source   | S002-D35                        |
 
 Any completed game must be exportable as a downloaded `.pgn` file or copied PGN text.
 
@@ -547,56 +547,56 @@ The export must include applicable standard headers for event, site, date, round
 
 ### PR-PGN-002 — Single-game import
 
-| Field | Value |
-|---|---|
-| Type | Functional and interoperability |
-| Priority | Must |
-| Status | Accepted |
-| Source | S002-D36 |
+| Field    | Value                           |
+| -------- | ------------------------------- |
+| Type     | Functional and interoperability |
+| Priority | Must                            |
+| Status   | Accepted                        |
+| Source   | S002-D36                        |
 
 A visitor must be able to import one game by selecting a `.pgn` file or pasting PGN text. Multi-game import is outside the MVP.
 
 ### PR-PGN-003 — Import validation and feedback
 
-| Field | Value |
-|---|---|
-| Type | Functional and integrity |
-| Priority | Must |
-| Status | Accepted |
-| Source | S002-D37 |
+| Field    | Value                    |
+| -------- | ------------------------ |
+| Type     | Functional and integrity |
+| Priority | Must                     |
+| Status   | Accepted                 |
+| Source   | S002-D37                 |
 
 The platform must validate imported PGN structure, main-line moves, result, and game consistency before replay. Invalid input must provide a useful error location or reason when available.
 
 ### PR-PGN-004 — Private imported-game replay
 
-| Field | Value |
-|---|---|
-| Type | Functional and privacy |
-| Priority | Must |
-| Status | Accepted |
-| Source | S002-D38 |
+| Field    | Value                  |
+| -------- | ---------------------- |
+| Type     | Functional and privacy |
+| Priority | Must                   |
+| Status   | Accepted               |
+| Source   | S002-D38               |
 
 A successfully imported game opens in the replay experience but is not automatically persisted or published in public history.
 
 ### PR-PGN-005 — Standard chess and initial positions
 
-| Field | Value |
-|---|---|
-| Type | Interoperability |
-| Priority | Must |
-| Status | Accepted |
-| Source | S002-D39 |
+| Field    | Value            |
+| -------- | ---------------- |
+| Type     | Interoperability |
+| Priority | Must             |
+| Status   | Accepted         |
+| Source   | S002-D39         |
 
 The importer must support standard chess games from the normal initial position and games declaring a valid non-standard initial position through `SetUp` and `FEN` tags. Chess960 and other variants are outside the MVP.
 
 ### PR-PGN-006 — Main-line replay
 
-| Field | Value |
-|---|---|
-| Type | Interoperability and scope |
-| Priority | Must |
-| Status | Accepted |
-| Source | S002-D40 |
+| Field    | Value                      |
+| -------- | -------------------------- |
+| Type     | Interoperability and scope |
+| Priority | Must                       |
+| Status   | Accepted                   |
+| Source   | S002-D40                   |
 
 The importer must tolerate standard PGN comments, variations, and annotation symbols, but MVP replay is required to display only the main line. Annotation display and editing are deferred.
 
@@ -604,34 +604,34 @@ The importer must tolerate standard PGN comments, variations, and annotation sym
 
 ### PR-I18N-001 — Supported interface languages
 
-| Field | Value |
-|---|---|
-| Type | Functional and localization |
-| Priority | Must |
-| Status | Accepted |
-| Source | S002-D41 |
+| Field    | Value                       |
+| -------- | --------------------------- |
+| Type     | Functional and localization |
+| Priority | Must                        |
+| Status   | Accepted                    |
+| Source   | S002-D41                    |
 
 The complete MVP interface must be available in English, Spanish, and French.
 
 ### PR-I18N-002 — Language selection and persistence
 
-| Field | Value |
-|---|---|
-| Type | Functional |
-| Priority | Must |
-| Status | Accepted |
-| Source | S002-D42 |
+| Field    | Value      |
+| -------- | ---------- |
+| Type     | Functional |
+| Priority | Must       |
+| Status   | Accepted   |
+| Source   | S002-D42   |
 
 On first use, the platform selects the browser's preferred supported language and falls back to English when no supported preference exists. A visible manual selector must allow language changes, and the selection must persist for future visits.
 
 ### PR-I18N-003 — Translation coverage
 
-| Field | Value |
-|---|---|
-| Type | Localization quality |
-| Priority | Must |
-| Status | Accepted |
-| Source | S002-D43 |
+| Field    | Value                |
+| -------- | -------------------- |
+| Type     | Localization quality |
+| Priority | Must                 |
+| Status   | Accepted             |
+| Source   | S002-D43             |
 
 Navigation, forms, validation, errors, connection states, results, termination reasons, board controls, and help text must be localized. User-facing text must not be embedded directly in UI components in a way that bypasses localization resources.
 
@@ -639,12 +639,12 @@ SAN, FEN, and PGN remain standards-based. Surrounding explanatory interface text
 
 ### PR-I18N-004 — Locale-aware formatting
 
-| Field | Value |
-|---|---|
-| Type | Localization quality |
-| Priority | Must |
-| Status | Accepted |
-| Source | S002-D44 |
+| Field    | Value                |
+| -------- | -------------------- |
+| Type     | Localization quality |
+| Priority | Must                 |
+| Status   | Accepted             |
+| Source   | S002-D44             |
 
 Dates, times, numbers, and plural forms must use the selected locale's conventions.
 
@@ -652,23 +652,23 @@ Dates, times, numbers, and plural forms must use the selected locale's conventio
 
 ### PR-A11Y-001 — WCAG target
 
-| Field | Value |
-|---|---|
-| Type | Non-functional |
-| Priority | Must |
-| Status | Accepted |
-| Source | S002-D45 |
+| Field    | Value          |
+| -------- | -------------- |
+| Type     | Non-functional |
+| Priority | Must           |
+| Status   | Accepted       |
+| Source   | S002-D45       |
 
 MVP functionality must target conformance with WCAG 2.2 Level AA.
 
 ### PR-A11Y-002 — Accessible chess interaction
 
-| Field | Value |
-|---|---|
-| Type | Functional and accessibility |
-| Priority | Must |
-| Status | Accepted |
-| Source | S002-D46 |
+| Field    | Value                        |
+| -------- | ---------------------------- |
+| Type     | Functional and accessibility |
+| Priority | Must                         |
+| Status   | Accepted                     |
+| Source   | S002-D46                     |
 
 The chess board must be operable by keyboard. Squares and pieces must be identifiable by assistive technologies. Turn, check, result, clock, and rejected-move changes must be communicated accessibly.
 
@@ -676,23 +676,23 @@ State must not depend only on color. Focus must be visible and applicable contra
 
 ### PR-A11Y-003 — Motion preferences
 
-| Field | Value |
-|---|---|
-| Type | Accessibility |
-| Priority | Must |
-| Status | Accepted |
-| Source | S002-D47 |
+| Field    | Value         |
+| -------- | ------------- |
+| Type     | Accessibility |
+| Priority | Must          |
+| Status   | Accepted      |
+| Source   | S002-D47      |
 
 The interface must respect reduced-motion preferences. No animation may be essential to understanding or operating the game.
 
 ### PR-A11Y-004 — Responsive web interface
 
-| Field | Value |
-|---|---|
-| Type | Usability and compatibility |
-| Priority | Must |
-| Status | Accepted |
-| Source | S002-D48 |
+| Field    | Value                       |
+| -------- | --------------------------- |
+| Type     | Usability and compatibility |
+| Priority | Must                        |
+| Status   | Accepted                    |
+| Source   | S002-D48                    |
 
 MVP functionality must work in supported desktop, tablet, and mobile web browsers. Native mobile applications remain outside scope.
 
@@ -700,69 +700,69 @@ MVP functionality must work in supported desktop, tablet, and mobile web browser
 
 ### PR-SEC-001 — Secure production transport
 
-| Field | Value |
-|---|---|
-| Type | Security |
-| Priority | Must |
-| Status | Accepted |
-| Source | S002-D49 |
+| Field    | Value    |
+| -------- | -------- |
+| Type     | Security |
+| Priority | Must     |
+| Status   | Accepted |
+| Source   | S002-D49 |
 
 Production HTTP and real-time communication must use secure encrypted transport.
 
 ### PR-SEC-002 — Untrusted client boundary
 
-| Field | Value |
-|---|---|
-| Type | Security and integrity |
-| Priority | Must |
-| Status | Accepted |
-| Source | S002-D50 |
-| Implementation risk | High |
+| Field               | Value                  |
+| ------------------- | ---------------------- |
+| Type                | Security and integrity |
+| Priority            | Must                   |
+| Status              | Accepted               |
+| Source              | S002-D50               |
+| Implementation risk | High                   |
 
 The server must not trust client-calculated identity, legal moves, turn order, clock state, game state, or results.
 
 ### PR-SEC-003 — Temporary-session security
 
-| Field | Value |
-|---|---|
-| Type | Security |
-| Priority | Must |
-| Status | Accepted |
-| Source | S002-D51 |
-| Implementation risk | High |
+| Field               | Value    |
+| ------------------- | -------- |
+| Type                | Security |
+| Priority            | Must     |
+| Status              | Accepted |
+| Source              | S002-D51 |
+| Implementation risk | High     |
 
 Temporary-session credentials must be unpredictable, expire according to the identity lifecycle, and use secure browser storage and transport appropriate to the selected architecture.
 
 ### PR-SEC-004 — Input and abuse controls
 
-| Field | Value |
-|---|---|
-| Type | Security and reliability |
-| Priority | Must |
-| Status | Accepted |
-| Source | S002-D52 |
+| Field    | Value                    |
+| -------- | ------------------------ |
+| Type     | Security and reliability |
+| Priority | Must                     |
+| Status   | Accepted                 |
+| Source   | S002-D52                 |
 
 Names, PGN, commands, and request parameters must be validated. Appropriate payload-size and request-frequency limits must protect public interfaces.
 
 ### PR-SEC-005 — Automated security checks
 
-| Field | Value |
-|---|---|
-| Type | Security process |
-| Priority | Must |
-| Status | Accepted |
-| Source | S002-D53 |
+| Field    | Value            |
+| -------- | ---------------- |
+| Type     | Security process |
+| Priority | Must             |
+| Status   | Accepted         |
+| Source   | S002-D53         |
 
 Continuous integration must include applicable dependency-vulnerability, secret, and static security checks. OWASP ASVS will guide security requirements; the target verification level will be selected during security design.
 
 ### PR-PRIV-001 — Data minimization and public-data notice
 
-| Field | Value |
-|---|---|
-| Type | Privacy |
-| Priority | Must |
-| Status | Accepted |
-| Source | S002-D54 |
+| Field    | Value    |
+| -------- | -------- |
+| Type     | Privacy  |
+| Priority | Must     |
+| Status   | Accepted |
+| Source   | S002-D54 |
 
 The MVP must collect only information necessary for its functions. Before playing, the interface must explain that display names and completed games are public.
 
@@ -770,12 +770,12 @@ The MVP will not include advertising, commercial tracking, or invasive analytics
 
 ### PR-PRIV-002 — Safe telemetry
 
-| Field | Value |
-|---|---|
-| Type | Privacy and operations |
-| Priority | Must |
-| Status | Accepted |
-| Source | S002-D55 |
+| Field    | Value                  |
+| -------- | ---------------------- |
+| Type     | Privacy and operations |
+| Priority | Must                   |
+| Status   | Accepted               |
+| Source   | S002-D55               |
 
 Logs, metrics, traces, and error reports must not contain session credentials or unnecessary sensitive content.
 
@@ -783,23 +783,23 @@ Logs, metrics, traces, and error reports must not contain session credentials or
 
 ### PR-PERF-001 — User-perceived page performance
 
-| Field | Value |
-|---|---|
-| Type | Performance |
-| Priority | Must |
-| Status | Accepted as initial target |
-| Source | S002-D56 |
+| Field    | Value                      |
+| -------- | -------------------------- |
+| Type     | Performance                |
+| Priority | Must                       |
+| Status   | Accepted as initial target |
+| Source   | S002-D56                   |
 
 Main user journeys should achieve a 75th-percentile Largest Contentful Paint below 2.5 seconds under a defined reasonable mobile-network test profile.
 
 ### PR-PERF-002 — Move-processing latency
 
-| Field | Value |
-|---|---|
-| Type | Performance |
-| Priority | Must |
-| Status | Accepted as initial target |
-| Source | S002-D57 |
+| Field    | Value                      |
+| -------- | -------------------------- |
+| Type     | Performance                |
+| Priority | Must                       |
+| Status   | Accepted as initial target |
+| Source   | S002-D57                   |
 
 Server-side move-request processing should complete below 100 milliseconds at the 95th percentile, excluding network latency.
 
@@ -807,12 +807,12 @@ Under normal supported conditions, an accepted move should normally be reflected
 
 ### PR-PERF-003 — Initial capacity target
 
-| Field | Value |
-|---|---|
-| Type | Capacity |
-| Priority | Must |
-| Status | Accepted as initial target |
-| Source | S002-D58 |
+| Field    | Value                      |
+| -------- | -------------------------- |
+| Type     | Capacity                   |
+| Priority | Must                       |
+| Status   | Accepted as initial target |
+| Source   | S002-D58                   |
 
 Before public deployment, the system must be tested against an initial target of 100 simultaneous games and 500 active connections.
 
@@ -820,36 +820,36 @@ Before public deployment, the system must be tested against an initial target of
 
 ### PR-REL-001 — Confirmed-move recovery point
 
-| Field | Value |
-|---|---|
-| Type | Reliability |
-| Priority | Must |
-| Status | Accepted |
-| Source | S002-D59 |
-| Implementation risk | High |
+| Field               | Value       |
+| ------------------- | ----------- |
+| Type                | Reliability |
+| Priority            | Must        |
+| Status              | Accepted    |
+| Source              | S002-D59    |
+| Implementation risk | High        |
 
 The recovery-point objective for confirmed moves is zero accepted moves lost.
 
 ### PR-REL-002 — Active-game recovery time
 
-| Field | Value |
-|---|---|
-| Type | Reliability |
-| Priority | Must |
-| Status | Accepted as initial target |
-| Source | S002-D60 |
-| Implementation risk | High |
+| Field               | Value                      |
+| ------------------- | -------------------------- |
+| Type                | Reliability                |
+| Priority            | Must                       |
+| Status              | Accepted as initial target |
+| Source              | S002-D60                   |
+| Implementation risk | High                       |
 
 After a service restart, active games should be recoverable within five minutes.
 
 ### PR-REL-003 — Availability measurement
 
-| Field | Value |
-|---|---|
-| Type | Reliability and operations |
-| Priority | Must |
-| Status | Accepted |
-| Source | S002-D61 |
+| Field    | Value                      |
+| -------- | -------------------------- |
+| Type     | Reliability and operations |
+| Priority | Must                       |
+| Status   | Accepted                   |
+| Source   | S002-D61                   |
 
 The MVP has no contractual availability SLA. Production availability and error rates must nevertheless be measured and reported.
 
@@ -857,23 +857,23 @@ The MVP has no contractual availability SLA. Production availability and error r
 
 ### PR-OBS-001 — Operational telemetry
 
-| Field | Value |
-|---|---|
-| Type | Operability |
-| Priority | Must |
-| Status | Accepted |
-| Source | S002-D62 |
+| Field    | Value       |
+| -------- | ----------- |
+| Type     | Operability |
+| Priority | Must        |
+| Status   | Accepted    |
+| Source   | S002-D62    |
 
 The system must provide structured logs, metrics, and error tracing sufficient to observe connections, active games, accepted and rejected moves, latency, failures, and recoveries.
 
 ### PR-OBS-002 — Correlation
 
-| Field | Value |
-|---|---|
-| Type | Operability |
-| Priority | Must |
-| Status | Accepted |
-| Source | S002-D63 |
+| Field    | Value       |
+| -------- | ----------- |
+| Type     | Operability |
+| Priority | Must        |
+| Status   | Accepted    |
+| Source   | S002-D63    |
 
 Relevant requests and events must carry correlation identifiers that support investigation without exposing session credentials.
 
@@ -881,23 +881,23 @@ Relevant requests and events must carry correlation identifiers that support inv
 
 ### PR-COMP-001 — Supported browsers
 
-| Field | Value |
-|---|---|
-| Type | Compatibility |
-| Priority | Must |
-| Status | Accepted |
-| Source | S002-D64 |
+| Field    | Value         |
+| -------- | ------------- |
+| Type     | Compatibility |
+| Priority | Must          |
+| Status   | Accepted      |
+| Source   | S002-D64      |
 
 The MVP must support the two most recent major versions of Chrome, Firefox, Safari, and Edge at the time of release.
 
 ### PR-COMP-002 — Unsupported capability feedback
 
-| Field | Value |
-|---|---|
-| Type | Compatibility and usability |
-| Priority | Must |
-| Status | Accepted |
-| Source | S002-D65 |
+| Field    | Value                       |
+| -------- | --------------------------- |
+| Type     | Compatibility and usability |
+| Priority | Must                        |
+| Status   | Accepted                    |
+| Source   | S002-D65                    |
 
 When an essential capability is unavailable in a browser, the application must fail safely and provide a clear explanation rather than silently malfunction.
 
@@ -957,18 +957,18 @@ Defined tests and production-like measurements demonstrate or transparently qual
 
 ## Approval
 
-| Role | Name | Decision | Date |
-|---|---|---|---|
-| Project owner | Yasmany | Accepted | 2026-08-17 |
-| AI collaborator | Codex | Interviewed and drafted | 2026-08-17 |
+| Role            | Name    | Decision                | Date       |
+| --------------- | ------- | ----------------------- | ---------- |
+| Project owner   | Yasmany | Accepted                | 2026-08-17 |
+| AI collaborator | Codex   | Interviewed and drafted | 2026-08-17 |
 
 ## Revision History
 
-| Version | Date | Change | Decision owner |
-|---|---|---|---|
-| 0.1 | 2026-08-17 | Requirements elicitation draft opened. | Yasmany |
-| 1.0 | 2026-08-17 | Requirements and end-to-end acceptance journeys reviewed and accepted. | Yasmany |
-| 1.1 | 2026-08-18 | Corrected repetition, move-count, dead-position, and timeout semantics using FIDE Laws of Chess articles 6.9 and 9.2–9.6. | Yasmany |
+| Version | Date       | Change                                                                                                                    | Decision owner |
+| ------- | ---------- | ------------------------------------------------------------------------------------------------------------------------- | -------------- |
+| 0.1     | 2026-08-17 | Requirements elicitation draft opened.                                                                                    | Yasmany        |
+| 1.0     | 2026-08-17 | Requirements and end-to-end acceptance journeys reviewed and accepted.                                                    | Yasmany        |
+| 1.1     | 2026-08-18 | Corrected repetition, move-count, dead-position, and timeout semantics using FIDE Laws of Chess articles 6.9 and 9.2–9.6. | Yasmany        |
 
 ## Normative Chess Rules Reference
 

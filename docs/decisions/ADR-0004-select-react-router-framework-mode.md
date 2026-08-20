@@ -2,14 +2,14 @@
 
 ## Metadata
 
-| Field | Value |
-|---|---|
-| Status | Accepted |
-| Date | 2026-08-19 |
-| Decision owner | Yasmany |
-| AI contributor | Codex |
-| Related session | Session 008 |
-| Related decision | ADR-0003 |
+| Field            | Value       |
+| ---------------- | ----------- |
+| Status           | Accepted    |
+| Date             | 2026-08-19  |
+| Decision owner   | Yasmany     |
+| AI contributor   | Codex       |
+| Related session  | Session 008 |
+| Related decision | ADR-0003    |
 
 ## Context
 
@@ -66,4 +66,3 @@ Codex researched current React guidance, compared Vite SPA, Next.js, and React R
 ## Human Approval
 
 Yasmany accepted React Router Framework Mode on 2026-08-19.
-

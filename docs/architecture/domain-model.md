@@ -2,12 +2,12 @@
 
 ## Document Control
 
-| Field | Value |
-|---|---|
-| Status | Accepted |
-| Version | 1.0 |
-| Decision owner | Yasmany |
-| Source | Session 007 and ADR-0002 |
+| Field          | Value                    |
+| -------------- | ------------------------ |
+| Status         | Accepted                 |
+| Version        | 1.0                      |
+| Decision owner | Yasmany                  |
+| Source         | Session 007 and ADR-0002 |
 
 ## Purpose
 
@@ -15,19 +15,19 @@ Define the business language and consistency boundaries of the MVP independently
 
 ## Ubiquitous Language
 
-| Term | Meaning |
-|---|---|
-| Temporary Identity | Accountless, globally unique, time-bounded player identity protected by a private session credential |
-| Player Participation | The admission record ensuring one identity has at most one waiting or active game |
-| Waiting Game | A public lobby offer that has not yet accepted an opponent |
-| Chess Game | The authoritative aggregate for a started game |
-| Player Seat | A participant's immutable identity snapshot and assigned color within a game |
-| Move Record | An accepted move and its ordered notation, resulting state, and relevant clock data |
-| Game Clock | The authoritative time state for both players |
-| Draw Offer | A pending, accepted, rejected, or superseded draw proposal |
-| Archived Game | Public read projection of a terminal authoritative game |
-| Replay | Read-only reconstruction of a game over its ordered move history |
-| Imported Game | Validated, private, non-persisted PGN representation |
+| Term                 | Meaning                                                                                              |
+| -------------------- | ---------------------------------------------------------------------------------------------------- |
+| Temporary Identity   | Accountless, globally unique, time-bounded player identity protected by a private session credential |
+| Player Participation | The admission record ensuring one identity has at most one waiting or active game                    |
+| Waiting Game         | A public lobby offer that has not yet accepted an opponent                                           |
+| Chess Game           | The authoritative aggregate for a started game                                                       |
+| Player Seat          | A participant's immutable identity snapshot and assigned color within a game                         |
+| Move Record          | An accepted move and its ordered notation, resulting state, and relevant clock data                  |
+| Game Clock           | The authoritative time state for both players                                                        |
+| Draw Offer           | A pending, accepted, rejected, or superseded draw proposal                                           |
+| Archived Game        | Public read projection of a terminal authoritative game                                              |
+| Replay               | Read-only reconstruction of a game over its ordered move history                                     |
+| Imported Game        | Validated, private, non-persisted PGN representation                                                 |
 
 ## Aggregates
 
@@ -334,14 +334,14 @@ Standard-chess behavior initially follows the [FIDE Laws of Chess effective from
 
 ## Approval
 
-| Role | Name | Decision | Date |
-|---|---|---|---|
-| Project owner | Yasmany | Accepted | 2026-08-18 |
-| AI collaborator | Codex | Interviewed, verified, and drafted | 2026-08-18 |
+| Role            | Name    | Decision                           | Date       |
+| --------------- | ------- | ---------------------------------- | ---------- |
+| Project owner   | Yasmany | Accepted                           | 2026-08-18 |
+| AI collaborator | Codex   | Interviewed, verified, and drafted | 2026-08-18 |
 
 ## Revision History
 
-| Version | Date | Change | Decision owner |
-|---|---|---|---|
-| 0.1 | 2026-08-18 | Domain-model elicitation opened. | Yasmany |
-| 1.0 | 2026-08-18 | Language, aggregates, invariants, lifecycles, commands, events, rules correction, and consolidated view accepted. | Yasmany |
+| Version | Date       | Change                                                                                                            | Decision owner |
+| ------- | ---------- | ----------------------------------------------------------------------------------------------------------------- | -------------- |
+| 0.1     | 2026-08-18 | Domain-model elicitation opened.                                                                                  | Yasmany        |
+| 1.0     | 2026-08-18 | Language, aggregates, invariants, lifecycles, commands, events, rules correction, and consolidated view accepted. | Yasmany        |

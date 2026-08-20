@@ -8,8 +8,30 @@ body {
   margin: 0;
 }
 
-main {
-  max-width: 60rem;
+main,
+.site-header {
+  max-width: 72rem;
   margin: 0 auto;
-  padding: 3rem 1.5rem;
+  padding: 1rem 1.5rem;
+}
+
+main {
+  padding-top: 2rem;
+}
+
+.site-header {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
 }

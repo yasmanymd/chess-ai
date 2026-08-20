@@ -2,15 +2,15 @@
 
 ## Session Metadata
 
-| Field | Value |
-|---|---|
-| Date | YYYY-MM-DD |
-| Status | In Progress / Completed |
-| Human participants | |
-| AI models and agents | |
-| Tools | |
-| Working language | |
-| Artifact language | English |
+| Field                | Value                   |
+| -------------------- | ----------------------- |
+| Date                 | YYYY-MM-DD              |
+| Status               | In Progress / Completed |
+| Human participants   |                         |
+| AI models and agents |                         |
+| Tools                |                         |
+| Working language     |                         |
+| Artifact language    | English                 |
 
 ## Objective
 
@@ -24,8 +24,8 @@
 
 ## Decisions
 
-| ID | Decision | Owner | Status |
-|---|---|---|---|
+| ID  | Decision | Owner | Status |
+| --- | -------- | ----- | ------ |
 
 ## Rejected Proposals
 
@@ -46,4 +46,3 @@
 ## Open Questions
 
 ## Next Step
-

@@ -1,11 +1,11 @@
 # EXP-0001: Durable Move Confirmation
 
-| Field | Value |
-|---|---|
-| Status | Planned |
-| Owner | AI implementation team |
-| Decision owner | Yasmany |
-| Related decision | ADR-0001 |
+| Field            | Value                  |
+| ---------------- | ---------------------- |
+| Status           | Planned                |
+| Owner            | AI implementation team |
+| Decision owner   | Yasmany                |
+| Related decision | ADR-0001               |
 
 ## Hypothesis
 
@@ -20,4 +20,3 @@ The selected modular-monolith stack can validate, serialize, persist, and acknow
 ## Pending Detail
 
 Method, environment, and evidence format will be refined after stack and persistence selection.
-

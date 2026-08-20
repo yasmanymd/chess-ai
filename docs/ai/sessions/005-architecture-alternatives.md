@@ -2,14 +2,14 @@
 
 ## Session Metadata
 
-| Field | Value |
-|---|---|
-| Date | 2026-08-17 |
-| Status | Completed |
-| Human participant | Yasmany |
-| AI collaborator | Codex |
-| Working language | Spanish |
-| Artifact language | English |
+| Field             | Value      |
+| ----------------- | ---------- |
+| Date              | 2026-08-17 |
+| Status            | Completed  |
+| Human participant | Yasmany    |
+| AI collaborator   | Codex      |
+| Working language  | Spanish    |
+| Artifact language | English    |
 
 ## Objective
 
@@ -32,18 +32,18 @@ The MVP requires server-authoritative chess, durable confirmation, reconnectable
 
 ## Decisions
 
-| ID | Decision | Owner | Status |
-|---|---|---|---|
-| S005-D01 | Evaluate a modular monolith, modular core with separate real-time gateway, microservices, and managed serverless/event-driven architecture. | Yasmany | Accepted |
-| S005-D02 | A responsive web client and all accepted product obligations are common to every candidate. | Yasmany | Accepted |
-| S005-D03 | Weighted criteria use the accepted 20/18/17/15/12/7/6/5 distribution and a one-to-five fit scale. | Yasmany | Accepted |
-| S005-D04 | Server authority, zero confirmed-move loss, recovery, complete chess rules, session security, three languages, WCAG 2.2 AA, initial capacity, and reproducible verification are mandatory gates. | Yasmany | Accepted |
-| S005-D05 | The documented scores and rationale for the four candidates are accepted as the architecture-style evaluation result. | Yasmany | Accepted |
-| S005-D06 | Five experiments will validate durable confirmation, initial real-time capacity, restart recovery, chess-library isolation, and reproducible local development. | Yasmany | Accepted |
-| S005-D07 | Adopt a modular monolith as the initial MVP backend architecture, subject to the five mandatory validation experiments. | Yasmany | Accepted |
+| ID       | Decision                                                                                                                                                                                                | Owner   | Status   |
+| -------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------- | -------- |
+| S005-D01 | Evaluate a modular monolith, modular core with separate real-time gateway, microservices, and managed serverless/event-driven architecture.                                                             | Yasmany | Accepted |
+| S005-D02 | A responsive web client and all accepted product obligations are common to every candidate.                                                                                                             | Yasmany | Accepted |
+| S005-D03 | Weighted criteria use the accepted 20/18/17/15/12/7/6/5 distribution and a one-to-five fit scale.                                                                                                       | Yasmany | Accepted |
+| S005-D04 | Server authority, zero confirmed-move loss, recovery, complete chess rules, session security, three languages, WCAG 2.2 AA, initial capacity, and reproducible verification are mandatory gates.        | Yasmany | Accepted |
+| S005-D05 | The documented scores and rationale for the four candidates are accepted as the architecture-style evaluation result.                                                                                   | Yasmany | Accepted |
+| S005-D06 | Five experiments will validate durable confirmation, initial real-time capacity, restart recovery, chess-library isolation, and reproducible local development.                                         | Yasmany | Accepted |
+| S005-D07 | Adopt a modular monolith as the initial MVP backend architecture, subject to the five mandatory validation experiments.                                                                                 | Yasmany | Accepted |
 | S005-D08 | Use one backend deployable, explicit modules, central authoritative transactions, one primary transactional store, a separate web client, and adapters for chess, persistence, time, and communication. | Yasmany | Accepted |
-| S005-D09 | A separately deployable real-time gateway is the first extraction candidate if future evidence justifies it. | Yasmany | Accepted |
-| S005-D10 | Architecture Alternatives version 1.0 and ADR-0001 are accepted. | Yasmany | Accepted |
+| S005-D09 | A separately deployable real-time gateway is the first extraction candidate if future evidence justifies it.                                                                                            | Yasmany | Accepted |
+| S005-D10 | Architecture Alternatives version 1.0 and ADR-0001 are accepted.                                                                                                                                        | Yasmany | Accepted |
 
 No architecture alternative has been selected. The preliminary modular-monolith recommendation remains an unverified hypothesis.
 
