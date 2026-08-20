@@ -1,0 +1,26 @@
+{
+  "name": "chess-ai",
+  "private": true,
+  "packageManager": "pnpm@11.22.0",
+  "engines": { "node": "24.16.0", "pnpm": "11.22.0" },
+  "scripts": {
+    "dev": "docker compose up --build",
+    "down": "docker compose down",
+    "logs": "docker compose logs -f",
+    "reset": "docker compose down --volumes --remove-orphans",
+    "build": "turbo run build",
+    "test": "turbo run test",
+    "test:integration": "turbo run test:integration",
+    "test:e2e": "turbo run test:e2e",
+    "lint": "turbo run lint",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "typecheck": "turbo run typecheck",
+    "architecture": "depcruise --config .dependency-cruiser.cjs apps packages"
+  },
+  "devDependencies": {
+    "dependency-cruiser": "18.2.0",
+    "prettier": "3.9.6",
+    "turbo": "2.10.11"
+  }
+}

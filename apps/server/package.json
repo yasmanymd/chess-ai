@@ -1,0 +1,35 @@
+{
+  "name": "@chess-ai/server",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "tsx watch --clear-screen=false src/main.ts",
+    "build": "tsc -p tsconfig.json",
+    "test": "vitest run --passWithNoTests",
+    "test:integration": "vitest run --passWithNoTests",
+    "lint": "eslint src --max-warnings=0",
+    "typecheck": "tsc --noEmit -p tsconfig.json",
+    "migration:up": "tsx src/infrastructure/database/migrate.ts"
+  },
+  "dependencies": {
+    "@nestjs/common": "11.2.1",
+    "@nestjs/core": "11.2.1",
+    "@nestjs/platform-fastify": "11.2.1",
+    "@nestjs/platform-socket.io": "11.2.1",
+    "@nestjs/websockets": "11.2.1",
+    "fastify": "5.12.1",
+    "kysely": "0.29.5",
+    "pg": "8.23.0",
+    "pino": "10.3.1",
+    "reflect-metadata": "0.2.2",
+    "socket.io": "4.8.3",
+    "zod": "4.4.3"
+  },
+  "devDependencies": {
+    "@types/node": "26.2.0",
+    "@types/pg": "8.23.1",
+    "tsx": "4.23.12",
+    "typescript": "7.0.2",
+    "vitest": "4.1.11"
+  }
+}
