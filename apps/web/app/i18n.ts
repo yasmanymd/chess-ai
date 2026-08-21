@@ -45,6 +45,13 @@ const resources = {
       nameRequired: 'Enter a visible name to continue.',
       prototypeNotice:
         'This is a visual prototype. Multiplayer actions will be connected in the next product slice.',
+      errorEyebrow: 'A safe place to return to',
+      errorTitle: 'This page is unavailable.',
+      errorDescription:
+        'The page may have moved, or something unexpected happened. Your game data is safe.',
+      errorReferenceLabel: 'Reference',
+      returnHome: 'Return to home',
+      connectionUnavailable: 'Connection is temporarily unavailable. We will keep trying.',
     },
   },
   es: {
@@ -79,6 +86,13 @@ const resources = {
       nameRequired: 'Escribe un nombre visible para continuar.',
       prototypeNotice:
         'Este es un prototipo visual. Las acciones multijugador se conectarán en el próximo incremento del producto.',
+      errorEyebrow: 'Un lugar seguro al que volver',
+      errorTitle: 'Esta página no está disponible.',
+      errorDescription:
+        'Es posible que la página haya cambiado o que haya ocurrido algo inesperado. Tus datos de juego están seguros.',
+      errorReferenceLabel: 'Referencia',
+      returnHome: 'Volver al inicio',
+      connectionUnavailable: 'La conexión no está disponible temporalmente. Seguiremos intentando.',
     },
   },
   fr: {
@@ -114,11 +128,19 @@ const resources = {
       nameRequired: 'Saisissez un nom visible pour continuer.',
       prototypeNotice:
         'Ceci est un prototype visuel. Les actions multijoueurs seront connectées dans la prochaine étape du produit.',
+      errorEyebrow: 'Un endroit sûr où revenir',
+      errorTitle: 'Cette page est indisponible.',
+      errorDescription:
+        'La page a peut-être changé, ou un problème inattendu est survenu. Vos données de jeu sont en sécurité.',
+      errorReferenceLabel: 'Référence',
+      returnHome: 'Retour à l’accueil',
+      connectionUnavailable:
+        'La connexion est temporairement indisponible. Nous continuons à essayer.',
     },
   },
 };
 
-void i18n
+export const i18nReady = i18n
   .use(LanguageDetector)
   .use(initReactI18next)
   .init({
