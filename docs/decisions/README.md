@@ -47,5 +47,6 @@ ADR-NNNN-short-kebab-case-title.md
 | [ADR-0010](ADR-0010-adopt-a-container-first-monorepo.md)                 | Adopt a Container-First Monorepo               | Accepted, subject to repository validation |
 | [ADR-0011](ADR-0011-adopt-web-internationalization-with-i18next.md)      | Adopt Web Internationalization with i18next    | Accepted, subject to repository validation |
 | [ADR-0012](ADR-0012-establish-mvp-observability-baseline.md)             | Establish the MVP Observability Baseline       | Accepted, subject to repository validation |
+| [ADR-0013](ADR-0013-adopt-a-themeable-design-system.md)                  | Adopt a Themeable Design System                | Accepted                                   |
 
 Use [`../templates/adr-template.md`](../templates/adr-template.md).

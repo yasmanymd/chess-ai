@@ -10,6 +10,7 @@ This directory is the source of truth for product, architecture, planning, and A
 | [`product/`](product/)           | Vision, scope, requirements, and product decisions              | Started        |
 | [`architecture/`](architecture/) | System context, domain model, quality attributes, and diagrams  | Pending        |
 | [`decisions/`](decisions/)       | Architecture Decision Records                                   | Template ready |
+| [`design/`](design/)             | Visual system and interaction design briefs                     | Started        |
 | [`planning/`](planning/)         | Roadmap, milestones, backlog, risks, and status                 | Pending        |
 | [`reference/`](reference/)       | Analysis of predecessor systems and external references         | Started        |
 | [`templates/`](templates/)       | Reusable documentation templates                                | Ready          |
