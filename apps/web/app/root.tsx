@@ -10,18 +10,11 @@ import {
 } from 'react-router';
 import { useTranslation } from 'react-i18next';
 import i18n, { languageLabels, supportedLanguages, type SupportedLanguage } from './i18n.js';
+import { isApplicationReady } from './readiness.server.js';
 import './styles.css';
 
 export async function loader() {
-  try {
-    const response = await fetch(process.env.API_INTERNAL_URL ?? 'http://server:3000/ready', {
-      signal: AbortSignal.timeout(5_000),
-    });
-
-    return { applicationReady: response.ok };
-  } catch {
-    return { applicationReady: false };
-  }
+  return { applicationReady: await isApplicationReady() };
 }
 
 export function Layout({ children }: { children: React.ReactNode }) {

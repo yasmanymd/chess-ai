@@ -26,6 +26,24 @@ fastify.addHook(
   },
 );
 
+fastify.addHook('onResponse', async (request, reply) => {
+  const context = {
+    requestId: request.id,
+    method: request.method,
+    route: request.routeOptions.url ?? 'unmatched',
+    statusCode: reply.statusCode,
+    durationMs: Math.round(reply.elapsedTime),
+  };
+
+  if (reply.statusCode >= 500) {
+    logger.error(context, 'HTTP request completed');
+  } else if (reply.statusCode >= 400) {
+    logger.warn(context, 'HTTP request completed');
+  } else {
+    logger.info(context, 'HTTP request completed');
+  }
+});
+
 fastify.get('/health', async () => ({ status: 'ok' }));
 fastify.get('/ready', async (_request: unknown, reply: { code: (status: number) => unknown }) => {
   try {

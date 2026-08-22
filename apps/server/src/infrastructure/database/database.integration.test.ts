@@ -1,9 +1,9 @@
-import { PostgreSqlContainer } from '@testcontainers/postgresql';
+import { PostgreSqlContainer, type StartedPostgreSqlContainer } from '@testcontainers/postgresql';
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 import { createDatabase, verifyDatabase, type DatabaseSchema } from './database.js';
 import type { Kysely } from 'kysely';
 
-let container: PostgreSqlContainer;
+let container: StartedPostgreSqlContainer;
 let database: Kysely<DatabaseSchema>;
 
 describe('database integration', () => {
