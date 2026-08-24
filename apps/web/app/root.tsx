@@ -161,6 +161,10 @@ export default function App() {
 
 export function ErrorBoundary() {
   const { t } = useTranslation();
+  const translated = (key: string, fallback: string) => {
+    const value = t(key);
+    return value === key ? fallback : value;
+  };
   const error = useRouteError();
   const reference =
     typeof error === 'object' && error !== null && 'status' in error
@@ -170,15 +174,20 @@ export function ErrorBoundary() {
   return (
     <main className="error-page" id="main-content">
       <p className="eyebrow">
-        <span aria-hidden="true">✦</span> {t('errorEyebrow')}
+        <span aria-hidden="true">✦</span> {translated('errorEyebrow', 'A safe place to return to')}
       </p>
-      <h1>{t('errorTitle')}</h1>
-      <p>{t('errorDescription')}</p>
+      <h1>{translated('errorTitle', 'This page is unavailable.')}</h1>
+      <p>
+        {translated(
+          'errorDescription',
+          'The page may have moved, or something unexpected happened. Your game data is safe.',
+        )}
+      </p>
       <p className="error-reference">
-        {t('errorReferenceLabel')}: <code>{reference}</code>
+        {translated('errorReferenceLabel', 'Reference')}: <code>{reference}</code>
       </p>
       <a className="button button-primary" href="/">
-        {t('returnHome')}
+        {translated('returnHome', 'Return to home')}
       </a>
     </main>
   );
