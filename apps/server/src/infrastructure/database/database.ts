@@ -27,6 +27,24 @@ export interface ActiveGamesTable {
   black_identity_id: string;
   time_control: string;
   status: 'active';
+  current_fen: string;
+  side_to_move: 'white' | 'black';
+  version: number;
+  created_at: Generated<Date>;
+}
+
+export interface GameMovesTable {
+  id: string;
+  game_id: string;
+  sequence: number;
+  command_id: string;
+  player_identity_id: string;
+  from_square: string;
+  to_square: string;
+  promotion: 'queen' | 'rook' | 'bishop' | 'knight' | null;
+  san: string;
+  fen_before: string;
+  fen_after: string;
   created_at: Generated<Date>;
 }
 
@@ -34,6 +52,7 @@ export interface DatabaseSchema {
   temporary_identities: TemporaryIdentitiesTable;
   waiting_games: WaitingGamesTable;
   active_games: ActiveGamesTable;
+  game_moves: GameMovesTable;
 }
 
 export function createDatabase(connectionString: string): Kysely<DatabaseSchema> {

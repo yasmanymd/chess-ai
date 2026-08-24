@@ -2,7 +2,10 @@ import 'reflect-metadata';
 import { NestFactory } from '@nestjs/core';
 import { FastifyAdapter, type NestFastifyApplication } from '@nestjs/platform-fastify';
 import pino from 'pino';
+import { z } from 'zod';
 import { AppModule } from './app.module.js';
+import { submitAuthoritativeMove } from './game/application/submit-authoritative-move.js';
+import { ChessJsRulesAdapter } from './game/infrastructure/chess-js-rules-adapter.js';
 import { BootstrapGateway } from './infrastructure/realtime/bootstrap.gateway.js';
 import { createDatabase, verifyDatabase } from './infrastructure/database/database.js';
 import { joinWaitingGame } from './lobby/join-waiting-game.js';
@@ -26,6 +29,7 @@ if (!connectionString) {
 
 const logger = pino({ level: process.env.LOG_LEVEL ?? 'info' });
 const database = createDatabase(connectionString);
+const chessRules = new ChessJsRulesAdapter();
 const app = await NestFactory.create<NestFastifyApplication>(AppModule, new FastifyAdapter(), {
   logger: false,
 });
@@ -233,7 +237,7 @@ fastify.post('/lobby/waiting-games/:gameId/join', async (request, reply) => {
   if (alreadyInGame || ownWaitingGame) {
     return reply.code(409).send({ error: { code: 'IDENTITY_ALREADY_IN_GAME' } });
   }
-  const result = await joinWaitingGame(database, gameId, identity.id);
+  const result = await joinWaitingGame(database, chessRules, gameId, identity.id);
   if (!result.accepted) {
     return reply.code(409).send({ error: { code: result.code } });
   }
@@ -269,6 +273,9 @@ fastify.get('/games/:gameId', async (request, reply) => {
       'active_games.id',
       'active_games.time_control',
       'active_games.status',
+      'active_games.current_fen',
+      'active_games.side_to_move',
+      'active_games.version',
       'active_games.white_identity_id',
       'active_games.black_identity_id',
       'white_player.display_name as whiteDisplayName',
@@ -279,7 +286,53 @@ fastify.get('/games/:gameId', async (request, reply) => {
   if (!game || (game.white_identity_id !== identity.id && game.black_identity_id !== identity.id)) {
     return reply.code(404).send({ error: { code: 'GAME_NOT_FOUND' } });
   }
-  return { game };
+  const moves = await database
+    .selectFrom('game_moves')
+    .select(['sequence', 'from_square', 'to_square', 'promotion', 'san', 'created_at'])
+    .where('game_id', '=', game.id)
+    .orderBy('sequence', 'asc')
+    .execute();
+  return { game, moves };
+});
+const moveCommandSchema = z.object({
+  commandId: z.uuid(),
+  expectedVersion: z.number().int().nonnegative(),
+  from: z.string().regex(/^[a-h][1-8]$/),
+  to: z.string().regex(/^[a-h][1-8]$/),
+  promotion: z.enum(['queen', 'rook', 'bishop', 'knight']).optional(),
+});
+fastify.post('/games/:gameId/moves', async (request, reply) => {
+  const identity = await resumeTemporaryIdentity(
+    database,
+    readTemporarySessionCookie(request.headers.cookie),
+  );
+  if (!identity) {
+    return reply.code(401).send({ error: { code: 'TEMPORARY_IDENTITY_REQUIRED' } });
+  }
+  const body = moveCommandSchema.safeParse(request.body);
+  if (!body.success) {
+    return reply.code(400).send({ error: { code: 'MOVE_INVALID' } });
+  }
+  const gameId = Object.values(request.params as Record<string, string>)[0];
+  const result = await submitAuthoritativeMove(database, chessRules, {
+    gameId: gameId ?? '',
+    identityId: identity.id,
+    ...body.data,
+  });
+  if (!result.accepted) {
+    const status =
+      result.code === 'GAME_NOT_FOUND'
+        ? 404
+        : result.code === 'MOVE_ILLEGAL' || result.code === 'MOVE_NOT_YOUR_TURN'
+          ? 422
+          : 409;
+    return reply.code(status).send({ error: { code: result.code } });
+  }
+  notifications.gameUpdated(
+    [result.game.white_identity_id, result.game.black_identity_id],
+    result.game.id,
+  );
+  return reply.code(201).send({ game: result.game, move: result.move });
 });
 fastify.get('/games/current', async (request, reply) => {
   const identity = await resumeTemporaryIdentity(

@@ -1,6 +1,7 @@
 import { randomInt, randomUUID } from 'node:crypto';
 import type { Kysely } from 'kysely';
 import type { DatabaseSchema } from '../infrastructure/database/database.js';
+import type { ChessRulesPort } from '../game/domain/chess-rules-port.js';
 
 type ActiveGame = {
   id: string;
@@ -17,6 +18,7 @@ export type JoinWaitingGameResult =
 
 export async function joinWaitingGame(
   database: Kysely<DatabaseSchema>,
+  rules: ChessRulesPort,
   gameId: string,
   opponentId: string,
 ): Promise<JoinWaitingGameResult> {
@@ -51,6 +53,9 @@ export async function joinWaitingGame(
         black_identity_id: blackIdentityId,
         time_control: waiting.time_control,
         status: 'active',
+        current_fen: rules.initialPosition().fen,
+        side_to_move: 'white',
+        version: 0,
       })
       .returningAll()
       .executeTakeFirstOrThrow();

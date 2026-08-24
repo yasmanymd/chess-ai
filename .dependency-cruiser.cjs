@@ -16,6 +16,17 @@ module.exports = {
       from: { path: '^apps/web' },
       to: { path: '^apps/server' },
     },
+    {
+      name: 'chess-library-must-stay-behind-rules-adapter',
+      comment:
+        'Domain, delivery, and persistence use ChessRulesPort rather than chess.js types or APIs.',
+      severity: 'error',
+      from: {
+        path: '^apps/server/src',
+        pathNot: '^apps/server/src/game/infrastructure/chess-js-rules-adapter\\.ts$',
+      },
+      to: { dependencyTypes: ['npm'], path: '^chess\\.js$' },
+    },
   ],
   options: {
     doNotFollow: { path: 'node_modules' },

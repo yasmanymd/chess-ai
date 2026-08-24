@@ -29,8 +29,15 @@ export class BootstrapGateway {
     await client.join(`identity:${identity.id}`);
   }
 
-  lobbyChanged(): void { this.server.emit('lobby.changed'); }
+  lobbyChanged(): void {
+    this.server.emit('lobby.changed');
+  }
   gameStarted(identityIds: string[], gameId: string): void {
-    for (const identityId of identityIds) this.server.to(`identity:${identityId}`).emit('game.started', { gameId });
+    for (const identityId of identityIds)
+      this.server.to(`identity:${identityId}`).emit('game.started', { gameId });
+  }
+  gameUpdated(identityIds: string[], gameId: string): void {
+    for (const identityId of identityIds)
+      this.server.to(`identity:${identityId}`).emit('game.updated', { gameId });
   }
 }
