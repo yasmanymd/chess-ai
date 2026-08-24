@@ -37,6 +37,8 @@ services:
       DATABASE_URL: postgresql://${POSTGRES_USER:-chess_ai}:${POSTGRES_PASSWORD:-change-me-for-local-use}@postgres:5432/${POSTGRES_DB:-chess_ai}
       SERVER_PORT: 3000
       LOG_LEVEL: ${LOG_LEVEL:-info}
+      WEB_ORIGINS: ${WEB_ORIGINS:-http://localhost:5173,http://127.0.0.1:5173,http://192.168.0.12:5173}
+      SESSION_COOKIE_SECURE: ${SESSION_COOKIE_SECURE:-false}
     depends_on:
       migrate:
         condition: service_completed_successfully

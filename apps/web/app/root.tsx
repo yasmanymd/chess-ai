@@ -114,7 +114,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
             <span>Chess AI</span>
           </a>
           <div className="header-controls">
-            <form action="/" className="language-selector" method="get">
+            <form action={location.pathname} className="language-selector" method="get">
               {new URLSearchParams(location.search).get('intent') ? (
                 <input
                   name="intent"

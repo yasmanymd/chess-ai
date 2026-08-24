@@ -1,4 +1,4 @@
-import { FormEvent, useState } from 'react';
+import { useState } from 'react';
 import { useLocation } from 'react-router';
 import { useTranslation } from 'react-i18next';
 
@@ -28,11 +28,7 @@ export default function Home() {
   const location = useLocation();
   const intent = readPlayerIntent(location.search);
   const [visibleName, setVisibleName] = useState('');
-  const [nameError, setNameError] = useState(false);
-  const handleNameSubmit = (event: FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    setNameError(visibleName.trim().length === 0);
-  };
+  const identityError = new URLSearchParams(location.search).get('identityError');
 
   return (
     <main id="main-content" className="home-page">
@@ -120,22 +116,23 @@ export default function Home() {
             </p>
             <h2 id="name-dialog-title">{t('nameDialogTitle')}</h2>
             <p id="name-dialog-description">{t('nameDialogDescription')}</p>
-            <form onSubmit={handleNameSubmit}>
+            <form action="/identity" method="post">
               <label htmlFor="visible-name">{t('nameLabel')}</label>
               <input
-                aria-describedby={nameError ? 'visible-name-error' : undefined}
-                aria-invalid={nameError}
+                aria-describedby={identityError ? 'visible-name-error' : undefined}
+                aria-invalid={Boolean(identityError)}
                 autoFocus
                 id="visible-name"
+                name="displayName"
                 maxLength={32}
                 onChange={(event) => setVisibleName(event.target.value)}
                 placeholder={t('namePlaceholder')}
                 required
                 value={visibleName}
               />
-              {nameError ? (
+              {identityError ? (
                 <p id="visible-name-error" className="field-error">
-                  {t('nameRequired')}
+                  {t(identityError === 'DISPLAY_NAME_UNAVAILABLE' ? 'nameUnavailable' : 'nameRequired')}
                 </p>
               ) : null}
               <div className="dialog-actions">
