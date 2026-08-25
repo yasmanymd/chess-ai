@@ -2,12 +2,12 @@ import { useState } from 'react';
 import { useLocation } from 'react-router';
 import { useTranslation } from 'react-i18next';
 
-type PlayerIntent = 'create' | 'browse' | null;
+type PlayerIntent = 'create' | 'browse' | 'recover' | null;
 const boardSquares = Array.from({ length: 64 }, (_, index) => index);
 
 function readPlayerIntent(search: string): PlayerIntent {
   const intent = new URLSearchParams(search).get('intent');
-  return intent === 'create' || intent === 'browse' ? intent : null;
+  return intent === 'create' || intent === 'browse' || intent === 'recover' ? intent : null;
 }
 
 function buildHomeHref(intent: PlayerIntent, search: string): string {
@@ -50,6 +50,9 @@ export default function Home() {
             </a>
           </div>
           <p className="prototype-notice">{t('prototypeNotice')}</p>
+          <a className="text-link" href={buildHomeHref('recover', location.search)}>
+            {t('recoverIdentity')}
+          </a>
         </div>
         <div className="board-area">
           <div className="board-orbit board-orbit-one" aria-hidden="true" />
@@ -114,9 +117,14 @@ export default function Home() {
             <p className="dialog-symbol" aria-hidden="true">
               ♞
             </p>
-            <h2 id="name-dialog-title">{t('nameDialogTitle')}</h2>
-            <p id="name-dialog-description">{t('nameDialogDescription')}</p>
+            <h2 id="name-dialog-title">
+              {intent === 'recover' ? t('recoveryDialogTitle') : t('nameDialogTitle')}
+            </h2>
+            <p id="name-dialog-description">
+              {intent === 'recover' ? t('recoveryDialogDescription') : t('nameDialogDescription')}
+            </p>
             <form action="/identity" method="post">
+              <input name="mode" type="hidden" value={intent === 'recover' ? 'recover' : 'claim'} />
               <label htmlFor="visible-name">{t('nameLabel')}</label>
               <input
                 aria-describedby={identityError ? 'visible-name-error' : undefined}
@@ -130,9 +138,27 @@ export default function Home() {
                 required
                 value={visibleName}
               />
+              {intent === 'recover' ? (
+                <>
+                  <label htmlFor="recovery-code">{t('recoveryCodeLabel')}</label>
+                  <input
+                    autoComplete="off"
+                    id="recovery-code"
+                    name="recoveryCode"
+                    placeholder={t('recoveryCodePlaceholder')}
+                    required
+                  />
+                </>
+              ) : null}
               {identityError ? (
                 <p id="visible-name-error" className="field-error">
-                  {t(identityError === 'DISPLAY_NAME_UNAVAILABLE' ? 'nameUnavailable' : 'nameRequired')}
+                  {t(
+                    identityError === 'DISPLAY_NAME_UNAVAILABLE'
+                      ? 'nameUnavailable'
+                      : identityError === 'RECOVERY_CODE_INVALID'
+                        ? 'recoveryCodeInvalid'
+                        : 'nameRequired',
+                  )}
                 </p>
               ) : null}
               <div className="dialog-actions">
@@ -140,9 +166,11 @@ export default function Home() {
                   {t('cancel')}
                 </a>
                 <button className="button button-primary" type="submit">
-                  {intent === 'create'
-                    ? t('createGameWithName', { name: visibleName || '…' })
-                    : t('browseGamesWithName', { name: visibleName || '…' })}
+                  {intent === 'recover'
+                    ? t('recoverSession')
+                    : intent === 'create'
+                      ? t('createGameWithName', { name: visibleName || '…' })
+                      : t('browseGamesWithName', { name: visibleName || '…' })}
                 </button>
               </div>
             </form>

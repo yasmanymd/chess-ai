@@ -13,6 +13,14 @@ function serverHeaders(request: Request): HeadersInit {
   return request.headers.get('cookie') ? { cookie: request.headers.get('cookie')! } : {};
 }
 
+function readCookie(header: string | null, name: string): string | undefined {
+  const item = header
+    ?.split(';')
+    .map((value) => value.trim())
+    .find((value) => value.startsWith(`${name}=`));
+  return item ? decodeURIComponent(item.slice(name.length + 1)) : undefined;
+}
+
 async function errorRedirect(response: Response): Promise<Response> {
   const body = (await response.json().catch(() => null)) as { error?: { code?: string } } | null;
   const code = body?.error?.code ?? 'LOBBY_ACTION_FAILED';
@@ -30,7 +38,11 @@ export async function loader({ request }: { request: Request }) {
     identity: { id: string; displayName: string };
   };
   const lobby = (await gamesResponse.json()) as { games: WaitingGame[] };
-  return { identity: identity.identity, games: lobby.games };
+  return {
+    identity: identity.identity,
+    games: lobby.games,
+    recoveryCode: readCookie(request.headers.get('cookie'), 'chess_ai_recovery_notice'),
+  };
 }
 
 export async function action({ request }: { request: Request }) {
@@ -75,7 +87,7 @@ export async function action({ request }: { request: Request }) {
 
 export default function Lobby() {
   const { t } = useTranslation();
-  const { identity, games } = useLoaderData<typeof loader>();
+  const { identity, games, recoveryCode } = useLoaderData<typeof loader>();
   const query = new URLSearchParams(typeof window === 'undefined' ? '' : window.location.search);
   const ownGame = games.find((game) => game.creatorDisplayName === identity.displayName);
   const visibleGames = games.filter((game) => game.creatorDisplayName !== identity.displayName);
@@ -111,6 +123,13 @@ export default function Lobby() {
               : 'waitingGameCreated',
           )}
         </p>
+      ) : null}
+      {recoveryCode ? (
+        <aside className="recovery-notice" role="status">
+          <strong>{t('recoveryCodeTitle')}</strong>
+          <p>{t('recoveryCodeDescription')}</p>
+          <code>{recoveryCode}</code>
+        </aside>
       ) : null}
       {query.get('error') ? (
         <p className="field-error" role="alert">

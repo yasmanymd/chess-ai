@@ -1,4 +1,4 @@
-import { Generated, Kysely, PostgresDialect, sql } from 'kysely';
+import { ColumnType, Generated, Kysely, PostgresDialect, sql } from 'kysely';
 import { Pool } from 'pg';
 
 export interface TemporaryIdentitiesTable {
@@ -6,6 +6,7 @@ export interface TemporaryIdentitiesTable {
   display_name: string;
   normalized_name: string;
   session_digest: string;
+  recovery_digest: ColumnType<string | null, string | null | undefined, string | null>;
   status: 'lobby';
   created_at: Generated<Date>;
   updated_at: Generated<Date>;

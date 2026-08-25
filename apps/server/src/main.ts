@@ -10,6 +10,7 @@ import { BootstrapGateway } from './infrastructure/realtime/bootstrap.gateway.js
 import { createDatabase, verifyDatabase } from './infrastructure/database/database.js';
 import { joinWaitingGame } from './lobby/join-waiting-game.js';
 import { claimTemporaryIdentity } from './temporary-identity/application/claim-temporary-identity.js';
+import { recoverTemporaryIdentity } from './temporary-identity/application/recover-temporary-identity.js';
 import { resumeTemporaryIdentity } from './temporary-identity/application/resume-temporary-identity.js';
 import {
   buildTemporarySessionCookie,
@@ -88,7 +89,26 @@ fastify.post('/temporary-identities', async (request, reply) => {
   }
 
   reply.header('set-cookie', buildTemporarySessionCookie(result.sessionCredential));
-  return reply.code(201).send({ identity: result.identity });
+  return reply.code(201).send({ identity: result.identity, recoveryCode: result.recoveryCode });
+});
+fastify.post('/temporary-identities/recover', async (request, reply) => {
+  const body = request.body;
+  const displayName =
+    typeof body === 'object' && body !== null && 'displayName' in body && typeof body.displayName === 'string'
+      ? body.displayName
+      : '';
+  const recoveryCode =
+    typeof body === 'object' && body !== null && 'recoveryCode' in body && typeof body.recoveryCode === 'string'
+      ? body.recoveryCode
+      : '';
+  const result = await recoverTemporaryIdentity(database, displayName, recoveryCode);
+
+  if (!result.accepted) {
+    return reply.code(400).send({ error: { code: result.code } });
+  }
+
+  reply.header('set-cookie', buildTemporarySessionCookie(result.sessionCredential));
+  return { identity: result.identity };
 });
 fastify.get('/temporary-identities/me', async (request, reply) => {
   const identity = await resumeTemporaryIdentity(
@@ -293,6 +313,43 @@ fastify.get('/games/:gameId', async (request, reply) => {
     .orderBy('sequence', 'asc')
     .execute();
   return { game, moves };
+});
+fastify.get('/games/:gameId/legal-moves', async (request, reply) => {
+  const identity = await resumeTemporaryIdentity(
+    database,
+    readTemporarySessionCookie(request.headers.cookie),
+  );
+  if (!identity) {
+    return reply.code(401).send({ error: { code: 'TEMPORARY_IDENTITY_REQUIRED' } });
+  }
+  const gameId = Object.values(request.params as Record<string, string>)[0] ?? '';
+  const from =
+    typeof (request.query as Record<string, unknown>).from === 'string'
+      ? ((request.query as Record<string, string>).from ?? '')
+      : '';
+  if (!/^[a-h][1-8]$/.test(from)) {
+    return reply.code(400).send({ error: { code: 'MOVE_INVALID' } });
+  }
+  const game = await database
+    .selectFrom('active_games')
+    .select([
+      'id',
+      'current_fen',
+      'side_to_move',
+      'status',
+      'white_identity_id',
+      'black_identity_id',
+    ])
+    .where('id', '=', gameId)
+    .executeTakeFirst();
+  if (!game || (game.white_identity_id !== identity.id && game.black_identity_id !== identity.id)) {
+    return reply.code(404).send({ error: { code: 'GAME_NOT_FOUND' } });
+  }
+  const playerColor = game.white_identity_id === identity.id ? 'white' : 'black';
+  if (game.status !== 'active' || game.side_to_move !== playerColor) {
+    return { moves: [] };
+  }
+  return { moves: chessRules.legalMoves(game.current_fen, from) };
 });
 const moveCommandSchema = z.object({
   commandId: z.uuid(),

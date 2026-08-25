@@ -44,6 +44,17 @@ const resources = {
       browseGamesWithName: 'Browse games as {{name}}',
       nameRequired: 'Enter a visible name to continue.',
       nameUnavailable: 'That visible name is already in use.',
+      recoverIdentity: 'Recover a lost session',
+      recoveryDialogTitle: 'Recover your chess identity',
+      recoveryDialogDescription:
+        'Enter the visible name and recovery code that were shown when the identity was created.',
+      recoveryCodeLabel: 'Recovery code',
+      recoveryCodePlaceholder: 'ABCD-1234-…',
+      recoveryCodeInvalid: 'That name and recovery code do not match.',
+      recoverSession: 'Recover session',
+      recoveryCodeTitle: 'Save your recovery code',
+      recoveryCodeDescription:
+        'Keep this code somewhere safe. You need it to restore this identity after losing browser data.',
       lobbyEyebrow: 'Your chess space',
       lobbyTitle: 'Welcome to the lobby.',
       lobbyDescription: 'Set a table or join a player already waiting to make the first move.',
@@ -66,10 +77,13 @@ const resources = {
       waitingGameCreated: 'Your table is open. Share this lobby with another player.',
       waitingGameCancelled: 'Your table was cancelled.',
       lobbyActionFailed: 'That table is no longer available. Refresh and try again.',
-      'lobbyError.TEMPORARY_IDENTITY_REQUIRED': 'Your temporary session was not available. Return home and choose your name again.',
-      'lobbyError.IDENTITY_ALREADY_IN_GAME': 'You already have a table or an active game. Cancel it before joining another one.',
+      'lobbyError.TEMPORARY_IDENTITY_REQUIRED':
+        'Your temporary session was not available. Return home and choose your name again.',
+      'lobbyError.IDENTITY_ALREADY_IN_GAME':
+        'You already have a table or an active game. Cancel it before joining another one.',
       'lobbyError.WAITING_GAME_OWNED_BY_PLAYER': 'You cannot join your own table.',
-      'lobbyError.WAITING_GAME_UNAVAILABLE': 'That table is no longer available. Refresh and try again.',
+      'lobbyError.WAITING_GAME_UNAVAILABLE':
+        'That table is no longer available. Refresh and try again.',
       'lobbyError.LOBBY_ACTION_FAILED': 'We could not complete that request. Please try again.',
       yourOpenTable: 'Your open table',
       waitingForOpponent: 'Waiting for an opponent',
@@ -79,6 +93,16 @@ const resources = {
       boardWaiting: 'The authoritative chess board is the next milestone.',
       gameBoardNote:
         'Both players are now assigned. Moves will become available with the game engine.',
+      confirmedBoardNote: 'The board only changes after the server confirms a legal move.',
+      yourTurn: 'Your turn',
+      opponentTurn: 'Opponent to move',
+      moveHistory: 'Move history',
+      noMovesYet: 'No moves yet.',
+      'moveError.MOVE_ILLEGAL': 'That move is not legal in the confirmed position.',
+      'moveError.MOVE_NOT_YOUR_TURN': 'It is not your turn.',
+      'moveError.MOVE_STALE': 'The game changed. The board has been refreshed.',
+      'moveError.MOVE_COMMAND_DUPLICATE': 'That move was already received.',
+      'moveError.MOVE_FAILED': 'We could not submit that move. Please try again.',
       prototypeNotice:
         'This is a visual prototype. Multiplayer actions will be connected in the next product slice.',
       errorEyebrow: 'A safe place to return to',
@@ -121,6 +145,17 @@ const resources = {
       browseGamesWithName: 'Ver partidas como {{name}}',
       nameRequired: 'Escribe un nombre visible para continuar.',
       nameUnavailable: 'Ese nombre visible ya está en uso.',
+      recoverIdentity: 'Recuperar una sesión perdida',
+      recoveryDialogTitle: 'Recupera tu identidad de ajedrez',
+      recoveryDialogDescription:
+        'Escribe el nombre visible y el código de recuperación que se mostraron al crear la identidad.',
+      recoveryCodeLabel: 'Código de recuperación',
+      recoveryCodePlaceholder: 'ABCD-1234-…',
+      recoveryCodeInvalid: 'Ese nombre y código de recuperación no coinciden.',
+      recoverSession: 'Recuperar sesión',
+      recoveryCodeTitle: 'Guarda tu código de recuperación',
+      recoveryCodeDescription:
+        'Conserva este código en un lugar seguro. Lo necesitarás para restaurar esta identidad si se pierden los datos del navegador.',
       lobbyEyebrow: 'Tu espacio de ajedrez',
       lobbyTitle: 'Bienvenido al lobby.',
       lobbyDescription: 'Abre una mesa o únete a un jugador que ya espera su primera jugada.',
@@ -143,10 +178,13 @@ const resources = {
       waitingGameCreated: 'Tu mesa está abierta. Comparte este lobby con otro jugador.',
       waitingGameCancelled: 'Tu mesa fue cancelada.',
       lobbyActionFailed: 'Esa mesa ya no está disponible. Actualiza e inténtalo de nuevo.',
-      'lobbyError.TEMPORARY_IDENTITY_REQUIRED': 'Tu sesión temporal no está disponible. Vuelve al inicio y elige tu nombre de nuevo.',
-      'lobbyError.IDENTITY_ALREADY_IN_GAME': 'Ya tienes una mesa o una partida activa. Cancélala antes de unirte a otra.',
+      'lobbyError.TEMPORARY_IDENTITY_REQUIRED':
+        'Tu sesión temporal no está disponible. Vuelve al inicio y elige tu nombre de nuevo.',
+      'lobbyError.IDENTITY_ALREADY_IN_GAME':
+        'Ya tienes una mesa o una partida activa. Cancélala antes de unirte a otra.',
       'lobbyError.WAITING_GAME_OWNED_BY_PLAYER': 'No puedes unirte a tu propia mesa.',
-      'lobbyError.WAITING_GAME_UNAVAILABLE': 'Esa mesa ya no está disponible. Actualiza e inténtalo de nuevo.',
+      'lobbyError.WAITING_GAME_UNAVAILABLE':
+        'Esa mesa ya no está disponible. Actualiza e inténtalo de nuevo.',
       'lobbyError.LOBBY_ACTION_FAILED': 'No pudimos completar la solicitud. Inténtalo de nuevo.',
       yourOpenTable: 'Tu mesa abierta',
       waitingForOpponent: 'Esperando un oponente',
@@ -156,6 +194,17 @@ const resources = {
       boardWaiting: 'El tablero autoritativo llega en el próximo hito.',
       gameBoardNote:
         'Los dos jugadores ya están asignados. Las jugadas estarán disponibles con el motor.',
+      confirmedBoardNote:
+        'El tablero solo cambia después de que el servidor confirme una jugada legal.',
+      yourTurn: 'Tu turno',
+      opponentTurn: 'Turno del oponente',
+      moveHistory: 'Historial de jugadas',
+      noMovesYet: 'Aún no hay jugadas.',
+      'moveError.MOVE_ILLEGAL': 'Esa jugada no es legal en la posición confirmada.',
+      'moveError.MOVE_NOT_YOUR_TURN': 'No es tu turno.',
+      'moveError.MOVE_STALE': 'La partida cambió. El tablero se actualizó.',
+      'moveError.MOVE_COMMAND_DUPLICATE': 'Esa jugada ya fue recibida.',
+      'moveError.MOVE_FAILED': 'No pudimos enviar esa jugada. Inténtalo de nuevo.',
       prototypeNotice:
         'Este es un prototipo visual. Las acciones multijugador se conectarán en el próximo incremento del producto.',
       errorEyebrow: 'Un lugar seguro al que volver',
@@ -199,6 +248,17 @@ const resources = {
       browseGamesWithName: 'Voir les parties avec {{name}}',
       nameRequired: 'Saisissez un nom visible pour continuer.',
       nameUnavailable: 'Ce nom visible est déjà utilisé.',
+      recoverIdentity: 'Récupérer une session perdue',
+      recoveryDialogTitle: 'Récupérez votre identité d’échecs',
+      recoveryDialogDescription:
+        'Saisissez le nom visible et le code de récupération affichés lors de la création de l’identité.',
+      recoveryCodeLabel: 'Code de récupération',
+      recoveryCodePlaceholder: 'ABCD-1234-…',
+      recoveryCodeInvalid: 'Ce nom et ce code de récupération ne correspondent pas.',
+      recoverSession: 'Récupérer la session',
+      recoveryCodeTitle: 'Enregistrez votre code de récupération',
+      recoveryCodeDescription:
+        'Conservez ce code en lieu sûr. Vous en aurez besoin pour restaurer cette identité si les données du navigateur sont perdues.',
       lobbyEyebrow: 'Votre espace d’échecs',
       lobbyTitle: 'Bienvenue dans le lobby.',
       lobbyDescription: 'Ouvrez une table ou rejoignez un joueur qui attend déjà son premier coup.',
@@ -221,10 +281,13 @@ const resources = {
       waitingGameCreated: 'Votre table est ouverte. Partagez ce lobby avec un autre joueur.',
       waitingGameCancelled: 'Votre table a été annulée.',
       lobbyActionFailed: "Cette table n'est plus disponible. Actualisez et réessayez.",
-      'lobbyError.TEMPORARY_IDENTITY_REQUIRED': 'Votre session temporaire est indisponible. Retournez à l’accueil et choisissez un nom.',
-      'lobbyError.IDENTITY_ALREADY_IN_GAME': 'Vous avez déjà une table ou une partie active. Annulez-la avant de rejoindre une autre table.',
+      'lobbyError.TEMPORARY_IDENTITY_REQUIRED':
+        'Votre session temporaire est indisponible. Retournez à l’accueil et choisissez un nom.',
+      'lobbyError.IDENTITY_ALREADY_IN_GAME':
+        'Vous avez déjà une table ou une partie active. Annulez-la avant de rejoindre une autre table.',
       'lobbyError.WAITING_GAME_OWNED_BY_PLAYER': 'Vous ne pouvez pas rejoindre votre propre table.',
-      'lobbyError.WAITING_GAME_UNAVAILABLE': "Cette table n'est plus disponible. Actualisez et réessayez.",
+      'lobbyError.WAITING_GAME_UNAVAILABLE':
+        "Cette table n'est plus disponible. Actualisez et réessayez.",
       'lobbyError.LOBBY_ACTION_FAILED': 'Nous ne pouvons pas terminer cette demande. Réessayez.',
       yourOpenTable: 'Votre table ouverte',
       waitingForOpponent: "En attente d'un adversaire",
@@ -233,6 +296,17 @@ const resources = {
       yourGameIsReady: 'Votre partie est prête.',
       boardWaiting: "L'échiquier faisant autorité arrive au prochain jalon.",
       gameBoardNote: 'Les deux joueurs sont assignés. Les coups arriveront avec le moteur de jeu.',
+      confirmedBoardNote:
+        'L’échiquier ne change qu’après confirmation d’un coup légal par le serveur.',
+      yourTurn: 'À vous de jouer',
+      opponentTurn: 'Au tour de l’adversaire',
+      moveHistory: 'Historique des coups',
+      noMovesYet: 'Aucun coup pour le moment.',
+      'moveError.MOVE_ILLEGAL': 'Ce coup est illégal dans la position confirmée.',
+      'moveError.MOVE_NOT_YOUR_TURN': 'Ce n’est pas votre tour.',
+      'moveError.MOVE_STALE': 'La partie a changé. L’échiquier a été actualisé.',
+      'moveError.MOVE_COMMAND_DUPLICATE': 'Ce coup a déjà été reçu.',
+      'moveError.MOVE_FAILED': 'Nous ne pouvons pas envoyer ce coup. Réessayez.',
       prototypeNotice:
         'Ceci est un prototype visuel. Les actions multijoueurs seront connectées dans la prochaine étape du produit.',
       errorEyebrow: 'Un endroit sûr où revenir',

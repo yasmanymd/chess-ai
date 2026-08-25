@@ -21,6 +21,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
   const { t } = useTranslation();
   const { applicationReady } = useLoaderData<typeof loader>();
   const location = useLocation();
+  const isGameRoute = location.pathname.startsWith('/games/');
   const [isEnhanced, setIsEnhanced] = useState(false);
   const [connectionUnavailable, setConnectionUnavailable] = useState(!applicationReady);
   const requestedLanguage = new URLSearchParams(location.search).get('lang');
@@ -97,6 +98,11 @@ export function Layout({ children }: { children: React.ReactNode }) {
         <meta charSet="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <meta name="theme-color" content="#f5f1e9" />
+        {isGameRoute ? (
+          <noscript>
+            <meta httpEquiv="refresh" content="10" />
+          </noscript>
+        ) : null}
         <title>{t('title')}</title>
         <Links />
       </head>
