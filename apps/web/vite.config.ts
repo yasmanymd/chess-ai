@@ -11,5 +11,12 @@ export default defineConfig({
     hmr: {
       clientPort: 5173,
     },
+    proxy: {
+      '/socket.io': {
+        target: 'http://server:3000',
+        changeOrigin: true,
+        ws: true,
+      },
+    },
   },
 });
