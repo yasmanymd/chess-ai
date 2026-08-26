@@ -1,5 +1,7 @@
 const sessionCookieName = process.env.SESSION_COOKIE_NAME ?? 'chess_ai_session';
-const sessionCookieSecure = process.env.SESSION_COOKIE_SECURE !== 'false';
+const sessionCookieSecure =
+  process.env.SESSION_COOKIE_SECURE === 'true' ||
+  (process.env.SESSION_COOKIE_SECURE === undefined && process.env.NODE_ENV === 'production');
 
 export function buildTemporarySessionCookie(credential: string): string {
   return [

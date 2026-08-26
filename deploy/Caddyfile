@@ -1,0 +1,27 @@
+{
+  email {$CADDY_EMAIL}
+}
+
+{$CHESS_AI_DOMAIN} {
+  encode zstd gzip
+
+  header {
+    Content-Security-Policy "default-src 'self'; base-uri 'self'; frame-ancestors 'none'; form-action 'self'"
+    Permissions-Policy "camera=(), geolocation=(), microphone=(), payment=(), usb=()"
+    Referrer-Policy "strict-origin-when-cross-origin"
+    X-Content-Type-Options "nosniff"
+    X-Frame-Options "DENY"
+  }
+
+  handle_path /api/* {
+    reverse_proxy server:3000
+  }
+
+  handle /socket.io/* {
+    reverse_proxy server:3000
+  }
+
+  handle {
+    reverse_proxy web:5173
+  }
+}

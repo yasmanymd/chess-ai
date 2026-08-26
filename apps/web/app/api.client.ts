@@ -1,5 +1,7 @@
 function apiOrigin(): string {
-  return `${window.location.protocol}//${window.location.hostname}:3000`;
+  return (
+    import.meta.env.VITE_API_URL ?? `${window.location.protocol}//${window.location.hostname}:3000`
+  );
 }
 
 export async function claimTemporaryIdentity(displayName: string) {

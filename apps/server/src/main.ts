@@ -33,28 +33,24 @@ import {
   buildTemporarySessionCookie,
   readTemporarySessionCookie,
 } from './temporary-identity/delivery/session-cookie.js';
+import { isAllowedWebOrigin, readRuntimeConfig } from './infrastructure/config/runtime-config.js';
+import { createRateLimiter, ruleForRequest } from './infrastructure/http/rate-limiter.js';
 
-const port = Number(process.env.SERVER_PORT ?? 3000);
-const connectionString = process.env.DATABASE_URL;
-const allowedWebOrigins = (process.env.WEB_ORIGINS ?? 'http://localhost:5173,http://127.0.0.1:5173')
-  .split(',')
-  .map((origin) => origin.trim())
-  .filter(Boolean);
-
-if (!connectionString) {
-  throw new Error('DATABASE_URL is required.');
-}
-
-const logger = pino({ level: process.env.LOG_LEVEL ?? 'info' });
-const database = createDatabase(connectionString);
+const config = readRuntimeConfig();
+const logger = pino({ level: config.LOG_LEVEL });
+const database = createDatabase(config.DATABASE_URL);
 const chessRules = new ChessJsRulesAdapter();
-const app = await NestFactory.create<NestFastifyApplication>(AppModule, new FastifyAdapter(), {
-  logger: false,
-});
+const app = await NestFactory.create<NestFastifyApplication>(
+  AppModule,
+  new FastifyAdapter({ trustProxy: config.trustProxy }),
+  {
+    logger: false,
+  },
+);
 app.enableCors({
   credentials: true,
   origin: (origin, callback) => {
-    if (!origin || allowedWebOrigins.includes(origin)) {
+    if (isAllowedWebOrigin(origin, config)) {
       callback(null, true);
       return;
     }
@@ -63,6 +59,7 @@ app.enableCors({
 });
 const fastify = app.getHttpAdapter().getInstance();
 const notifications = app.get(BootstrapGateway);
+const limitRequest = createRateLimiter();
 let outboxSweepInProgress = false;
 async function flushGameOutbox() {
   if (outboxSweepInProgress) return;
@@ -99,8 +96,34 @@ outboxSweep.unref();
 
 fastify.addHook(
   'onRequest',
-  async (request: { id: string }, reply: { header: (name: string, value: string) => void }) => {
+  async (
+    request: { id: string; ip: string; method: string; url: string },
+    reply: {
+      code: (statusCode: number) => { send: (payload: unknown) => unknown };
+      header: (name: string, value: string) => void;
+    },
+  ) => {
     reply.header('x-request-id', request.id);
+    reply.header('x-content-type-options', 'nosniff');
+    reply.header('x-frame-options', 'DENY');
+    reply.header('referrer-policy', 'strict-origin-when-cross-origin');
+    reply.header('cross-origin-opener-policy', 'same-origin');
+    reply.header('permissions-policy', 'camera=(), geolocation=(), microphone=()');
+    reply.header(
+      'content-security-policy',
+      "default-src 'self'; base-uri 'self'; frame-ancestors 'none'; form-action 'self'",
+    );
+    if (config.sessionCookieSecure) {
+      reply.header('strict-transport-security', 'max-age=31536000; includeSubDomains');
+    }
+
+    const rule = ruleForRequest(request.method, request.url);
+    if (!rule) return;
+    const result = limitRequest(request.ip, rule);
+    if (!result.allowed) {
+      reply.header('retry-after', String(result.retryAfterSeconds));
+      return reply.code(429).send({ error: { code: 'RATE_LIMITED' } });
+    }
   },
 );
 
@@ -596,8 +619,8 @@ app
     clearInterval(outboxSweep);
     await database.destroy();
   });
-await app.listen({ port, host: '0.0.0.0' });
-logger.info({ port }, 'Server listening');
+await app.listen({ port: config.SERVER_PORT, host: '0.0.0.0' });
+logger.info({ port: config.SERVER_PORT }, 'Server listening');
 void flushGameOutbox();
 void backfillCompletedGames(
   database,

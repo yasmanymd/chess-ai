@@ -25,4 +25,21 @@ USER node
 
 FROM development AS release-build
 
+ARG VITE_API_URL
+ENV VITE_API_URL=$VITE_API_URL
 RUN pnpm --filter @chess-ai/server build && pnpm --filter @chess-ai/web build
+
+FROM release-build AS server-runtime
+
+ENV NODE_ENV=production
+EXPOSE 3000
+USER node
+CMD ["pnpm", "--filter", "@chess-ai/server", "start"]
+
+FROM release-build AS web-runtime
+
+ENV NODE_ENV=production
+ENV PORT=5173
+EXPOSE 5173
+USER node
+CMD ["pnpm", "--filter", "@chess-ai/web", "start"]

@@ -1,0 +1,83 @@
+services:
+  migrate:
+    build:
+      context: .
+      target: server-runtime
+    command: pnpm --filter @chess-ai/server migration:up
+    environment:
+      DATABASE_URL: ${DATABASE_URL:?Set DATABASE_URL for the externally managed PostgreSQL database.}
+
+  server:
+    build:
+      context: .
+      target: server-runtime
+    environment:
+      DATABASE_URL: ${DATABASE_URL:?Set DATABASE_URL for the externally managed PostgreSQL database.}
+      NODE_ENV: production
+      SERVER_PORT: 3000
+      LOG_LEVEL: ${LOG_LEVEL:-info}
+      WEB_ORIGINS: https://${CHESS_AI_DOMAIN:?Set CHESS_AI_DOMAIN before deployment.}
+      SESSION_COOKIE_SECURE: 'true'
+      TRUST_PROXY: 'true'
+    depends_on:
+      migrate:
+        condition: service_completed_successfully
+    expose:
+      - '3000'
+    healthcheck:
+      test:
+        [
+          'CMD',
+          'node',
+          '-e',
+          "fetch('http://127.0.0.1:3000/ready').then(r => process.exit(r.ok ? 0 : 1)).catch(() => process.exit(1))",
+        ]
+      interval: 10s
+      timeout: 3s
+      retries: 6
+      start_period: 10s
+
+  web:
+    build:
+      context: .
+      target: web-runtime
+      args:
+        VITE_API_URL: /api
+    environment:
+      PORT: 5173
+    expose:
+      - '5173'
+    healthcheck:
+      test:
+        [
+          'CMD',
+          'node',
+          '-e',
+          "fetch('http://127.0.0.1:5173').then(r => process.exit(r.ok ? 0 : 1)).catch(() => process.exit(1))",
+        ]
+      interval: 10s
+      timeout: 3s
+      retries: 6
+      start_period: 10s
+
+  caddy:
+    image: caddy:2.10.2-alpine
+    environment:
+      CHESS_AI_DOMAIN: ${CHESS_AI_DOMAIN:?Set CHESS_AI_DOMAIN before deployment.}
+      CADDY_EMAIL: ${CADDY_EMAIL:?Set CADDY_EMAIL before deployment.}
+    depends_on:
+      server:
+        condition: service_healthy
+      web:
+        condition: service_healthy
+    ports:
+      - '80:80'
+      - '443:443'
+    volumes:
+      - ./deploy/Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddy-data:/data
+      - caddy-config:/config
+
+volumes:
+  caddy-data:
+  caddy-config:

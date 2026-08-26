@@ -27,7 +27,7 @@ Produce reproducible technical and operational evidence that Chess AI can be eva
 
 ## Delivery Slices
 
-### M6.1 — CI and Reproducible Release Build — Implemented pending first GitHub run
+### M6.1 — CI and Reproducible Release Build — Accepted and validated
 
 **Outcome:** Every repository change can be validated in GitHub Actions without deploying.
 
@@ -37,9 +37,9 @@ Produce reproducible technical and operational evidence that Chess AI can be eva
 
 **Evidence:** A pull request or branch workflow runs the release-quality checks and proves the production images build without secrets.
 
-**Implemented evidence:** A GitHub Actions workflow now defines independent static-quality, PostgreSQL integration, browser accessibility, and reproducible release-build jobs. Local container validation passed format, lint, type checks, architecture checks, unit tests, and the `release-build` Docker target. The workflow has no deployment step or credentials; its first remote run occurs when the changes are pushed.
+**Validated evidence:** GitHub Actions run #4 completed successfully on 2026-08-26. Static-quality, PostgreSQL integration, browser accessibility, and reproducible release-build jobs all passed. The workflow has no deployment step or credentials.
 
-### M6.2 — Production Configuration, Security, and Operations Baseline
+### M6.2 — Production Configuration, Security, and Operations Baseline — Implemented and locally validated
 
 **Outcome:** The application has an explicit provider-neutral production configuration and a documented operational boundary.
 
@@ -49,6 +49,8 @@ Produce reproducible technical and operational evidence that Chess AI can be eva
 - Document structured logging, metrics/traces interfaces, correlation, collection requirements, operational dashboards, alert candidates, backup/restore procedure, rollback procedure, and incident runbook.
 
 **Evidence:** A local production-like container experiment passes health and HTTPS-proxy configuration checks without exposing credentials or treating it as a public deployment.
+
+**Validated evidence:** On 2026-08-26, an isolated Docker Compose experiment built the release API and web images, ran migrations against a disposable PostgreSQL database, and served the web UI plus `/api/ready` through Caddy at `http://127.0.0.1:8080`. The response carried the configured edge security-header baseline. Formatting, linting, type checking, architecture checks, unit tests, and secret scanning passed locally. This is an HTTP-only local proxy experiment; real HTTPS validation remains contingent on a future domain and provider.
 
 ### M6.3 — Capacity and Resilience Evidence
 

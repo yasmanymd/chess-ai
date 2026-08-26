@@ -6,9 +6,18 @@ import { readTemporarySessionCookie } from '../../temporary-identity/delivery/se
 
 const connectionString = process.env.DATABASE_URL;
 const database = connectionString ? createDatabase(connectionString) : undefined;
+const allowedWebOrigins = (process.env.WEB_ORIGINS ?? 'http://localhost:5173,http://127.0.0.1:5173')
+  .split(',')
+  .map((origin) => origin.trim())
+  .filter(Boolean);
 
 /** Non-authoritative notification channel. HTTP remains the source of all state. */
-@WebSocketGateway({ cors: { origin: true, credentials: true } })
+@WebSocketGateway({
+  cors: {
+    credentials: true,
+    origin: (origin, callback) => callback(null, !origin || allowedWebOrigins.includes(origin)),
+  },
+})
 export class BootstrapGateway {
   @WebSocketServer()
   private server!: Server;
