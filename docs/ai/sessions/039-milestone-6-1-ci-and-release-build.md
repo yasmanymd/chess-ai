@@ -1,11 +1,11 @@
 # Session 039 — Milestone 6.1 CI and Reproducible Release Build
 
-| Field | Value |
-| --- | --- |
-| Date | 2026-08-26 |
-| Milestone | M6.1 — CI and Reproducible Release Build |
+| Field        | Value                                                      |
+| ------------ | ---------------------------------------------------------- |
+| Date         | 2026-08-26                                                 |
+| Milestone    | M6.1 — CI and Reproducible Release Build                   |
 | Participants | Yasmany (decision owner), Codex (implementation assistant) |
-| Status | Implemented pending first GitHub Actions run |
+| Status       | Implemented pending first GitHub Actions run               |
 
 ## Objective
 

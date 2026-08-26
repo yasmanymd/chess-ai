@@ -1,11 +1,11 @@
 # Session 040 — M6.1 First CI Run Correction
 
-| Field | Value |
-| --- | --- |
-| Date | 2026-08-26 |
-| Milestone | M6.1 — CI and Reproducible Release Build |
+| Field        | Value                                                      |
+| ------------ | ---------------------------------------------------------- |
+| Date         | 2026-08-26                                                 |
+| Milestone    | M6.1 — CI and Reproducible Release Build                   |
 | Participants | Yasmany (decision owner), Codex (implementation assistant) |
-| Status | Corrected locally; pending a new GitHub Actions run |
+| Status       | Corrected locally; pending a new GitHub Actions run        |
 
 ## Trigger
 
