@@ -22,6 +22,7 @@ import {
   readPublicArchivedGame,
 } from './game-archive/application/read-public-game-archive.js';
 import { exportArchivedGameAsPgn } from './chess-interchange/application/export-archived-game-as-pgn.js';
+import { importPgnForPrivateReplay } from './chess-interchange/application/import-pgn-for-private-replay.js';
 import { BootstrapGateway } from './infrastructure/realtime/bootstrap.gateway.js';
 import { createDatabase, verifyDatabase } from './infrastructure/database/database.js';
 import { joinWaitingGame } from './lobby/join-waiting-game.js';
@@ -552,6 +553,16 @@ fastify.get('/archive/games/:gameId/pgn', async (request, reply) => {
   reply.header('content-type', 'application/x-chess-pgn; charset=utf-8');
   reply.header('content-disposition', `attachment; filename="chess-ai-${game.id}.pgn"`);
   return exportArchivedGameAsPgn(game);
+});
+fastify.post('/chess-interchange/import-pgn', async (request, reply) => {
+  const body = request.body;
+  const pgn =
+    typeof body === 'object' && body !== null && 'pgn' in body && typeof body.pgn === 'string'
+      ? body.pgn
+      : '';
+  const result = importPgnForPrivateReplay(pgn);
+  if (!result.accepted) return reply.code(422).send({ error: { code: result.code } });
+  return { game: result.game };
 });
 fastify.get('/ready', async (_request: unknown, reply: { code: (status: number) => unknown }) => {
   try {

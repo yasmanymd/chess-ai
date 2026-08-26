@@ -178,7 +178,8 @@ body[data-enhanced='true'] .language-selector select {
 .lobby-page,
 .game-page,
 .archive-page,
-.archive-game-page {
+.archive-game-page,
+.import-page {
   max-width: 76rem;
   margin: 0 auto;
   padding: clamp(2rem, 6vw, 5rem) clamp(1.25rem, 4vw, 3.5rem) 4rem;
@@ -282,6 +283,66 @@ body[data-enhanced='true'] .language-selector select {
 .archive-more {
   margin-top: 1rem;
 }
+.import-page {
+  max-width: 52rem;
+}
+.import-page h1 {
+  margin: 0;
+  font-family: Georgia, 'Times New Roman', serif;
+  font-size: clamp(2.8rem, 6vw, 4.9rem);
+  font-weight: 500;
+  letter-spacing: -0.055em;
+  line-height: 0.98;
+}
+.import-description,
+.import-private-note {
+  max-width: 42rem;
+  color: var(--text-muted);
+}
+.import-game-players {
+  margin: 0;
+  color: var(--text);
+  font-size: clamp(1.05rem, 2vw, 1.3rem);
+  font-weight: 750;
+}
+.import-game-details {
+  margin: 0.35rem 0 0;
+  color: var(--text-muted);
+}
+.import-form {
+  display: grid;
+  gap: 1rem;
+  max-width: 46rem;
+  margin-top: 2rem;
+  padding: 1.25rem;
+  border: 1px solid var(--border);
+  border-radius: 0.9rem;
+  background: var(--surface);
+}
+.import-form label {
+  display: grid;
+  gap: 0.45rem;
+  font-weight: 700;
+}
+.import-form textarea {
+  width: 100%;
+  resize: vertical;
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 0.9rem;
+  line-height: 1.45;
+}
+.import-file-label input {
+  font-weight: 400;
+}
+.import-another {
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--link);
+  font: inherit;
+  font-weight: 700;
+  text-decoration: underline;
+}
 .archive-replay-layout {
   display: grid;
   grid-template-columns: minmax(0, 36rem) minmax(15rem, 21rem);
@@ -370,6 +431,20 @@ body[data-enhanced='true'] .language-selector select {
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+}
+.import-player-row {
+  grid-template-columns: minmax(0, 1fr);
+  gap: 0.5rem;
+}
+.import-player-row span {
+  min-height: 2.5rem;
+  padding: 0.5rem 0.6rem;
+  border: 1px solid var(--border);
+  border-radius: 0.5rem;
+  overflow: visible;
+  text-overflow: clip;
+  white-space: normal;
+  word-break: break-word;
 }
 .archive-replay-moves {
   margin-top: 0.75rem;

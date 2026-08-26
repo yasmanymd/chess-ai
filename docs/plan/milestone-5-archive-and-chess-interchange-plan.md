@@ -71,7 +71,7 @@ Make completed standard-chess games discoverable and replayable, while providing
 
 **Implemented evidence:** Chess Interchange now generates PGN from Archive's public replay contract only. The public endpoint and browser download route provide a `.pgn` file, and the replay page provides a copy-to-clipboard action. Unit tests validate headers, escaped names, time control, FEN setup, main-line moves, and result; a real archived game returned valid PGN locally.
 
-### M5.4 — Private PGN Import and Replay
+### M5.4 — Private PGN Import and Replay — Completed 2026-08-26
 
 **Outcome:** A visitor can paste or select one PGN and immediately replay its validated main line without creating a stored public game.
 
@@ -81,6 +81,8 @@ Make completed standard-chess games discoverable and replayable, while providing
 - Return localized, safe validation feedback for malformed or unsupported input and never persist import payloads.
 
 **Evidence:** Normal-start and FEN-start games import successfully; malformed PGN, illegal moves, invalid FEN, inconsistent result, unsupported variants, and oversized payloads fail safely.
+
+**Implemented evidence:** The Chess Interchange import endpoint accepts one pasted PGN and returns only a private replay representation; no imported data reaches the database or Archive. The localized Import PGN page accepts pasted text or a selected `.pgn` file, and renders the same deterministic main-line replay controls used by Archive. The parser accepts comments and variations while exposing only the main line, supports declared `SetUp`/`FEN`, bounds input to 512 KB, and returns safe codes for empty, malformed, inconsistent, oversized, and non-standard-variant input.
 
 ### M5.5 — Exit Validation and Documentation
 
