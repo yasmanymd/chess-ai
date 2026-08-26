@@ -7,6 +7,7 @@ import { AppModule } from './app.module.js';
 import { submitAuthoritativeMove } from './game/application/submit-authoritative-move.js';
 import { performGameAction } from './game/application/perform-game-action.js';
 import { expireTimedOutGames } from './game/application/expire-timed-out-games.js';
+import { dispatchPendingGameOutbox } from './game/application/dispatch-game-outbox.js';
 import { ChessJsRulesAdapter } from './game/infrastructure/chess-js-rules-adapter.js';
 import { BootstrapGateway } from './infrastructure/realtime/bootstrap.gateway.js';
 import { createDatabase, verifyDatabase } from './infrastructure/database/database.js';
@@ -48,17 +49,31 @@ app.enableCors({
 });
 const fastify = app.getHttpAdapter().getInstance();
 const notifications = app.get(BootstrapGateway);
+let outboxSweepInProgress = false;
+async function flushGameOutbox() {
+  if (outboxSweepInProgress) return;
+  outboxSweepInProgress = true;
+  try {
+    await dispatchPendingGameOutbox(database, ({ gameId, recipientIdentityIds }) => {
+      notifications.gameUpdated(recipientIdentityIds, gameId);
+    });
+  } catch (error) {
+    logger.error({ error }, 'Game outbox dispatch failed');
+  } finally {
+    outboxSweepInProgress = false;
+  }
+}
 const clockSweep = setInterval(async () => {
   try {
-    const expired = await expireTimedOutGames(database);
-    for (const game of expired) {
-      notifications.gameUpdated([game.whiteIdentityId, game.blackIdentityId], game.id);
-    }
+    await expireTimedOutGames(database);
+    await flushGameOutbox();
   } catch (error) {
     logger.error({ error }, 'Clock expiry sweep failed');
   }
 }, 1_000);
 clockSweep.unref();
+const outboxSweep = setInterval(() => void flushGameOutbox(), 500);
+outboxSweep.unref();
 
 fastify.addHook(
   'onRequest',
@@ -412,14 +427,12 @@ fastify.post('/games/:gameId/moves', async (request, reply) => {
           : 409;
     return reply.code(status).send({ error: { code: result.code } });
   }
-  notifications.gameUpdated(
-    [result.game.white_identity_id, result.game.black_identity_id],
-    result.game.id,
-  );
+  void flushGameOutbox();
   return reply.code(201).send({ game: result.game, move: result.move });
 });
 const gameActionSchema = z.object({
   expectedVersion: z.number().int().nonnegative(),
+  commandId: z.uuid(),
   action: z.enum(['resign', 'offer_draw', 'accept_draw', 'reject_draw', 'claim_draw']),
 });
 fastify.post('/games/:gameId/actions', async (request, reply) => {
@@ -443,10 +456,7 @@ fastify.post('/games/:gameId/actions', async (request, reply) => {
       result.code === 'GAME_NOT_FOUND' ? 404 : result.code === 'ACTION_NOT_AVAILABLE' ? 422 : 409;
     return reply.code(status).send({ error: { code: result.code } });
   }
-  notifications.gameUpdated(
-    [result.game.white_identity_id, result.game.black_identity_id],
-    result.game.id,
-  );
+  void flushGameOutbox();
   return reply.code(201).send({ game: result.game });
 });
 fastify.get('/games/current', async (request, reply) => {
@@ -500,7 +510,9 @@ app
   .getInstance()
   .addHook('onClose', async () => {
     clearInterval(clockSweep);
+    clearInterval(outboxSweep);
     await database.destroy();
   });
 await app.listen({ port, host: '0.0.0.0' });
 logger.info({ port }, 'Server listening');
+void flushGameOutbox();

@@ -7,10 +7,11 @@ import { FileMigrationProvider, Migrator } from 'kysely/migration';
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 
 import { ChessJsRulesAdapter } from '../infrastructure/chess-js-rules-adapter.js';
-import { createDatabase, type DatabaseSchema } from '../../infrastructure/database/database.js';
+import { createDatabase } from '../../infrastructure/database/database.js';
 import { submitAuthoritativeMove } from './submit-authoritative-move.js';
 import { expireTimedOutGames } from './expire-timed-out-games.js';
 import { performGameAction } from './perform-game-action.js';
+import { dispatchPendingGameOutbox } from './dispatch-game-outbox.js';
 
 const migrationFolder = fileURLToPath(
   new URL('../../infrastructure/database/migrations', import.meta.url),
@@ -73,7 +74,7 @@ describe('submitAuthoritativeMove integration', () => {
     await container?.stop();
   });
 
-  it('commits one legal transition and rejects duplicate, stale, and out-of-turn commands', async () => {
+  it('commits one legal transition, records its result, and replays it idempotently', async () => {
     const commandId = randomUUID();
     const accepted = await submitAuthoritativeMove(database, rules, {
       gameId,
@@ -98,7 +99,7 @@ describe('submitAuthoritativeMove integration', () => {
         from: 'e2',
         to: 'e4',
       }),
-    ).resolves.toEqual({ accepted: false, code: 'MOVE_COMMAND_DUPLICATE' });
+    ).resolves.toEqual(accepted);
     await expect(
       submitAuthoritativeMove(database, rules, {
         gameId,
@@ -127,6 +128,25 @@ describe('submitAuthoritativeMove integration', () => {
       .execute();
     expect(stored).toHaveLength(1);
     expect(stored[0]).toMatchObject({ sequence: 1, san: 'e4' });
+    await expect(
+      database
+        .selectFrom('game_command_ledger')
+        .select(['command_type', 'response'])
+        .where('game_id', '=', gameId)
+        .execute(),
+    ).resolves.toHaveLength(1);
+    await expect(
+      database
+        .selectFrom('game_outbox')
+        .select(['event_type', 'payload'])
+        .where('game_id', '=', gameId)
+        .execute(),
+    ).resolves.toEqual([
+      {
+        event_type: 'game.updated',
+        payload: { gameId, recipientIdentityIds: [whiteIdentityId, blackIdentityId] },
+      },
+    ]);
   });
 
   it('closes an expired clock without waiting for another browser command', async () => {
@@ -168,6 +188,13 @@ describe('submitAuthoritativeMove integration', () => {
       termination_reason: 'timeout',
       white_time_remaining_ms: 0,
     });
+    await expect(
+      database
+        .selectFrom('game_outbox')
+        .select('event_type')
+        .where('game_id', '=', expiredGameId)
+        .execute(),
+    ).resolves.toEqual([{ event_type: 'game.updated' }]);
   });
 
   it('persists an agreed draw as an explicit game lifecycle event', async () => {
@@ -185,19 +212,30 @@ describe('submitAuthoritativeMove integration', () => {
         version: 0,
       })
       .execute();
+    const offerCommandId = randomUUID();
+    const offer = await performGameAction(database, rules, {
+      gameId: drawGameId,
+      identityId: whiteIdentityId,
+      expectedVersion: 0,
+      commandId: offerCommandId,
+      action: 'offer_draw',
+    });
+    expect(offer).toMatchObject({ accepted: true, game: { version: 1 } });
     await expect(
       performGameAction(database, rules, {
         gameId: drawGameId,
         identityId: whiteIdentityId,
-        expectedVersion: 0,
+        expectedVersion: 1,
+        commandId: offerCommandId,
         action: 'offer_draw',
       }),
-    ).resolves.toMatchObject({ accepted: true, game: { version: 1 } });
+    ).resolves.toEqual(offer);
     await expect(
       performGameAction(database, rules, {
         gameId: drawGameId,
         identityId: blackIdentityId,
         expectedVersion: 1,
+        commandId: randomUUID(),
         action: 'accept_draw',
       }),
     ).resolves.toMatchObject({ accepted: true, game: { version: 2 } });
@@ -220,5 +258,171 @@ describe('submitAuthoritativeMove integration', () => {
         .orderBy('sequence', 'asc')
         .execute(),
     ).resolves.toEqual([{ event_type: 'offer_draw' }, { event_type: 'accept_draw' }]);
+    await expect(
+      database
+        .selectFrom('game_outbox')
+        .select('event_type')
+        .where('game_id', '=', drawGameId)
+        .orderBy('created_at', 'asc')
+        .execute(),
+    ).resolves.toEqual([{ event_type: 'game.updated' }, { event_type: 'game.updated' }]);
+  });
+
+  it('retries an outbox publication without repeating game state', async () => {
+    const outboxGameId = randomUUID();
+    const outboxId = randomUUID();
+    const now = new Date();
+    await database.deleteFrom('game_outbox').execute();
+    await database
+      .insertInto('active_games')
+      .values({
+        id: outboxGameId,
+        white_identity_id: whiteIdentityId,
+        black_identity_id: blackIdentityId,
+        time_control: 'none',
+        status: 'active',
+        current_fen: rules.initialPosition().fen,
+        side_to_move: 'white',
+        version: 0,
+      })
+      .execute();
+    await database
+      .insertInto('game_outbox')
+      .values({
+        id: outboxId,
+        game_id: outboxGameId,
+        event_type: 'game.updated',
+        payload: {
+          gameId: outboxGameId,
+          recipientIdentityIds: [whiteIdentityId, blackIdentityId],
+        },
+        available_at: now,
+        delivered_at: null,
+        lease_token: null,
+        lease_expires_at: null,
+      })
+      .execute();
+
+    await expect(
+      dispatchPendingGameOutbox(
+        database,
+        () => {
+          throw new Error('simulated publish failure');
+        },
+        now,
+      ),
+    ).resolves.toEqual({ delivered: 0, failed: 1 });
+    await expect(
+      database
+        .selectFrom('game_outbox')
+        .select(['attempts', 'delivered_at', 'lease_token'])
+        .where('id', '=', outboxId)
+        .executeTakeFirstOrThrow(),
+    ).resolves.toMatchObject({ attempts: 1, delivered_at: null, lease_token: null });
+
+    const published: string[] = [];
+    await expect(
+      dispatchPendingGameOutbox(
+        database,
+        ({ gameId: publishedGameId }) => {
+          published.push(publishedGameId);
+        },
+        new Date(now.getTime() + 1_001),
+      ),
+    ).resolves.toEqual({ delivered: 1, failed: 0 });
+    expect(published).toEqual([outboxGameId]);
+    await expect(
+      database
+        .selectFrom('game_outbox')
+        .select(['attempts', 'delivered_at'])
+        .where('id', '=', outboxId)
+        .executeTakeFirstOrThrow(),
+    ).resolves.toMatchObject({ attempts: 2 });
+  });
+
+  it('accepts one of two concurrent retries for the same move command', async () => {
+    const concurrentGameId = randomUUID();
+    const commandId = randomUUID();
+    await database
+      .insertInto('active_games')
+      .values({
+        id: concurrentGameId,
+        white_identity_id: whiteIdentityId,
+        black_identity_id: blackIdentityId,
+        time_control: 'none',
+        status: 'active',
+        current_fen: rules.initialPosition().fen,
+        side_to_move: 'white',
+        version: 0,
+      })
+      .execute();
+    const command = {
+      gameId: concurrentGameId,
+      identityId: whiteIdentityId,
+      commandId,
+      expectedVersion: 0,
+      from: 'e2',
+      to: 'e4',
+    };
+    const [first, second] = await Promise.all([
+      submitAuthoritativeMove(database, rules, command),
+      submitAuthoritativeMove(database, rules, command),
+    ]);
+    expect(first).toEqual(second);
+    await expect(
+      database
+        .selectFrom('game_moves')
+        .select('id')
+        .where('game_id', '=', concurrentGameId)
+        .execute(),
+    ).resolves.toHaveLength(1);
+  });
+
+  it('automatically ends on fivefold repetition', async () => {
+    const repetitionGameId = randomUUID();
+    await database
+      .insertInto('active_games')
+      .values({
+        id: repetitionGameId,
+        white_identity_id: whiteIdentityId,
+        black_identity_id: blackIdentityId,
+        time_control: 'none',
+        status: 'active',
+        current_fen: rules.initialPosition().fen,
+        side_to_move: 'white',
+        version: 0,
+      })
+      .execute();
+    const cycle = [
+      [whiteIdentityId, 'g1', 'f3'],
+      [blackIdentityId, 'g8', 'f6'],
+      [whiteIdentityId, 'f3', 'g1'],
+      [blackIdentityId, 'f6', 'g8'],
+    ] as const;
+    let version = 0;
+    for (const [identityId, from, to] of Array.from({ length: 4 }, () => cycle).flat()) {
+      const result = await submitAuthoritativeMove(database, rules, {
+        gameId: repetitionGameId,
+        identityId,
+        commandId: randomUUID(),
+        expectedVersion: version,
+        from,
+        to,
+      });
+      expect(result.accepted).toBe(true);
+      version += 1;
+    }
+    await expect(
+      database
+        .selectFrom('active_games')
+        .select(['status', 'result', 'termination_reason', 'version'])
+        .where('id', '=', repetitionGameId)
+        .executeTakeFirstOrThrow(),
+    ).resolves.toMatchObject({
+      status: 'completed',
+      result: 'draw',
+      termination_reason: 'fivefold_repetition',
+      version: 16,
+    });
   });
 });

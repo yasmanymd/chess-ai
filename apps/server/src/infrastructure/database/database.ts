@@ -39,6 +39,8 @@ export interface ActiveGamesTable {
     | 'checkmate'
     | 'stalemate'
     | 'insufficient_material'
+    | 'fivefold_repetition'
+    | 'seventy_five_move_rule'
     | 'timeout'
     | 'resignation'
     | 'agreed_draw'
@@ -73,12 +75,37 @@ export interface GameEventsTable {
   created_at: Generated<Date>;
 }
 
+export interface GameCommandLedgerTable {
+  id: string;
+  game_id: string;
+  command_id: string;
+  actor_identity_id: string;
+  command_type: 'move' | 'game_action';
+  response: unknown;
+  created_at: Generated<Date>;
+}
+
+export interface GameOutboxTable {
+  id: string;
+  game_id: string;
+  event_type: string;
+  payload: unknown;
+  available_at: Generated<Date>;
+  delivered_at: Date | null;
+  attempts: Generated<number>;
+  lease_token: string | null;
+  lease_expires_at: Date | null;
+  created_at: Generated<Date>;
+}
+
 export interface DatabaseSchema {
   temporary_identities: TemporaryIdentitiesTable;
   waiting_games: WaitingGamesTable;
   active_games: ActiveGamesTable;
   game_moves: GameMovesTable;
   game_events: GameEventsTable;
+  game_command_ledger: GameCommandLedgerTable;
+  game_outbox: GameOutboxTable;
 }
 
 export function createDatabase(connectionString: string): Kysely<DatabaseSchema> {

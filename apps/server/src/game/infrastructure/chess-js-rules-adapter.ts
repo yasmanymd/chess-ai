@@ -1,7 +1,6 @@
 import { Chess } from 'chess.js';
 
 import type {
-  AcceptedChessMove,
   ChessColor,
   ChessLegalMove,
   ChessMoveIntent,

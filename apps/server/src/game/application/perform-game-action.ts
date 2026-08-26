@@ -10,18 +10,18 @@ export interface PerformGameActionCommand {
   gameId: string;
   identityId: string;
   expectedVersion: number;
+  commandId: string;
   action: GameAction;
 }
 
 export type PerformGameActionResult =
-  | { accepted: true; game: { id: string; version: number; white_identity_id: string; black_identity_id: string } }
+  | {
+      accepted: true;
+      game: { id: string; version: number; white_identity_id: string; black_identity_id: string };
+    }
   | {
       accepted: false;
-      code:
-        | 'GAME_NOT_FOUND'
-        | 'GAME_NOT_ACTIVE'
-        | 'ACTION_STALE'
-        | 'ACTION_NOT_AVAILABLE';
+      code: 'GAME_NOT_FOUND' | 'GAME_NOT_ACTIVE' | 'ACTION_STALE' | 'ACTION_NOT_AVAILABLE';
     };
 
 /** Applies player lifecycle actions in the same transaction as their audit event. */
@@ -39,10 +39,19 @@ export async function performGameAction(
       .executeTakeFirst();
     if (
       !game ||
-      (game.white_identity_id !== command.identityId && game.black_identity_id !== command.identityId)
+      (game.white_identity_id !== command.identityId &&
+        game.black_identity_id !== command.identityId)
     ) {
       return { accepted: false, code: 'GAME_NOT_FOUND' };
     }
+    const previousCommand = await transaction
+      .selectFrom('game_command_ledger')
+      .select('response')
+      .where('game_id', '=', game.id)
+      .where('command_id', '=', command.commandId)
+      .executeTakeFirst();
+    if (previousCommand) return previousCommand.response as PerformGameActionResult;
+
     if (game.status !== 'active') return { accepted: false, code: 'GAME_NOT_ACTIVE' };
     if (game.version !== command.expectedVersion) return { accepted: false, code: 'ACTION_STALE' };
 
@@ -50,11 +59,7 @@ export async function performGameAction(
     const nextVersion = game.version + 1;
     let status: 'active' | 'completed' = 'active';
     let result: 'white_win' | 'black_win' | 'draw' | null = null;
-    let reason:
-      | 'resignation'
-      | 'agreed_draw'
-      | 'draw_claim'
-      | null = null;
+    let reason: 'resignation' | 'agreed_draw' | 'draw_claim' | null = null;
     let drawOffer: string | null = game.draw_offered_by_identity_id;
 
     if (command.action === 'resign') {
@@ -127,6 +132,33 @@ export async function performGameAction(
         payload: { result, terminationReason: reason },
       })
       .execute();
-    return { accepted: true, game: updated };
+    const response: PerformGameActionResult = { accepted: true, game: updated };
+    await transaction
+      .insertInto('game_command_ledger')
+      .values({
+        id: randomUUID(),
+        game_id: game.id,
+        command_id: command.commandId,
+        actor_identity_id: command.identityId,
+        command_type: 'game_action',
+        response,
+      })
+      .execute();
+    await transaction
+      .insertInto('game_outbox')
+      .values({
+        id: randomUUID(),
+        game_id: game.id,
+        event_type: 'game.updated',
+        payload: {
+          gameId: game.id,
+          recipientIdentityIds: [game.white_identity_id, game.black_identity_id],
+        },
+        delivered_at: null,
+        lease_token: null,
+        lease_expires_at: null,
+      })
+      .execute();
+    return response;
   });
 }

@@ -31,7 +31,7 @@ describe('chess library boundary', () => {
 
     expect(
       directImports
-        .filter(({ source }) => /from ['\"]chess\.js['\"]/.test(source))
+        .filter(({ source }) => /from ['"]chess\.js['"]/.test(source))
         .map(({ relativePath }) => relativePath),
     ).toEqual([adapterPath]);
   });

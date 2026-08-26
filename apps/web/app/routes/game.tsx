@@ -161,7 +161,7 @@ export async function action({
       body: JSON.stringify({
         expectedVersion: Number(form.get('expectedVersion')),
         ...(isGameAction
-          ? { action: form.get('gameAction') }
+          ? { commandId: crypto.randomUUID(), action: form.get('gameAction') }
           : {
               commandId: crypto.randomUUID(),
               from: form.get('from'),
@@ -264,8 +264,8 @@ export default function Game() {
       withCredentials: true,
       transports: ['websocket', 'polling'],
     });
-    const refreshGame = (event: { gameId?: string }) => {
-      if (event.gameId !== game.id) return;
+    const refreshGame = (event?: { gameId?: string }) => {
+      if (event?.gameId && event.gameId !== game.id) return;
 
       if (revalidatorRef.current.state === 'idle') {
         revalidatorRef.current.revalidate();
@@ -275,7 +275,13 @@ export default function Game() {
     };
 
     socket.on('game.updated', refreshGame);
+    socket.on('connect', refreshGame);
+    const refreshWhenVisible = () => {
+      if (document.visibilityState === 'visible') refreshGame({ gameId: game.id });
+    };
+    document.addEventListener('visibilitychange', refreshWhenVisible);
     return () => {
+      document.removeEventListener('visibilitychange', refreshWhenVisible);
       socket.disconnect();
     };
   }, [game.id]);

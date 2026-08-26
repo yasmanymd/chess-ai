@@ -72,6 +72,21 @@ export async function expireTimedOutGames(
           payload: { flagged: game.side_to_move },
         })
         .execute();
+      await transaction
+        .insertInto('game_outbox')
+        .values({
+          id: randomUUID(),
+          game_id: game.id,
+          event_type: 'game.updated',
+          payload: {
+            gameId: game.id,
+            recipientIdentityIds: [game.white_identity_id, game.black_identity_id],
+          },
+          delivered_at: null,
+          lease_token: null,
+          lease_expires_at: null,
+        })
+        .execute();
       return {
         id: game.id,
         whiteIdentityId: game.white_identity_id,

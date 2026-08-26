@@ -109,10 +109,16 @@ export default function Lobby() {
       transports: ['websocket', 'polling'],
     });
     socket.on('lobby.changed', refreshLobby);
+    socket.on('connect', refreshLobby);
     socket.on('game.started', (event: { gameId?: string }) => {
       if (event.gameId) window.location.assign(`/games/${event.gameId}`);
     });
+    const refreshWhenVisible = () => {
+      if (document.visibilityState === 'visible') refreshLobby();
+    };
+    document.addEventListener('visibilitychange', refreshWhenVisible);
     return () => {
+      document.removeEventListener('visibilitychange', refreshWhenVisible);
       socket.disconnect();
     };
   }, []);

@@ -44,7 +44,6 @@ type RejectedAuthoritativeMove = {
   code:
     | 'GAME_NOT_FOUND'
     | 'GAME_NOT_ACTIVE'
-    | 'MOVE_COMMAND_DUPLICATE'
     | 'MOVE_STALE'
     | 'MOVE_NOT_YOUR_TURN'
     | 'MOVE_ILLEGAL'
@@ -77,15 +76,16 @@ export async function submitAuthoritativeMove(
     ) {
       return { accepted: false, code: 'GAME_NOT_FOUND' };
     }
-    if (game.status !== 'active') return { accepted: false, code: 'GAME_NOT_ACTIVE' };
 
     const previousCommand = await transaction
-      .selectFrom('game_moves')
-      .select('id')
+      .selectFrom('game_command_ledger')
+      .select('response')
       .where('game_id', '=', game.id)
       .where('command_id', '=', command.commandId)
       .executeTakeFirst();
-    if (previousCommand) return { accepted: false, code: 'MOVE_COMMAND_DUPLICATE' };
+    if (previousCommand) return previousCommand.response as SubmitAuthoritativeMoveResult;
+
+    if (game.status !== 'active') return { accepted: false, code: 'GAME_NOT_ACTIVE' };
 
     if (game.version !== command.expectedVersion) {
       return { accepted: false, code: 'MOVE_STALE' };
@@ -125,7 +125,15 @@ export async function submitAuthoritativeMove(
           payload: { flagged: playerColor },
         })
         .execute();
-      return { accepted: false, code: 'MOVE_FLAGGED' };
+      const response: RejectedAuthoritativeMove = { accepted: false, code: 'MOVE_FLAGGED' };
+      await recordConfirmedCommand(transaction, game.id, command, response);
+      await enqueueGameUpdated(
+        transaction,
+        game.id,
+        game.white_identity_id,
+        game.black_identity_id,
+      );
+      return response;
     }
 
     const moveResult = rules.tryMove(game.current_fen, command);
@@ -149,7 +157,21 @@ export async function submitAuthoritativeMove(
         fen_after: moveResult.move.fenAfter,
       })
       .execute();
-    const termination = terminalResult(moveResult.position.status, playerColor);
+    const confirmedMoves = await transaction
+      .selectFrom('game_moves')
+      .select(['from_square', 'to_square', 'promotion'])
+      .where('game_id', '=', game.id)
+      .orderBy('sequence', 'asc')
+      .execute();
+    const replayedPosition = rules.replay(
+      rules.initialPosition().fen,
+      confirmedMoves.map((move) => ({
+        from: move.from_square,
+        to: move.to_square,
+        promotion: move.promotion ?? undefined,
+      })),
+    );
+    const termination = terminalResult(replayedPosition.status, playerColor);
     const updatedGame = await transaction
       .updateTable('active_games')
       .set({
@@ -181,7 +203,7 @@ export async function submitAuthoritativeMove(
       ])
       .executeTakeFirstOrThrow();
 
-    return {
+    const response: AcceptedAuthoritativeMove = {
       accepted: true,
       game: updatedGame,
       move: {
@@ -192,7 +214,49 @@ export async function submitAuthoritativeMove(
         promotion: moveResult.move.promotion ?? null,
       },
     };
+    await recordConfirmedCommand(transaction, game.id, command, response);
+    await enqueueGameUpdated(transaction, game.id, game.white_identity_id, game.black_identity_id);
+    return response;
   });
+}
+
+async function recordConfirmedCommand(
+  transaction: Kysely<DatabaseSchema>,
+  gameId: string,
+  command: SubmitAuthoritativeMoveCommand,
+  response: SubmitAuthoritativeMoveResult,
+) {
+  await transaction
+    .insertInto('game_command_ledger')
+    .values({
+      id: randomUUID(),
+      game_id: gameId,
+      command_id: command.commandId,
+      actor_identity_id: command.identityId,
+      command_type: 'move',
+      response,
+    })
+    .execute();
+}
+
+async function enqueueGameUpdated(
+  transaction: Kysely<DatabaseSchema>,
+  gameId: string,
+  whiteIdentityId: string,
+  blackIdentityId: string,
+) {
+  await transaction
+    .insertInto('game_outbox')
+    .values({
+      id: randomUUID(),
+      game_id: gameId,
+      event_type: 'game.updated',
+      payload: { gameId, recipientIdentityIds: [whiteIdentityId, blackIdentityId] },
+      delivered_at: null,
+      lease_token: null,
+      lease_expires_at: null,
+    })
+    .execute();
 }
 
 type ClockGame = {
@@ -228,9 +292,13 @@ function calculateClock(game: ClockGame, now: Date) {
     whiteTimeRemainingMs,
     blackTimeRemainingMs,
     afterMoveWhiteTimeRemainingMs:
-      game.side_to_move === 'white' ? (whiteTimeRemainingMs ?? 0) + increment : whiteTimeRemainingMs,
+      game.side_to_move === 'white'
+        ? (whiteTimeRemainingMs ?? 0) + increment
+        : whiteTimeRemainingMs,
     afterMoveBlackTimeRemainingMs:
-      game.side_to_move === 'black' ? (blackTimeRemainingMs ?? 0) + increment : blackTimeRemainingMs,
+      game.side_to_move === 'black'
+        ? (blackTimeRemainingMs ?? 0) + increment
+        : blackTimeRemainingMs,
   };
 }
 
@@ -239,12 +307,23 @@ function terminalResult(
   mover: 'white' | 'black',
 ): {
   result: 'white_win' | 'black_win' | 'draw';
-  reason: 'checkmate' | 'stalemate' | 'insufficient_material';
+  reason:
+    | 'checkmate'
+    | 'stalemate'
+    | 'insufficient_material'
+    | 'fivefold_repetition'
+    | 'seventy_five_move_rule';
 } | null {
   if (status.isCheckmate) {
     return { result: mover === 'white' ? 'white_win' : 'black_win', reason: 'checkmate' };
   }
   if (status.isStalemate) return { result: 'draw', reason: 'stalemate' };
   if (status.isInsufficientMaterial) return { result: 'draw', reason: 'insufficient_material' };
+  if (status.automaticFivefoldRepetition) {
+    return { result: 'draw', reason: 'fivefold_repetition' };
+  }
+  if (status.automaticSeventyFiveMoveRule) {
+    return { result: 'draw', reason: 'seventy_five_move_rule' };
+  }
   return null;
 }
