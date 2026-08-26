@@ -2,7 +2,7 @@
 
 | Field          | Value                                       |
 | -------------- | ------------------------------------------- |
-| Status         | Accepted                                    |
+| Status         | Accepted 2026-08-26                         |
 | Milestone      | Milestone 5 — Archive and Chess Interchange |
 | Date           | 2026-08-26                                  |
 | Decision owner | Yasmany                                     |
@@ -84,7 +84,7 @@ Make completed standard-chess games discoverable and replayable, while providing
 
 **Implemented evidence:** The Chess Interchange import endpoint accepts one pasted PGN and returns only a private replay representation; no imported data reaches the database or Archive. The localized Import PGN page accepts pasted text or a selected `.pgn` file, and renders the same deterministic main-line replay controls used by Archive. The parser accepts comments and variations while exposing only the main line, supports declared `SetUp`/`FEN`, bounds input to 512 KB, and returns safe codes for empty, malformed, inconsistent, oversized, and non-standard-variant input.
 
-### M5.5 — Exit Validation and Documentation
+### M5.5 — Exit Validation and Documentation — Completed 2026-08-26
 
 **Outcome:** M5 has product and engineering evidence sufficient for acceptance.
 
@@ -93,6 +93,8 @@ Make completed standard-chess games discoverable and replayable, while providing
 - Publish a concise validation session and known-limitations record.
 
 **Evidence:** The M5 exit criteria in the implementation roadmap pass and Yasmany accepts the milestone.
+
+**Implemented evidence:** Server and web static checks, lint, and the dependency architecture guard pass. The server unit suite passes with 19 tests; isolated PostgreSQL integration passes with 7 tests; and the Playwright accessibility journey passes. Manual product validation covered archive discovery and replay, PGN export, private paste/file import, localized validation feedback, and replay on desktop and phone. Remaining product limits are recorded in the exit-validation session.
 
 ## Explicitly Deferred
 
