@@ -2,14 +2,14 @@
 
 ## Document Control
 
-| Field | Value |
-| --- | --- |
-| Status | Accepted |
-| Version | 0.1 |
-| Decision owner | Yasmany |
-| Prepared by | Codex |
-| Date | 2026-08-24 |
-| Milestone | Milestone 3 — Authoritative Chess Play |
+| Field          | Value                                  |
+| -------------- | -------------------------------------- |
+| Status         | Accepted                               |
+| Version        | 0.1                                    |
+| Decision owner | Yasmany                                |
+| Prepared by    | Codex                                  |
+| Date           | 2026-08-24                             |
+| Milestone      | Milestone 3 — Authoritative Chess Play |
 
 ## Objective
 
@@ -91,11 +91,11 @@ This plan does not reopen these accepted decisions:
 
 ## New Decisions Requiring Approval
 
-| ID | Decision | Proposed default | Why it matters |
-| --- | --- | --- | --- |
-| M3-D01 | Board input model | Click/tap only in M3; drag-and-drop may be added later as an enhancement. | It gives one accessible, reliable interaction model across touch and desktop. |
-| M3-D02 | Client update strategy | Confirmed-state rendering with no optimistic piece movement. | It makes server authority visually unambiguous during the educational first implementation. |
-| M3-D03 | Scope sequencing | Deliver the slices in order, retaining a usable game after each slice. | It limits risk in rules, transactions, UI, clocks, and completion logic. |
+| ID     | Decision               | Proposed default                                                          | Why it matters                                                                              |
+| ------ | ---------------------- | ------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------- |
+| M3-D01 | Board input model      | Click/tap only in M3; drag-and-drop may be added later as an enhancement. | It gives one accessible, reliable interaction model across touch and desktop.               |
+| M3-D02 | Client update strategy | Confirmed-state rendering with no optimistic piece movement.              | It makes server authority visually unambiguous during the educational first implementation. |
+| M3-D03 | Scope sequencing       | Deliver the slices in order, retaining a usable game after each slice.    | It limits risk in rules, transactions, UI, clocks, and completion logic.                    |
 
 Yasmany approved all three proposed decisions on 2026-08-24.
 

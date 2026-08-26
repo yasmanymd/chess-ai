@@ -3,7 +3,7 @@
 | Field        | Value                                                      |
 | ------------ | ---------------------------------------------------------- |
 | Date         | 2026-08-26                                                 |
-| Milestone    | M5.1 — Completed-Game Publication and Archive Projection  |
+| Milestone    | M5.1 — Completed-Game Publication and Archive Projection   |
 | Participants | Yasmany (decision owner), Codex (implementation assistant) |
 | Status       | Completed                                                  |
 

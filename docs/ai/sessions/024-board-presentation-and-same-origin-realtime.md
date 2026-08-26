@@ -1,11 +1,11 @@
 # Session 024 — Board Presentation and Same-Origin Realtime Synchronization
 
-| Field | Value |
-| --- | --- |
-| Date | 2026-08-25 |
-| Milestone | M3.3 — Interactive Board and Promotion |
+| Field        | Value                                            |
+| ------------ | ------------------------------------------------ |
+| Date         | 2026-08-25                                       |
+| Milestone    | M3.3 — Interactive Board and Promotion           |
 | Participants | Yasmany (decision owner), Codex (implementation) |
-| Status | In Progress |
+| Status       | In Progress                                      |
 
 ## Goal
 
@@ -25,13 +25,13 @@ Improve the play-screen clarity for real two-player testing and make confirmed m
 
 ## Human Decisions
 
-| ID | Decision | Owner | Status |
-| --- | --- | --- | --- |
-| S024-D01 | The board must be oriented from the active player's perspective, with the player's own pieces at the bottom. | Yasmany | Approved through implementation request |
-| S024-D02 | Use richer opaque board pieces rather than Unicode glyphs, and bundle the visual assets locally. | Yasmany | Approved through implementation request |
-| S024-D03 | Keep player identity and turn status adjacent to their respective move-history columns. | Yasmany | Approved through iterative visual review |
-| S024-D04 | Movement history must not increase the page height; it must remain board-sized and scroll internally. | Yasmany | Approved through implementation request |
-| S024-D05 | A move must reconcile across web and phone clients without a manual refresh. | Yasmany | Approved through implementation request |
+| ID       | Decision                                                                                                     | Owner   | Status                                   |
+| -------- | ------------------------------------------------------------------------------------------------------------ | ------- | ---------------------------------------- |
+| S024-D01 | The board must be oriented from the active player's perspective, with the player's own pieces at the bottom. | Yasmany | Approved through implementation request  |
+| S024-D02 | Use richer opaque board pieces rather than Unicode glyphs, and bundle the visual assets locally.             | Yasmany | Approved through implementation request  |
+| S024-D03 | Keep player identity and turn status adjacent to their respective move-history columns.                      | Yasmany | Approved through iterative visual review |
+| S024-D04 | Movement history must not increase the page height; it must remain board-sized and scroll internally.        | Yasmany | Approved through implementation request  |
+| S024-D05 | A move must reconcile across web and phone clients without a manual refresh.                                 | Yasmany | Approved through implementation request  |
 
 ## Asset Attribution
 

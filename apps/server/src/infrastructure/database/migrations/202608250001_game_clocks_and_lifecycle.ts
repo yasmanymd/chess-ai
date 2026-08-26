@@ -22,7 +22,9 @@ export async function up(db: Kysely<unknown>): Promise<void> {
     .addColumn('id', 'uuid', (column) => column.primaryKey())
     .addColumn('game_id', 'uuid', (column) => column.notNull().references('active_games.id'))
     .addColumn('sequence', 'integer', (column) => column.notNull())
-    .addColumn('actor_identity_id', 'uuid', (column) => column.references('temporary_identities.id'))
+    .addColumn('actor_identity_id', 'uuid', (column) =>
+      column.references('temporary_identities.id'),
+    )
     .addColumn('event_type', 'text', (column) => column.notNull())
     .addColumn('payload', 'jsonb', (column) => column.notNull().defaultTo(sql`'{}'::jsonb`))
     .addColumn('created_at', 'timestamptz', (column) => column.notNull().defaultTo(sql`now()`))

@@ -1,11 +1,11 @@
 # Session 025 — Milestone 3 Closure Implementation
 
-| Field | Value |
-| --- | --- |
-| Date | 2026-08-25 |
-| Milestone | M3.4–M3.5 — Clocks, completion, and player actions |
+| Field        | Value                                                      |
+| ------------ | ---------------------------------------------------------- |
+| Date         | 2026-08-25                                                 |
+| Milestone    | M3.4–M3.5 — Clocks, completion, and player actions         |
 | Participants | Yasmany (decision owner), Codex (implementation assistant) |
-| Status | Completed |
+| Status       | Completed                                                  |
 
 ## Objective
 
@@ -26,12 +26,12 @@ Implement the remaining authoritative gameplay capabilities required to close Mi
 
 ## Decisions Applied
 
-| ID | Decision | Owner | Status |
-| --- | --- | --- | --- |
-| M3-D04 | Clock elapsed time is calculated from a recorded server timestamp; browser timers are display-only estimates. | Yasmany + Codex | Applied |
-| M3-D05 | Player lifecycle commands create a persisted event in the same transaction as the game-state transition. | Yasmany + Codex | Applied |
-| M3-D06 | Promotion remains a deliberate client choice; the browser sends the selected piece but never determines move legality. | Yasmany + Codex | Applied |
-| M3-D07 | A clock reaching zero ends a game without requiring a subsequent player action. | Yasmany + Codex | Applied |
+| ID     | Decision                                                                                                                  | Owner           | Status                   |
+| ------ | ------------------------------------------------------------------------------------------------------------------------- | --------------- | ------------------------ |
+| M3-D04 | Clock elapsed time is calculated from a recorded server timestamp; browser timers are display-only estimates.             | Yasmany + Codex | Applied                  |
+| M3-D05 | Player lifecycle commands create a persisted event in the same transaction as the game-state transition.                  | Yasmany + Codex | Applied                  |
+| M3-D06 | Promotion remains a deliberate client choice; the browser sends the selected piece but never determines move legality.    | Yasmany + Codex | Applied                  |
+| M3-D07 | A clock reaching zero ends a game without requiring a subsequent player action.                                           | Yasmany + Codex | Applied                  |
 | M3-D08 | Player identity and turn state use compact badges in a full-width roster row rather than competing with the move columns. | Yasmany + Codex | Approved in human review |
 
 ## Validation Evidence
@@ -55,4 +55,5 @@ Implement the remaining authoritative gameplay capabilities required to close Mi
 ## Next Step
 
 Begin Milestone 4 — Durability, Recovery, and Concurrency.
+
 - Record the final M3 exit-validation session and update the milestone status after the evidence passes.

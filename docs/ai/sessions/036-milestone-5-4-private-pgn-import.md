@@ -1,11 +1,11 @@
 # Session 036 — Milestone 5.4 Private PGN Import
 
-| Field | Value |
-| --- | --- |
-| Date | 2026-08-26 |
-| Milestone | M5.4 — Private PGN Import and Replay |
+| Field        | Value                                                      |
+| ------------ | ---------------------------------------------------------- |
+| Date         | 2026-08-26                                                 |
+| Milestone    | M5.4 — Private PGN Import and Replay                       |
 | Participants | Yasmany (decision owner), Codex (implementation assistant) |
-| Status | Completed pending visual acceptance |
+| Status       | Completed pending visual acceptance                        |
 
 ## Objective
 

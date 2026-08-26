@@ -24,10 +24,10 @@ Make the confirmed authoritative board usable across desktop and mobile while pr
 
 ## Human Decisions
 
-| ID | Decision | Owner | Status |
-| --- | -------- | ----- | ------ |
-| S023-D01 | Preserve global unique visible names and add recovery rather than automatically allowing a new session to claim an existing name. | Yasmany | Approved |
-| S023-D02 | Reset the local Docker PostgreSQL volume because active test identities predated recovery codes and the current test game could be discarded. | Yasmany | Approved |
+| ID       | Decision                                                                                                                                          | Owner   | Status   |
+| -------- | ------------------------------------------------------------------------------------------------------------------------------------------------- | ------- | -------- |
+| S023-D01 | Preserve global unique visible names and add recovery rather than automatically allowing a new session to claim an existing name.                 | Yasmany | Approved |
+| S023-D02 | Reset the local Docker PostgreSQL volume because active test identities predated recovery codes and the current test game could be discarded.     | Yasmany | Approved |
 | S023-D03 | Move player cards above and below the board, remove technical UI values, avoid visual refresh flashes, and improve compact move-history grouping. | Yasmany | Approved |
 
 ## Validation Evidence

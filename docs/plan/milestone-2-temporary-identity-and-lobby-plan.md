@@ -4,7 +4,7 @@
 
 | Field          | Value                                      |
 | -------------- | ------------------------------------------ |
-| Status         | Implemented — validation in progress      |
+| Status         | Implemented — validation in progress       |
 | Version        | 1.0                                        |
 | Decision owner | Yasmany                                    |
 | Source         | Session 017                                |

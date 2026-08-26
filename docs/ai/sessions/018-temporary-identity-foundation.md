@@ -25,11 +25,11 @@ Begin the approved M2.1 vertical slice by establishing the server-side identity 
 
 ## Verification and Evidence
 
-| Check | Result |
-| --- | --- |
-| Temporary-identity unit tests | Passed: 6 tests |
-| Server unit tests | Passed: 7 tests total |
-| Server TypeScript typecheck | Passed |
+| Check                         | Result                |
+| ----------------------------- | --------------------- |
+| Temporary-identity unit tests | Passed: 6 tests       |
+| Server unit tests             | Passed: 7 tests total |
+| Server TypeScript typecheck   | Passed                |
 
 ## Progress Update
 
@@ -41,11 +41,11 @@ Begin the approved M2.1 vertical slice by establishing the server-side identity 
 
 ## Updated Verification and Evidence
 
-| Check | Result |
-| --- | --- |
-| Temporary-identity unit tests | Passed: 6 tests |
-| Server unit tests | Passed: 7 tests total |
-| Server TypeScript typecheck | Passed |
+| Check                         | Result                |
+| ----------------------------- | --------------------- |
+| Temporary-identity unit tests | Passed: 6 tests       |
+| Server unit tests             | Passed: 7 tests total |
+| Server TypeScript typecheck   | Passed                |
 
 ## Next Step
 

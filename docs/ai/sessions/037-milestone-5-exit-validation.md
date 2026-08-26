@@ -1,11 +1,11 @@
 # Session 037 — Milestone 5 Exit Validation
 
-| Field | Value |
-| --- | --- |
-| Date | 2026-08-26 |
-| Milestone | M5.5 — Exit Validation and Documentation |
+| Field        | Value                                                      |
+| ------------ | ---------------------------------------------------------- |
+| Date         | 2026-08-26                                                 |
+| Milestone    | M5.5 — Exit Validation and Documentation                   |
 | Participants | Yasmany (decision owner), Codex (implementation assistant) |
-| Status | Accepted |
+| Status       | Accepted                                                   |
 
 ## Objective
 
@@ -28,12 +28,12 @@ Validate the completed-game archive and Chess Interchange capabilities before as
 
 ## Exit-Criteria Traceability
 
-| Roadmap criterion | Evidence |
-| --- | --- |
-| Completed games appear in public history and replay deterministically. | Archive projection, public list/detail contracts, deterministic recorded-move replay, automated checks, and manual cross-device review. |
-| PGN export and supported import round trips preserve main-line facts. | Archive-derived export contract and unit coverage; the import validator accepts normal and FEN starts, validates main-line moves and result consistency, and uses the same replay representation. |
-| Invalid PGN and invalid positions are rejected safely with localized client messages. | Bounded import contract tests cover empty, malformed, inconsistent-result, and unsupported-variant input; browser feedback is localized. |
-| Archive and interchange access game data only through approved contracts and projections. | Dependency-cruiser passes; Archive owns its projection and Chess Interchange consumes Archive's public replay contract. |
+| Roadmap criterion                                                                         | Evidence                                                                                                                                                                                          |
+| ----------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Completed games appear in public history and replay deterministically.                    | Archive projection, public list/detail contracts, deterministic recorded-move replay, automated checks, and manual cross-device review.                                                           |
+| PGN export and supported import round trips preserve main-line facts.                     | Archive-derived export contract and unit coverage; the import validator accepts normal and FEN starts, validates main-line moves and result consistency, and uses the same replay representation. |
+| Invalid PGN and invalid positions are rejected safely with localized client messages.     | Bounded import contract tests cover empty, malformed, inconsistent-result, and unsupported-variant input; browser feedback is localized.                                                          |
+| Archive and interchange access game data only through approved contracts and projections. | Dependency-cruiser passes; Archive owns its projection and Chess Interchange consumes Archive's public replay contract.                                                                           |
 
 ## Known Limitations
 

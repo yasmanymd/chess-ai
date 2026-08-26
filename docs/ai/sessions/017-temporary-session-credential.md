@@ -29,7 +29,7 @@ Choose the browser-session mechanism that protects an accountless temporary iden
 | S017-D07 | When a waiting game is matched, navigate both players to `/games/:id` and show a non-interactive initial board, players, assigned colors, time control, and a localized Milestone 3 notice.           | Yasmany | Accepted |
 | S017-D08 | Normalize display names by trimming, applying Unicode NFKC, and using locale-independent lowercase comparison; enforce uniqueness on the normalized value while retaining the original display value. | Yasmany | Accepted |
 | S017-D09 | Extend Socket.IO notifications with a private `game.started` event to both matched identities; it triggers navigation only and does not accept a client mutation command.                             | Yasmany | Accepted |
-| S017-D10 | Let the browser call the public API directly with credentialed requests; restrict CORS to the configured web origin and defer a same-origin reverse proxy to deployment design.                     | Yasmany | Accepted |
+| S017-D10 | Let the browser call the public API directly with credentialed requests; restrict CORS to the configured web origin and defer a same-origin reverse proxy to deployment design.                       | Yasmany | Accepted |
 
 ## Rationale
 

@@ -1,11 +1,11 @@
 # Session 035 — Milestone 5.3 PGN Export
 
-| Field | Value |
-| --- | --- |
-| Date | 2026-08-26 |
-| Milestone | M5.3 — PGN Export Through Chess Interchange |
+| Field        | Value                                                      |
+| ------------ | ---------------------------------------------------------- |
+| Date         | 2026-08-26                                                 |
+| Milestone    | M5.3 — PGN Export Through Chess Interchange                |
 | Participants | Yasmany (decision owner), Codex (implementation assistant) |
-| Status | Completed |
+| Status       | Completed                                                  |
 
 ## Objective
 

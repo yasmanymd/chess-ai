@@ -2,13 +2,13 @@
 
 ## Session Metadata
 
-| Field | Value |
-| --- | --- |
-| Date | 2026-08-24 |
-| Status | Completed |
-| Human participant | Yasmany |
-| AI collaborator | Codex |
-| Milestone | Milestone 3 — Authoritative Chess Play |
+| Field             | Value                                  |
+| ----------------- | -------------------------------------- |
+| Date              | 2026-08-24                             |
+| Status            | Completed                              |
+| Human participant | Yasmany                                |
+| AI collaborator   | Codex                                  |
+| Milestone         | Milestone 3 — Authoritative Chess Play |
 
 ## Objective
 

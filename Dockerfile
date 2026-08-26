@@ -22,3 +22,7 @@ USER root
 ENV PLAYWRIGHT_BROWSERS_PATH=/ms-playwright
 RUN pnpm --filter @chess-ai/web exec playwright install --with-deps chromium
 USER node
+
+FROM development AS release-build
+
+RUN pnpm --filter @chess-ai/server build && pnpm --filter @chess-ai/web build

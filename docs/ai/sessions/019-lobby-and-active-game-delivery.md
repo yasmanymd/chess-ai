@@ -2,13 +2,13 @@
 
 ## Session Metadata
 
-| Field | Value |
-| --- | --- |
-| Date | 2026-08-21 |
-| Status | Completed |
-| Human participant | Yasmany |
-| AI collaborator | Codex |
-| Milestone | Milestone 2 — Temporary Identity and Lobby |
+| Field             | Value                                      |
+| ----------------- | ------------------------------------------ |
+| Date              | 2026-08-21                                 |
+| Status            | Completed                                  |
+| Human participant | Yasmany                                    |
+| AI collaborator   | Codex                                      |
+| Milestone         | Milestone 2 — Temporary Identity and Lobby |
 
 ## Outcome
 
@@ -25,15 +25,15 @@ Delivered the accountless lobby flow: an identified player can create one waitin
 
 ## Verification and Evidence
 
-| Check | Result |
-| --- | --- |
-| Server TypeScript typecheck | Passed |
-| Web TypeScript typecheck | Passed |
-| Server unit tests | Passed: 7 tests |
-| Web unit tests | Passed: 1 test |
-| Native web identity → lobby → create-table flow | Passed with HTTP redirects and session cookie |
-| Two temporary identities: create → list → atomic join → active-game read | Passed against Docker PostgreSQL |
-| Test-data cleanup | Completed; only specifically named probe records were deleted |
+| Check                                                                    | Result                                                        |
+| ------------------------------------------------------------------------ | ------------------------------------------------------------- |
+| Server TypeScript typecheck                                              | Passed                                                        |
+| Web TypeScript typecheck                                                 | Passed                                                        |
+| Server unit tests                                                        | Passed: 7 tests                                               |
+| Web unit tests                                                           | Passed: 1 test                                                |
+| Native web identity → lobby → create-table flow                          | Passed with HTTP redirects and session cookie                 |
+| Two temporary identities: create → list → atomic join → active-game read | Passed against Docker PostgreSQL                              |
+| Test-data cleanup                                                        | Completed; only specifically named probe records were deleted |
 
 ## Notable Correction
 

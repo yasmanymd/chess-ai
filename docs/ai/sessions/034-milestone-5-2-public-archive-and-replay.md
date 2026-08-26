@@ -1,11 +1,11 @@
 # Session 034 — Milestone 5.2 Public Archive and Replay
 
-| Field | Value |
-| --- | --- |
-| Date | 2026-08-26 |
-| Milestone | M5.2 — Public Archive Discovery and Replay |
+| Field        | Value                                                      |
+| ------------ | ---------------------------------------------------------- |
+| Date         | 2026-08-26                                                 |
+| Milestone    | M5.2 — Public Archive Discovery and Replay                 |
 | Participants | Yasmany (decision owner), Codex (implementation assistant) |
-| Status | Completed |
+| Status       | Completed                                                  |
 
 ## Objective
 

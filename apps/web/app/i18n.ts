@@ -345,8 +345,7 @@ const resources = {
       'importError.PGN_INVALID': 'No pudimos leer ese PGN. Comprueba que sea una partida válida.',
       'importError.PGN_RESULT_INCONSISTENT':
         'El resultado declarado no coincide con el resultado final.',
-      'importError.PGN_UNSUPPORTED_VARIANT':
-        'Por ahora solo se admite PGN de ajedrez estándar.',
+      'importError.PGN_UNSUPPORTED_VARIANT': 'Por ahora solo se admite PGN de ajedrez estándar.',
     },
   },
   fr: {
