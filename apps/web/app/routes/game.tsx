@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import {
   redirect,
   useFetcher,
@@ -13,7 +13,7 @@ import { io } from 'socket.io-client';
 type BoardGame = {
   id: string;
   time_control: string;
-  status: 'active';
+  status: 'active' | 'completed';
   current_fen: string;
   side_to_move: 'white' | 'black';
   version: number;
@@ -21,9 +21,15 @@ type BoardGame = {
   black_identity_id: string;
   whiteDisplayName: string;
   blackDisplayName: string;
+  white_time_remaining_ms: number | null;
+  black_time_remaining_ms: number | null;
+  turn_started_at: string | null;
+  result: 'white_win' | 'black_win' | 'draw' | null;
+  termination_reason: string | null;
+  draw_offered_by_identity_id: string | null;
 };
 type BoardMove = { sequence: number; from_square: string; to_square: string; san: string };
-type LegalMove = { to: string };
+type LegalMove = { to: string; promotion?: 'queen' | 'rook' | 'bishop' | 'knight' };
 const files = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h'];
 const pieceAsset: Record<string, string> = {
   P: '/pieces/cburnett/wP.svg',
@@ -122,7 +128,19 @@ export async function loader({
         response.ok ? ((await response.json()) as { moves: LegalMove[] }).moves : [],
       )
     : [];
-  return { identity: identity.identity, ...payload, selection, destinations };
+  const promotionTarget = new URL(request.url).searchParams.get('promote');
+  const promotionChoices =
+    selection && promotionTarget && /^[a-h][1-8]$/.test(promotionTarget)
+      ? destinations.filter((move) => move.to === promotionTarget && move.promotion)
+      : [];
+  return {
+    identity: identity.identity,
+    ...payload,
+    selection,
+    destinations,
+    promotionTarget,
+    promotionChoices,
+  };
 }
 
 export async function action({
@@ -134,16 +152,25 @@ export async function action({
 }) {
   const form = await request.formData();
   const enhanced = form.get('_enhanced') === 'true';
-  const response = await fetch(`http://server:3000/games/${params.gameId ?? ''}/moves`, {
-    method: 'POST',
-    headers: { ...serverHeaders(request), 'content-type': 'application/json' },
-    body: JSON.stringify({
-      commandId: crypto.randomUUID(),
-      expectedVersion: Number(form.get('expectedVersion')),
-      from: form.get('from'),
-      to: form.get('to'),
-    }),
-  });
+  const isGameAction = form.get('intent') === 'game-action';
+  const response = await fetch(
+    `http://server:3000/games/${params.gameId ?? ''}/${isGameAction ? 'actions' : 'moves'}`,
+    {
+      method: 'POST',
+      headers: { ...serverHeaders(request), 'content-type': 'application/json' },
+      body: JSON.stringify({
+        expectedVersion: Number(form.get('expectedVersion')),
+        ...(isGameAction
+          ? { action: form.get('gameAction') }
+          : {
+              commandId: crypto.randomUUID(),
+              from: form.get('from'),
+              to: form.get('to'),
+              promotion: form.get('promotion') || undefined,
+            }),
+      }),
+    },
+  );
   if (response.ok) {
     if (enhanced) return { accepted: true as const };
     return redirect(`/games/${params.gameId ?? ''}#game-board`);
@@ -158,12 +185,14 @@ export async function action({
 
 export default function Game() {
   const { t } = useTranslation();
-  const { game, identity, moves, selection, destinations } = useLoaderData<typeof loader>();
+  const { game, identity, moves, selection, destinations, promotionTarget, promotionChoices } =
+    useLoaderData<typeof loader>();
   const location = useLocation();
   const navigate = useNavigate();
   const revalidator = useRevalidator();
   const moveFetcher = useFetcher<typeof action>();
   const historyRef = useRef<HTMLOListElement>(null);
+  const [clockNow, setClockNow] = useState(() => Date.now());
   const revalidatorRef = useRef(revalidator);
   const handledMoveResponseRef = useRef<typeof moveFetcher.data>(undefined);
   const refreshPendingRef = useRef(false);
@@ -172,6 +201,14 @@ export default function Game() {
     query.get('error') ??
     (moveFetcher.data && !moveFetcher.data.accepted ? moveFetcher.data.errorCode : undefined);
   const color = game.white_identity_id === identity.id ? 'white' : 'black';
+  const drawOfferedByOpponent =
+    game.draw_offered_by_identity_id && game.draw_offered_by_identity_id !== identity.id;
+  const resultMessage =
+    game.result === 'white_win'
+      ? t('gameWinner', { name: game.whiteDisplayName })
+      : game.result === 'black_win'
+        ? t('gameWinner', { name: game.blackDisplayName })
+        : t('gameResult.draw');
   const canMove = game.status === 'active' && game.side_to_move === color;
   const pieces = piecesFromFen(game.current_fen);
   const squaresFromWhitePerspective = Array.from(
@@ -186,6 +223,18 @@ export default function Game() {
     white: moves[index * 2]?.san,
     black: moves[index * 2 + 1]?.san,
   }));
+  const renderClock = (side: 'white' | 'black') => {
+    const stored = side === 'white' ? game.white_time_remaining_ms : game.black_time_remaining_ms;
+    if (stored === null) return null;
+    const elapsed =
+      game.status === 'active' && game.side_to_move === side && game.turn_started_at
+        ? Math.max(0, clockNow - new Date(game.turn_started_at).getTime())
+        : 0;
+    const remaining = Math.max(0, stored - elapsed);
+    const minutes = Math.floor(remaining / 60_000);
+    const seconds = Math.floor((remaining % 60_000) / 1_000);
+    return <time className="game-clock">{`${minutes}:${String(seconds).padStart(2, '0')}`}</time>;
+  };
 
   useEffect(() => {
     revalidatorRef.current = revalidator;
@@ -202,6 +251,12 @@ export default function Game() {
 
     return () => window.clearInterval(interval);
   }, []);
+
+  useEffect(() => {
+    if (game.time_control === 'none' || game.status !== 'active') return undefined;
+    const interval = window.setInterval(() => setClockNow(Date.now()), 1_000);
+    return () => window.clearInterval(interval);
+  }, [game.status, game.time_control]);
 
   useEffect(() => {
     const socket = io({
@@ -264,7 +319,28 @@ export default function Game() {
             {squares.map((square, index) => {
               const piece = pieces[square];
               const destination = destinations.some((move) => move.to === square);
+              const requiresPromotion = destinations.some(
+                (move) => move.to === square && move.promotion,
+              );
               const className = `square ${(Math.floor(index / 8) + (index % 8)) % 2 === 0 ? 'square-light' : 'square-dark'}${lastMove?.from_square === square ? ' square-last-from' : ''}${lastMove?.to_square === square ? ' square-last-to' : ''}${selection === square ? ' square-selected' : ''}${destination ? ' square-destination' : ''}`;
+              if (destination && selection && requiresPromotion)
+                return (
+                  <a
+                    aria-label={`${selection} to ${square}`}
+                    className={className}
+                    href={`/games/${game.id}?selected=${selection}&promote=${square}#game-board`}
+                    key={square}
+                    onClick={(event) => {
+                      event.preventDefault();
+                      void navigate(
+                        `/games/${game.id}?selected=${selection}&promote=${square}#game-board`,
+                        { preventScrollReset: true },
+                      );
+                    }}
+                  >
+                    {renderSquareContents(piece, square, index)}
+                  </a>
+                );
               if (destination && selection)
                 return (
                   <form
@@ -316,42 +392,66 @@ export default function Game() {
               );
             })}
           </div>
+          {promotionTarget && promotionChoices.length ? (
+            <div className="promotion-picker" role="group" aria-label={t('choosePromotion')}>
+              <span>{t('choosePromotion')}</span>
+              {promotionChoices.map((move) => (
+                <button
+                  key={move.promotion}
+                  onClick={() =>
+                    moveFetcher.submit(
+                      {
+                        _enhanced: 'true',
+                        expectedVersion: String(game.version),
+                        from: selection!,
+                        to: promotionTarget,
+                        promotion: move.promotion!,
+                      },
+                      { method: 'post' },
+                    )
+                  }
+                  type="button"
+                >
+                  {t(`promotion.${move.promotion}`)}
+                </button>
+              ))}
+            </div>
+          ) : null}
         </div>
         <aside className="game-sidebar" aria-label={t('moveHistory')}>
           <section className="move-history" aria-label={t('moveHistory')}>
             <div className="move-history-players">
-              <span aria-hidden="true" />
               <div
                 className={`move-history-player${game.side_to_move === 'white' ? ' is-active' : ''}`}
               >
-                <span className="player-color">
-                  <i aria-hidden="true" className="piece-color-indicator piece-color-light" />
-                  {t('white')}
-                </span>
                 <div className="player-name-row">
-                  <strong>{game.whiteDisplayName}</strong>
+                  <span className="player-identity">
+                    <i aria-hidden="true" className="piece-color-indicator piece-color-light" />
+                    <strong>{game.whiteDisplayName}</strong>
+                  </span>
+                  {renderClock('white')}
+                </div>
+                <div className="player-status-row">
                   {color === 'white' ? <span className="you-indicator">{t('you')}</span> : null}
-                  {game.side_to_move === 'white' ? (
-                    <span className="turn-indicator">
-                      {color === 'white' ? t('yourTurn') : t('opponentTurn')}
-                    </span>
+                  {game.status === 'active' && game.side_to_move === 'white' ? (
+                    <span className="turn-indicator">{t('toMove')}</span>
                   ) : null}
                 </div>
               </div>
               <div
                 className={`move-history-player${game.side_to_move === 'black' ? ' is-active' : ''}`}
               >
-                <span className="player-color">
-                  <i aria-hidden="true" className="piece-color-indicator piece-color-dark" />
-                  {t('black')}
-                </span>
                 <div className="player-name-row">
-                  <strong>{game.blackDisplayName}</strong>
+                  <span className="player-identity">
+                    <i aria-hidden="true" className="piece-color-indicator piece-color-dark" />
+                    <strong>{game.blackDisplayName}</strong>
+                  </span>
+                  {renderClock('black')}
+                </div>
+                <div className="player-status-row">
                   {color === 'black' ? <span className="you-indicator">{t('you')}</span> : null}
-                  {game.side_to_move === 'black' ? (
-                    <span className="turn-indicator">
-                      {color === 'black' ? t('yourTurn') : t('opponentTurn')}
-                    </span>
+                  {game.status === 'active' && game.side_to_move === 'black' ? (
+                    <span className="turn-indicator">{t('toMove')}</span>
                   ) : null}
                 </div>
               </div>
@@ -372,6 +472,88 @@ export default function Game() {
               </ol>
             ) : (
               <p>{t('noMovesYet')}</p>
+            )}
+            {game.status === 'active' ? (
+              <div className="game-actions">
+                {drawOfferedByOpponent ? (
+                  <>
+                    <button
+                      className="button button-secondary"
+                      onClick={() =>
+                        moveFetcher.submit(
+                          {
+                            intent: 'game-action',
+                            gameAction: 'accept_draw',
+                            expectedVersion: String(game.version),
+                          },
+                          { method: 'post' },
+                        )
+                      }
+                      type="button"
+                    >
+                      {t('acceptDraw')}
+                    </button>
+                    <button
+                      className="button button-quiet"
+                      onClick={() =>
+                        moveFetcher.submit(
+                          {
+                            intent: 'game-action',
+                            gameAction: 'reject_draw',
+                            expectedVersion: String(game.version),
+                          },
+                          { method: 'post' },
+                        )
+                      }
+                      type="button"
+                    >
+                      {t('rejectDraw')}
+                    </button>
+                  </>
+                ) : (
+                  <button
+                    className="button button-quiet"
+                    onClick={() =>
+                      moveFetcher.submit(
+                        {
+                          intent: 'game-action',
+                          gameAction: 'offer_draw',
+                          expectedVersion: String(game.version),
+                        },
+                        { method: 'post' },
+                      )
+                    }
+                    type="button"
+                  >
+                    {t('offerDraw')}
+                  </button>
+                )}
+                <button
+                  className="button button-quiet"
+                  onClick={() =>
+                    moveFetcher.submit(
+                      {
+                        intent: 'game-action',
+                        gameAction: 'resign',
+                        expectedVersion: String(game.version),
+                      },
+                      { method: 'post' },
+                    )
+                  }
+                  type="button"
+                >
+                  {t('resign')}
+                </button>
+              </div>
+            ) : (
+              <div className="game-complete-actions">
+                <p className="game-result" role="status">
+                  {resultMessage}
+                </p>
+                <a className="button button-secondary" href="/lobby">
+                  {t('returnToLobby')}
+                </a>
+              </div>
             )}
           </section>
         </aside>

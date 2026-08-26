@@ -27,10 +27,24 @@ export interface ActiveGamesTable {
   white_identity_id: string;
   black_identity_id: string;
   time_control: string;
-  status: 'active';
+  status: 'active' | 'completed';
   current_fen: string;
   side_to_move: 'white' | 'black';
   version: number;
+  white_time_remaining_ms: number | null;
+  black_time_remaining_ms: number | null;
+  turn_started_at: Date | null;
+  result: 'white_win' | 'black_win' | 'draw' | null;
+  termination_reason:
+    | 'checkmate'
+    | 'stalemate'
+    | 'insufficient_material'
+    | 'timeout'
+    | 'resignation'
+    | 'agreed_draw'
+    | 'draw_claim'
+    | null;
+  draw_offered_by_identity_id: string | null;
   created_at: Generated<Date>;
 }
 
@@ -49,11 +63,22 @@ export interface GameMovesTable {
   created_at: Generated<Date>;
 }
 
+export interface GameEventsTable {
+  id: string;
+  game_id: string;
+  sequence: number;
+  actor_identity_id: string | null;
+  event_type: string;
+  payload: unknown;
+  created_at: Generated<Date>;
+}
+
 export interface DatabaseSchema {
   temporary_identities: TemporaryIdentitiesTable;
   waiting_games: WaitingGamesTable;
   active_games: ActiveGamesTable;
   game_moves: GameMovesTable;
+  game_events: GameEventsTable;
 }
 
 export function createDatabase(connectionString: string): Kysely<DatabaseSchema> {

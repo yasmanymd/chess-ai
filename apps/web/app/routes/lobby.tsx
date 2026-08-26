@@ -1,6 +1,7 @@
-import { useEffect } from 'react';
-import { redirect, useLoaderData } from 'react-router';
+import { useEffect, useRef } from 'react';
+import { redirect, useLoaderData, useRevalidator } from 'react-router';
 import { useTranslation } from 'react-i18next';
+import { io } from 'socket.io-client';
 import { getCurrentActiveGame } from '../api.client.js';
 
 type WaitingGame = {
@@ -88,9 +89,46 @@ export async function action({ request }: { request: Request }) {
 export default function Lobby() {
   const { t } = useTranslation();
   const { identity, games, recoveryCode } = useLoaderData<typeof loader>();
+  const revalidator = useRevalidator();
+  const revalidatorRef = useRef(revalidator);
+  const refreshPendingRef = useRef(false);
   const query = new URLSearchParams(typeof window === 'undefined' ? '' : window.location.search);
   const ownGame = games.find((game) => game.creatorDisplayName === identity.displayName);
   const visibleGames = games.filter((game) => game.creatorDisplayName !== identity.displayName);
+  useEffect(() => {
+    revalidatorRef.current = revalidator;
+  });
+  useEffect(() => {
+    const refreshLobby = () => {
+      if (revalidatorRef.current.state === 'idle') revalidatorRef.current.revalidate();
+      else refreshPendingRef.current = true;
+    };
+    const socket = io({
+      path: '/socket.io',
+      withCredentials: true,
+      transports: ['websocket', 'polling'],
+    });
+    socket.on('lobby.changed', refreshLobby);
+    socket.on('game.started', (event: { gameId?: string }) => {
+      if (event.gameId) window.location.assign(`/games/${event.gameId}`);
+    });
+    return () => {
+      socket.disconnect();
+    };
+  }, []);
+  useEffect(() => {
+    if (revalidator.state === 'idle' && refreshPendingRef.current) {
+      refreshPendingRef.current = false;
+      revalidator.revalidate();
+    }
+  }, [revalidator.revalidate, revalidator.state]);
+  useEffect(() => {
+    const interval = window.setInterval(() => {
+      if (revalidatorRef.current.state === 'idle') revalidatorRef.current.revalidate();
+      else refreshPendingRef.current = true;
+    }, 10_000);
+    return () => window.clearInterval(interval);
+  }, []);
   useEffect(() => {
     let mounted = true;
     const checkForMatch = async () => {

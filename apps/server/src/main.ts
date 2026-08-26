@@ -5,6 +5,8 @@ import pino from 'pino';
 import { z } from 'zod';
 import { AppModule } from './app.module.js';
 import { submitAuthoritativeMove } from './game/application/submit-authoritative-move.js';
+import { performGameAction } from './game/application/perform-game-action.js';
+import { expireTimedOutGames } from './game/application/expire-timed-out-games.js';
 import { ChessJsRulesAdapter } from './game/infrastructure/chess-js-rules-adapter.js';
 import { BootstrapGateway } from './infrastructure/realtime/bootstrap.gateway.js';
 import { createDatabase, verifyDatabase } from './infrastructure/database/database.js';
@@ -46,6 +48,17 @@ app.enableCors({
 });
 const fastify = app.getHttpAdapter().getInstance();
 const notifications = app.get(BootstrapGateway);
+const clockSweep = setInterval(async () => {
+  try {
+    const expired = await expireTimedOutGames(database);
+    for (const game of expired) {
+      notifications.gameUpdated([game.whiteIdentityId, game.blackIdentityId], game.id);
+    }
+  } catch (error) {
+    logger.error({ error }, 'Clock expiry sweep failed');
+  }
+}, 1_000);
+clockSweep.unref();
 
 fastify.addHook(
   'onRequest',
@@ -94,11 +107,17 @@ fastify.post('/temporary-identities', async (request, reply) => {
 fastify.post('/temporary-identities/recover', async (request, reply) => {
   const body = request.body;
   const displayName =
-    typeof body === 'object' && body !== null && 'displayName' in body && typeof body.displayName === 'string'
+    typeof body === 'object' &&
+    body !== null &&
+    'displayName' in body &&
+    typeof body.displayName === 'string'
       ? body.displayName
       : '';
   const recoveryCode =
-    typeof body === 'object' && body !== null && 'recoveryCode' in body && typeof body.recoveryCode === 'string'
+    typeof body === 'object' &&
+    body !== null &&
+    'recoveryCode' in body &&
+    typeof body.recoveryCode === 'string'
       ? body.recoveryCode
       : '';
   const result = await recoverTemporaryIdentity(database, displayName, recoveryCode);
@@ -298,6 +317,12 @@ fastify.get('/games/:gameId', async (request, reply) => {
       'active_games.version',
       'active_games.white_identity_id',
       'active_games.black_identity_id',
+      'active_games.white_time_remaining_ms',
+      'active_games.black_time_remaining_ms',
+      'active_games.turn_started_at',
+      'active_games.result',
+      'active_games.termination_reason',
+      'active_games.draw_offered_by_identity_id',
       'white_player.display_name as whiteDisplayName',
       'black_player.display_name as blackDisplayName',
     ])
@@ -380,7 +405,9 @@ fastify.post('/games/:gameId/moves', async (request, reply) => {
     const status =
       result.code === 'GAME_NOT_FOUND'
         ? 404
-        : result.code === 'MOVE_ILLEGAL' || result.code === 'MOVE_NOT_YOUR_TURN'
+        : result.code === 'MOVE_ILLEGAL' ||
+            result.code === 'MOVE_NOT_YOUR_TURN' ||
+            result.code === 'MOVE_FLAGGED'
           ? 422
           : 409;
     return reply.code(status).send({ error: { code: result.code } });
@@ -390,6 +417,37 @@ fastify.post('/games/:gameId/moves', async (request, reply) => {
     result.game.id,
   );
   return reply.code(201).send({ game: result.game, move: result.move });
+});
+const gameActionSchema = z.object({
+  expectedVersion: z.number().int().nonnegative(),
+  action: z.enum(['resign', 'offer_draw', 'accept_draw', 'reject_draw', 'claim_draw']),
+});
+fastify.post('/games/:gameId/actions', async (request, reply) => {
+  const identity = await resumeTemporaryIdentity(
+    database,
+    readTemporarySessionCookie(request.headers.cookie),
+  );
+  if (!identity) {
+    return reply.code(401).send({ error: { code: 'TEMPORARY_IDENTITY_REQUIRED' } });
+  }
+  const body = gameActionSchema.safeParse(request.body);
+  if (!body.success) return reply.code(400).send({ error: { code: 'ACTION_INVALID' } });
+  const gameId = Object.values(request.params as Record<string, string>)[0] ?? '';
+  const result = await performGameAction(database, chessRules, {
+    gameId,
+    identityId: identity.id,
+    ...body.data,
+  });
+  if (!result.accepted) {
+    const status =
+      result.code === 'GAME_NOT_FOUND' ? 404 : result.code === 'ACTION_NOT_AVAILABLE' ? 422 : 409;
+    return reply.code(status).send({ error: { code: result.code } });
+  }
+  notifications.gameUpdated(
+    [result.game.white_identity_id, result.game.black_identity_id],
+    result.game.id,
+  );
+  return reply.code(201).send({ game: result.game });
 });
 fastify.get('/games/current', async (request, reply) => {
   const identity = await resumeTemporaryIdentity(
@@ -440,6 +498,9 @@ app.enableShutdownHooks();
 app
   .getHttpAdapter()
   .getInstance()
-  .addHook('onClose', async () => database.destroy());
+  .addHook('onClose', async () => {
+    clearInterval(clockSweep);
+    await database.destroy();
+  });
 await app.listen({ port, host: '0.0.0.0' });
 logger.info({ port }, 'Server listening');

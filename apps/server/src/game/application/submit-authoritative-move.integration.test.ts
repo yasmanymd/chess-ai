@@ -9,6 +9,8 @@ import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 import { ChessJsRulesAdapter } from '../infrastructure/chess-js-rules-adapter.js';
 import { createDatabase, type DatabaseSchema } from '../../infrastructure/database/database.js';
 import { submitAuthoritativeMove } from './submit-authoritative-move.js';
+import { expireTimedOutGames } from './expire-timed-out-games.js';
+import { performGameAction } from './perform-game-action.js';
 
 const migrationFolder = fileURLToPath(
   new URL('../../infrastructure/database/migrations', import.meta.url),
@@ -125,5 +127,98 @@ describe('submitAuthoritativeMove integration', () => {
       .execute();
     expect(stored).toHaveLength(1);
     expect(stored[0]).toMatchObject({ sequence: 1, san: 'e4' });
+  });
+
+  it('closes an expired clock without waiting for another browser command', async () => {
+    const expiredGameId = randomUUID();
+    const now = new Date();
+    await database
+      .insertInto('active_games')
+      .values({
+        id: expiredGameId,
+        white_identity_id: whiteIdentityId,
+        black_identity_id: blackIdentityId,
+        time_control: 'rapid_10_0',
+        status: 'active',
+        current_fen: rules.initialPosition().fen,
+        side_to_move: 'white',
+        version: 0,
+        white_time_remaining_ms: 10,
+        black_time_remaining_ms: 600_000,
+        turn_started_at: new Date(now.getTime() - 20),
+      })
+      .execute();
+
+    await expect(expireTimedOutGames(database, now)).resolves.toEqual([
+      {
+        id: expiredGameId,
+        whiteIdentityId,
+        blackIdentityId,
+      },
+    ]);
+    await expect(
+      database
+        .selectFrom('active_games')
+        .select(['status', 'result', 'termination_reason', 'white_time_remaining_ms'])
+        .where('id', '=', expiredGameId)
+        .executeTakeFirstOrThrow(),
+    ).resolves.toMatchObject({
+      status: 'completed',
+      result: 'black_win',
+      termination_reason: 'timeout',
+      white_time_remaining_ms: 0,
+    });
+  });
+
+  it('persists an agreed draw as an explicit game lifecycle event', async () => {
+    const drawGameId = randomUUID();
+    await database
+      .insertInto('active_games')
+      .values({
+        id: drawGameId,
+        white_identity_id: whiteIdentityId,
+        black_identity_id: blackIdentityId,
+        time_control: 'none',
+        status: 'active',
+        current_fen: rules.initialPosition().fen,
+        side_to_move: 'white',
+        version: 0,
+      })
+      .execute();
+    await expect(
+      performGameAction(database, rules, {
+        gameId: drawGameId,
+        identityId: whiteIdentityId,
+        expectedVersion: 0,
+        action: 'offer_draw',
+      }),
+    ).resolves.toMatchObject({ accepted: true, game: { version: 1 } });
+    await expect(
+      performGameAction(database, rules, {
+        gameId: drawGameId,
+        identityId: blackIdentityId,
+        expectedVersion: 1,
+        action: 'accept_draw',
+      }),
+    ).resolves.toMatchObject({ accepted: true, game: { version: 2 } });
+    await expect(
+      database
+        .selectFrom('active_games')
+        .select(['status', 'result', 'termination_reason'])
+        .where('id', '=', drawGameId)
+        .executeTakeFirstOrThrow(),
+    ).resolves.toMatchObject({
+      status: 'completed',
+      result: 'draw',
+      termination_reason: 'agreed_draw',
+    });
+    await expect(
+      database
+        .selectFrom('game_events')
+        .select('event_type')
+        .where('game_id', '=', drawGameId)
+        .orderBy('sequence', 'asc')
+        .execute(),
+    ).resolves.toEqual([{ event_type: 'offer_draw' }, { event_type: 'accept_draw' }]);
   });
 });

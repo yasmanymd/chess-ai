@@ -24,6 +24,11 @@ type AcceptedAuthoritativeMove = {
     version: number;
     white_identity_id: string;
     black_identity_id: string;
+    status: 'active' | 'completed';
+    result: 'white_win' | 'black_win' | 'draw' | null;
+    termination_reason: string | null;
+    white_time_remaining_ms: number | null;
+    black_time_remaining_ms: number | null;
   };
   move: {
     sequence: number;
@@ -42,7 +47,8 @@ type RejectedAuthoritativeMove = {
     | 'MOVE_COMMAND_DUPLICATE'
     | 'MOVE_STALE'
     | 'MOVE_NOT_YOUR_TURN'
-    | 'MOVE_ILLEGAL';
+    | 'MOVE_ILLEGAL'
+    | 'MOVE_FLAGGED';
 };
 
 export type SubmitAuthoritativeMoveResult = AcceptedAuthoritativeMove | RejectedAuthoritativeMove;
@@ -90,6 +96,38 @@ export async function submitAuthoritativeMove(
       return { accepted: false, code: 'MOVE_NOT_YOUR_TURN' };
     }
 
+    const clock = calculateClock(game, new Date());
+    if (clock.flagged) {
+      const nextVersion = game.version + 1;
+      const result = playerColor === 'white' ? 'black_win' : 'white_win';
+      await transaction
+        .updateTable('active_games')
+        .set({
+          status: 'completed',
+          result,
+          termination_reason: 'timeout',
+          white_time_remaining_ms: clock.whiteTimeRemainingMs,
+          black_time_remaining_ms: clock.blackTimeRemainingMs,
+          version: nextVersion,
+          draw_offered_by_identity_id: null,
+        })
+        .where('id', '=', game.id)
+        .where('version', '=', game.version)
+        .executeTakeFirstOrThrow();
+      await transaction
+        .insertInto('game_events')
+        .values({
+          id: randomUUID(),
+          game_id: game.id,
+          sequence: nextVersion,
+          actor_identity_id: null,
+          event_type: 'timeout',
+          payload: { flagged: playerColor },
+        })
+        .execute();
+      return { accepted: false, code: 'MOVE_FLAGGED' };
+    }
+
     const moveResult = rules.tryMove(game.current_fen, command);
     if (!moveResult.accepted) return { accepted: false, code: 'MOVE_ILLEGAL' };
 
@@ -111,12 +149,20 @@ export async function submitAuthoritativeMove(
         fen_after: moveResult.move.fenAfter,
       })
       .execute();
+    const termination = terminalResult(moveResult.position.status, playerColor);
     const updatedGame = await transaction
       .updateTable('active_games')
       .set({
         current_fen: moveResult.position.fen,
         side_to_move: moveResult.position.sideToMove,
         version: nextVersion,
+        status: termination ? 'completed' : 'active',
+        result: termination?.result ?? null,
+        termination_reason: termination?.reason ?? null,
+        white_time_remaining_ms: clock.afterMoveWhiteTimeRemainingMs,
+        black_time_remaining_ms: clock.afterMoveBlackTimeRemainingMs,
+        turn_started_at: termination || game.time_control === 'none' ? null : new Date(),
+        draw_offered_by_identity_id: null,
       })
       .where('id', '=', game.id)
       .where('version', '=', game.version)
@@ -127,6 +173,11 @@ export async function submitAuthoritativeMove(
         'version',
         'white_identity_id',
         'black_identity_id',
+        'status',
+        'result',
+        'termination_reason',
+        'white_time_remaining_ms',
+        'black_time_remaining_ms',
       ])
       .executeTakeFirstOrThrow();
 
@@ -142,4 +193,58 @@ export async function submitAuthoritativeMove(
       },
     };
   });
+}
+
+type ClockGame = {
+  time_control: string;
+  side_to_move: 'white' | 'black';
+  white_time_remaining_ms: number | null;
+  black_time_remaining_ms: number | null;
+  turn_started_at: Date | null;
+};
+
+function calculateClock(game: ClockGame, now: Date) {
+  if (game.time_control === 'none') {
+    return {
+      flagged: false,
+      whiteTimeRemainingMs: null,
+      blackTimeRemainingMs: null,
+      afterMoveWhiteTimeRemainingMs: null,
+      afterMoveBlackTimeRemainingMs: null,
+    };
+  }
+  const elapsed = Math.max(0, now.getTime() - (game.turn_started_at?.getTime() ?? now.getTime()));
+  const whiteTimeRemainingMs =
+    game.side_to_move === 'white'
+      ? Math.max(0, (game.white_time_remaining_ms ?? 0) - elapsed)
+      : game.white_time_remaining_ms;
+  const blackTimeRemainingMs =
+    game.side_to_move === 'black'
+      ? Math.max(0, (game.black_time_remaining_ms ?? 0) - elapsed)
+      : game.black_time_remaining_ms;
+  const increment = game.time_control === 'blitz_5_3' ? 3_000 : 0;
+  return {
+    flagged: (game.side_to_move === 'white' ? whiteTimeRemainingMs : blackTimeRemainingMs) === 0,
+    whiteTimeRemainingMs,
+    blackTimeRemainingMs,
+    afterMoveWhiteTimeRemainingMs:
+      game.side_to_move === 'white' ? (whiteTimeRemainingMs ?? 0) + increment : whiteTimeRemainingMs,
+    afterMoveBlackTimeRemainingMs:
+      game.side_to_move === 'black' ? (blackTimeRemainingMs ?? 0) + increment : blackTimeRemainingMs,
+  };
+}
+
+function terminalResult(
+  status: ReturnType<ChessRulesPort['inspect']>['status'],
+  mover: 'white' | 'black',
+): {
+  result: 'white_win' | 'black_win' | 'draw';
+  reason: 'checkmate' | 'stalemate' | 'insufficient_material';
+} | null {
+  if (status.isCheckmate) {
+    return { result: mover === 'white' ? 'white_win' : 'black_win', reason: 'checkmate' };
+  }
+  if (status.isStalemate) return { result: 'draw', reason: 'stalemate' };
+  if (status.isInsufficientMaterial) return { result: 'draw', reason: 'insufficient_material' };
+  return null;
 }
