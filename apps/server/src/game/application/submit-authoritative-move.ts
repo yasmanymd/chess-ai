@@ -110,6 +110,7 @@ export async function submitAuthoritativeMove(
           black_time_remaining_ms: clock.blackTimeRemainingMs,
           version: nextVersion,
           draw_offered_by_identity_id: null,
+          completed_at: new Date(),
         })
         .where('id', '=', game.id)
         .where('version', '=', game.version)
@@ -133,6 +134,7 @@ export async function submitAuthoritativeMove(
         game.white_identity_id,
         game.black_identity_id,
       );
+      await enqueueGameCompleted(transaction, game.id);
       return response;
     }
 
@@ -185,6 +187,7 @@ export async function submitAuthoritativeMove(
         black_time_remaining_ms: clock.afterMoveBlackTimeRemainingMs,
         turn_started_at: termination || game.time_control === 'none' ? null : new Date(),
         draw_offered_by_identity_id: null,
+        completed_at: termination ? new Date() : null,
       })
       .where('id', '=', game.id)
       .where('version', '=', game.version)
@@ -216,6 +219,7 @@ export async function submitAuthoritativeMove(
     };
     await recordConfirmedCommand(transaction, game.id, command, response);
     await enqueueGameUpdated(transaction, game.id, game.white_identity_id, game.black_identity_id);
+    if (termination) await enqueueGameCompleted(transaction, game.id);
     return response;
   });
 }
@@ -252,6 +256,21 @@ async function enqueueGameUpdated(
       game_id: gameId,
       event_type: 'game.updated',
       payload: { gameId, recipientIdentityIds: [whiteIdentityId, blackIdentityId] },
+      delivered_at: null,
+      lease_token: null,
+      lease_expires_at: null,
+    })
+    .execute();
+}
+
+async function enqueueGameCompleted(transaction: Kysely<DatabaseSchema>, gameId: string) {
+  await transaction
+    .insertInto('game_outbox')
+    .values({
+      id: randomUUID(),
+      game_id: gameId,
+      event_type: 'game.completed',
+      payload: { gameId },
       delivered_at: null,
       lease_token: null,
       lease_expires_at: null,

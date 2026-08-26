@@ -3,15 +3,15 @@ import { sql, type Kysely } from 'kysely';
 
 import type { DatabaseSchema } from '../../infrastructure/database/database.js';
 
-export type GameOutboxNotification = {
-  gameId: string;
-  recipientIdentityIds: string[];
-};
+export type GameOutboxEvent =
+  | { type: 'game.updated'; gameId: string; recipientIdentityIds: string[] }
+  | { type: 'game.completed'; gameId: string };
 
 type ClaimedOutboxRecord = {
   id: string;
+  eventType: GameOutboxEvent['type'];
   gameId: string;
-  recipientIdentityIds: string[];
+  recipientIdentityIds?: string[];
   leaseToken: string;
   attempts: number;
 };
@@ -23,7 +23,7 @@ type ClaimedOutboxRecord = {
  */
 export async function dispatchPendingGameOutbox(
   database: Kysely<DatabaseSchema>,
-  publish: (notification: GameOutboxNotification) => Promise<void> | void,
+  publish: (event: GameOutboxEvent) => Promise<void> | void,
   now = new Date(),
 ): Promise<{ delivered: number; failed: number }> {
   const candidates = await database
@@ -46,10 +46,15 @@ export async function dispatchPendingGameOutbox(
     if (!claimed) continue;
 
     try {
-      await publish({
-        gameId: claimed.gameId,
-        recipientIdentityIds: claimed.recipientIdentityIds,
-      });
+      await publish(
+        claimed.eventType === 'game.updated'
+          ? {
+              type: 'game.updated',
+              gameId: claimed.gameId,
+              recipientIdentityIds: claimed.recipientIdentityIds ?? [],
+            }
+          : { type: 'game.completed', gameId: claimed.gameId },
+      );
       await database
         .updateTable('game_outbox')
         .set({
@@ -100,12 +105,18 @@ async function claimOutboxRecord(
       return null;
     }
 
-    const payload = record.payload as Partial<GameOutboxNotification>;
+    const payload = record.payload as { gameId?: string; recipientIdentityIds?: string[] };
     const gameId = payload.gameId ?? record.game_id;
-    let recipientIdentityIds = Array.isArray(payload.recipientIdentityIds)
-      ? payload.recipientIdentityIds
-      : null;
-    if (!recipientIdentityIds) {
+    if (record.event_type !== 'game.updated' && record.event_type !== 'game.completed') {
+      return null;
+    }
+    let recipientIdentityIds: string[] | null = null;
+    if (record.event_type === 'game.updated') {
+      recipientIdentityIds = Array.isArray(payload.recipientIdentityIds)
+        ? payload.recipientIdentityIds
+        : null;
+    }
+    if (record.event_type === 'game.updated' && !recipientIdentityIds) {
       const game = await transaction
         .selectFrom('active_games')
         .select(['white_identity_id', 'black_identity_id'])
@@ -113,7 +124,7 @@ async function claimOutboxRecord(
         .executeTakeFirst();
       recipientIdentityIds = game ? [game.white_identity_id, game.black_identity_id] : null;
     }
-    if (!recipientIdentityIds) return null;
+    if (record.event_type === 'game.updated' && !recipientIdentityIds) return null;
     const leaseToken = randomUUID();
     const attempts = record.attempts + 1;
     await transaction
@@ -127,8 +138,9 @@ async function claimOutboxRecord(
       .execute();
     return {
       id: record.id,
+      eventType: record.event_type,
       gameId,
-      recipientIdentityIds,
+      recipientIdentityIds: recipientIdentityIds ?? undefined,
       leaseToken,
       attempts,
     };

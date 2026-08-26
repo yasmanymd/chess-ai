@@ -12,6 +12,18 @@ import { submitAuthoritativeMove } from './submit-authoritative-move.js';
 import { expireTimedOutGames } from './expire-timed-out-games.js';
 import { performGameAction } from './perform-game-action.js';
 import { dispatchPendingGameOutbox } from './dispatch-game-outbox.js';
+import {
+  listCompletedGameIdsForArchive,
+  readCompletedGameForArchive,
+} from './read-completed-game-for-archive.js';
+import {
+  backfillCompletedGames,
+  projectCompletedGame,
+} from '../../game-archive/application/project-completed-game.js';
+import {
+  listPublicArchivedGames,
+  readPublicArchivedGame,
+} from '../../game-archive/application/read-public-game-archive.js';
 
 const migrationFolder = fileURLToPath(
   new URL('../../infrastructure/database/migrations', import.meta.url),
@@ -194,7 +206,7 @@ describe('submitAuthoritativeMove integration', () => {
         .select('event_type')
         .where('game_id', '=', expiredGameId)
         .execute(),
-    ).resolves.toEqual([{ event_type: 'game.updated' }]);
+    ).resolves.toEqual([{ event_type: 'game.updated' }, { event_type: 'game.completed' }]);
   });
 
   it('persists an agreed draw as an explicit game lifecycle event', async () => {
@@ -265,7 +277,76 @@ describe('submitAuthoritativeMove integration', () => {
         .where('game_id', '=', drawGameId)
         .orderBy('created_at', 'asc')
         .execute(),
-    ).resolves.toEqual([{ event_type: 'game.updated' }, { event_type: 'game.updated' }]);
+    ).resolves.toEqual([
+      { event_type: 'game.updated' },
+      { event_type: 'game.updated' },
+      { event_type: 'game.completed' },
+    ]);
+    await expect(readCompletedGameForArchive(database, drawGameId)).resolves.toMatchObject({
+      gameId: drawGameId,
+      result: 'draw',
+      terminationReason: 'agreed_draw',
+    });
+    await expect(
+      projectCompletedGame(
+        database,
+        (gameId) => readCompletedGameForArchive(database, gameId),
+        drawGameId,
+      ),
+    ).resolves.toBe(true);
+    await expect(
+      database
+        .selectFrom('archived_games')
+        .select([
+          'game_id',
+          'white_display_name',
+          'black_display_name',
+          'result',
+          'termination_reason',
+        ])
+        .where('game_id', '=', drawGameId)
+        .executeTakeFirstOrThrow(),
+    ).resolves.toMatchObject({
+      game_id: drawGameId,
+      white_display_name: 'White',
+      black_display_name: 'Black',
+      result: 'draw',
+      termination_reason: 'agreed_draw',
+    });
+    await expect(
+      projectCompletedGame(
+        database,
+        (gameId) => readCompletedGameForArchive(database, gameId),
+        drawGameId,
+      ),
+    ).resolves.toBe(false);
+    await expect(readPublicArchivedGame(database, drawGameId)).resolves.toMatchObject({
+      id: drawGameId,
+      whiteDisplayName: 'White',
+      blackDisplayName: 'Black',
+      result: 'draw',
+      moves: [],
+    });
+    await expect(
+      listPublicArchivedGames(database, { player: 'whi', result: 'draw' }),
+    ).resolves.toMatchObject({
+      games: [
+        {
+          id: drawGameId,
+          whiteDisplayName: 'White',
+          blackDisplayName: 'Black',
+          result: 'draw',
+        },
+      ],
+      nextOffset: null,
+    });
+    await expect(
+      backfillCompletedGames(
+        database,
+        () => listCompletedGameIdsForArchive(database),
+        (gameId) => readCompletedGameForArchive(database, gameId),
+      ),
+    ).resolves.toBe(1);
   });
 
   it('retries an outbox publication without repeating game state', async () => {

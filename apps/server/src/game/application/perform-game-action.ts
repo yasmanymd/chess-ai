@@ -115,6 +115,7 @@ export async function performGameAction(
         termination_reason: reason,
         draw_offered_by_identity_id: drawOffer,
         turn_started_at: status === 'completed' ? null : game.turn_started_at,
+        completed_at: status === 'completed' ? new Date() : null,
         version: nextVersion,
       })
       .where('id', '=', game.id)
@@ -159,6 +160,20 @@ export async function performGameAction(
         lease_expires_at: null,
       })
       .execute();
+    if (status === 'completed') {
+      await transaction
+        .insertInto('game_outbox')
+        .values({
+          id: randomUUID(),
+          game_id: game.id,
+          event_type: 'game.completed',
+          payload: { gameId: game.id },
+          delivered_at: null,
+          lease_token: null,
+          lease_expires_at: null,
+        })
+        .execute();
+    }
     return response;
   });
 }

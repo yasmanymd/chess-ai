@@ -57,6 +57,7 @@ export async function expireTimedOutGames(
           turn_started_at: null,
           draw_offered_by_identity_id: null,
           version: nextVersion,
+          completed_at: now,
         })
         .where('id', '=', game.id)
         .where('version', '=', game.version)
@@ -82,6 +83,18 @@ export async function expireTimedOutGames(
             gameId: game.id,
             recipientIdentityIds: [game.white_identity_id, game.black_identity_id],
           },
+          delivered_at: null,
+          lease_token: null,
+          lease_expires_at: null,
+        })
+        .execute();
+      await transaction
+        .insertInto('game_outbox')
+        .values({
+          id: randomUUID(),
+          game_id: game.id,
+          event_type: 'game.completed',
+          payload: { gameId: game.id },
           delivered_at: null,
           lease_token: null,
           lease_expires_at: null,

@@ -8,7 +8,20 @@ import { submitAuthoritativeMove } from './game/application/submit-authoritative
 import { performGameAction } from './game/application/perform-game-action.js';
 import { expireTimedOutGames } from './game/application/expire-timed-out-games.js';
 import { dispatchPendingGameOutbox } from './game/application/dispatch-game-outbox.js';
+import {
+  listCompletedGameIdsForArchive,
+  readCompletedGameForArchive,
+} from './game/application/read-completed-game-for-archive.js';
 import { ChessJsRulesAdapter } from './game/infrastructure/chess-js-rules-adapter.js';
+import {
+  backfillCompletedGames,
+  projectCompletedGame,
+} from './game-archive/application/project-completed-game.js';
+import {
+  listPublicArchivedGames,
+  readPublicArchivedGame,
+} from './game-archive/application/read-public-game-archive.js';
+import { exportArchivedGameAsPgn } from './chess-interchange/application/export-archived-game-as-pgn.js';
 import { BootstrapGateway } from './infrastructure/realtime/bootstrap.gateway.js';
 import { createDatabase, verifyDatabase } from './infrastructure/database/database.js';
 import { joinWaitingGame } from './lobby/join-waiting-game.js';
@@ -54,8 +67,16 @@ async function flushGameOutbox() {
   if (outboxSweepInProgress) return;
   outboxSweepInProgress = true;
   try {
-    await dispatchPendingGameOutbox(database, ({ gameId, recipientIdentityIds }) => {
-      notifications.gameUpdated(recipientIdentityIds, gameId);
+    await dispatchPendingGameOutbox(database, async (event) => {
+      if (event.type === 'game.updated') {
+        notifications.gameUpdated(event.recipientIdentityIds, event.gameId);
+        return;
+      }
+      await projectCompletedGame(
+        database,
+        (gameId) => readCompletedGameForArchive(database, gameId),
+        event.gameId,
+      );
     });
   } catch (error) {
     logger.error({ error }, 'Game outbox dispatch failed');
@@ -481,6 +502,57 @@ fastify.get('/games/current', async (request, reply) => {
     .executeTakeFirst();
   return { game: game ?? null };
 });
+const archiveQuerySchema = z.object({
+  player: z.string().trim().max(80).optional(),
+  result: z.enum(['white_win', 'black_win', 'draw']).optional(),
+  timeControl: z.enum(['none', 'rapid_10_0', 'blitz_5_3']).optional(),
+  from: z
+    .string()
+    .regex(/^\d{4}-\d{2}-\d{2}$/)
+    .optional(),
+  to: z
+    .string()
+    .regex(/^\d{4}-\d{2}-\d{2}$/)
+    .optional(),
+  offset: z.coerce.number().int().nonnegative().max(100_000).optional(),
+  limit: z.coerce.number().int().positive().max(50).optional(),
+});
+fastify.get('/archive/games', async (request, reply) => {
+  const query = archiveQuerySchema.safeParse(request.query);
+  if (!query.success) return reply.code(400).send({ error: { code: 'ARCHIVE_QUERY_INVALID' } });
+  const dateAtStartOfDay = (value: string) => new Date(`${value}T00:00:00.000Z`);
+  const nextDay = (value: string) => {
+    const date = dateAtStartOfDay(value);
+    date.setUTCDate(date.getUTCDate() + 1);
+    return date;
+  };
+  const { from, to, ...filters } = query.data;
+  return listPublicArchivedGames(database, {
+    ...filters,
+    from: from ? dateAtStartOfDay(from) : undefined,
+    to: to ? nextDay(to) : undefined,
+  });
+});
+fastify.get('/archive/games/:gameId', async (request, reply) => {
+  const gameId = Object.values(request.params as Record<string, string>)[0] ?? '';
+  if (!z.uuid().safeParse(gameId).success) {
+    return reply.code(404).send({ error: { code: 'ARCHIVE_GAME_NOT_FOUND' } });
+  }
+  const game = await readPublicArchivedGame(database, gameId);
+  if (!game) return reply.code(404).send({ error: { code: 'ARCHIVE_GAME_NOT_FOUND' } });
+  return { game };
+});
+fastify.get('/archive/games/:gameId/pgn', async (request, reply) => {
+  const gameId = Object.values(request.params as Record<string, string>)[0] ?? '';
+  if (!z.uuid().safeParse(gameId).success) {
+    return reply.code(404).send({ error: { code: 'ARCHIVE_GAME_NOT_FOUND' } });
+  }
+  const game = await readPublicArchivedGame(database, gameId);
+  if (!game) return reply.code(404).send({ error: { code: 'ARCHIVE_GAME_NOT_FOUND' } });
+  reply.header('content-type', 'application/x-chess-pgn; charset=utf-8');
+  reply.header('content-disposition', `attachment; filename="chess-ai-${game.id}.pgn"`);
+  return exportArchivedGameAsPgn(game);
+});
 fastify.get('/ready', async (_request: unknown, reply: { code: (status: number) => unknown }) => {
   try {
     await verifyDatabase(database);
@@ -516,3 +588,8 @@ app
 await app.listen({ port, host: '0.0.0.0' });
 logger.info({ port }, 'Server listening');
 void flushGameOutbox();
+void backfillCompletedGames(
+  database,
+  () => listCompletedGameIdsForArchive(database),
+  (gameId) => readCompletedGameForArchive(database, gameId),
+).catch((error) => logger.error({ error }, 'Game Archive backfill failed'));

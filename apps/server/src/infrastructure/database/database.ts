@@ -47,6 +47,7 @@ export interface ActiveGamesTable {
     | 'draw_claim'
     | null;
   draw_offered_by_identity_id: string | null;
+  completed_at: Date | null;
   created_at: Generated<Date>;
 }
 
@@ -98,6 +99,29 @@ export interface GameOutboxTable {
   created_at: Generated<Date>;
 }
 
+export interface ArchivedGamesTable {
+  game_id: string;
+  white_display_name: string;
+  black_display_name: string;
+  time_control: string;
+  initial_fen: string;
+  final_fen: string;
+  result: 'white_win' | 'black_win' | 'draw';
+  termination_reason: string;
+  completed_at: Date;
+  created_at: Generated<Date>;
+}
+
+export interface ArchivedGameMovesTable {
+  archived_game_id: string;
+  sequence: number;
+  san: string;
+  from_square: string;
+  to_square: string;
+  promotion: 'queen' | 'rook' | 'bishop' | 'knight' | null;
+  fen_after: string;
+}
+
 export interface DatabaseSchema {
   temporary_identities: TemporaryIdentitiesTable;
   waiting_games: WaitingGamesTable;
@@ -106,6 +130,8 @@ export interface DatabaseSchema {
   game_events: GameEventsTable;
   game_command_ledger: GameCommandLedgerTable;
   game_outbox: GameOutboxTable;
+  archived_games: ArchivedGamesTable;
+  archived_game_moves: ArchivedGameMovesTable;
 }
 
 export function createDatabase(connectionString: string): Kysely<DatabaseSchema> {
