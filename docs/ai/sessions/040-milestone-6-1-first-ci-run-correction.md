@@ -37,6 +37,14 @@ The first GitHub Actions run for commit `e2754b4` failed in three jobs. The brow
 - The server TypeScript build and the web production build completed successfully.
 - The previously passing browser accessibility job was not changed by these corrections.
 
+## Follow-up Correction
+
+The second remote run reached Node `24.16.0`, but `actions/setup-node@v5` attempted its automatic package-manager cache before the explicit pnpm installation step. The cache setup could not find the pnpm executable and stopped both Node-based jobs.
+
+- Disabled setup-node's automatic package-manager cache in the static and integration jobs.
+- Retained the explicit, version-pinned pnpm installation immediately after Node setup.
+- The Docker release build and browser accessibility jobs passed in this remote run, narrowing the remaining issue to this workflow initialization behavior.
+
 ## Learning Record
 
 The initial workflow proposal was incomplete because it did not account for the action self-installer's runtime and filesystem assumptions. The correction removes that hidden dependency and aligns CI installation with the Docker build's explicit pnpm version.
