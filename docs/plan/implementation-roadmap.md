@@ -2,13 +2,13 @@
 
 ## Document Control
 
-| Field          | Value       |
-| -------------- | ----------- |
-| Status         | Accepted    |
-| Version        | 1.1         |
-| Decision owner | Yasmany     |
+| Field          | Value             |
+| -------------- | ----------------- |
+| Status         | Accepted          |
+| Version        | 1.1               |
+| Decision owner | Yasmany           |
 | Source         | Sessions 009, 044 |
-| Date           | 2026-08-27  |
+| Date           | 2026-08-27        |
 
 ## Purpose
 
@@ -158,6 +158,8 @@ The roadmap does not impose calendar deadlines. Later milestones may be refined 
 5. The release candidate has a complete evidence index and known-limitations record.
 
 ### Milestone 7 — Educational Foundations
+
+**Status:** Completed and approved on 2026-08-27.
 
 **Outcome:** Public study positions provide a small, multilingual, server-validated learning experience without accounts or a live chess-analysis dependency.
 

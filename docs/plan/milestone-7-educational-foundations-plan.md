@@ -1,11 +1,11 @@
 # Milestone 7 — Educational Foundations Plan
 
-| Field          | Value                                  |
-| -------------- | -------------------------------------- |
-| Status         | Implemented — awaiting visual approval |
-| Milestone      | Milestone 7 — Educational Foundations  |
-| Date           | 2026-08-27                             |
-| Decision owner | Yasmany                                |
+| Field          | Value                                 |
+| -------------- | ------------------------------------- |
+| Status         | Completed — approved on 2026-08-27    |
+| Milestone      | Milestone 7 — Educational Foundations |
+| Date           | 2026-08-27                            |
+| Decision owner | Yasmany                               |
 
 ## Objective
 
@@ -13,20 +13,20 @@ Deliver the first public educational capability for Chess AI: a focused catalog 
 
 ## Approved Decisions
 
-| ID     | Decision                  | Approved behavior |
-| ------ | ------------------------- | ----------------- |
-| M7-D01 | First learning format     | A study position contains a chess position, a prompt, and one accepted move. The learner attempts the move on the board. |
-| M7-D02 | Initial catalog ownership | Six public exercises are stored as small version-controlled application fixtures. There is no administration UI or account requirement. |
-| M7-D03 | Initial answer model      | Each exercise accepts exactly one correct move. Variations and multi-move lines are deferred. |
-| M7-D04 | Incorrect answer          | Show a short hint and let the learner retry from the same position. Do not reveal the answer immediately. |
-| M7-D05 | Correct answer            | Show a concise editorial explanation and offer the next exercise. |
-| M7-D06 | Progress                  | Persist completion locally in the current browser with `localStorage`; do not synchronize it across devices or users. |
+| ID     | Decision                  | Approved behavior                                                                                                                                                        |
+| ------ | ------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| M7-D01 | First learning format     | A study position contains a chess position, a prompt, and one accepted move. The learner attempts the move on the board.                                                 |
+| M7-D02 | Initial catalog ownership | Six public exercises are stored as small version-controlled application fixtures. There is no administration UI or account requirement.                                  |
+| M7-D03 | Initial answer model      | Each exercise accepts exactly one correct move. Variations and multi-move lines are deferred.                                                                            |
+| M7-D04 | Incorrect answer          | Show a short hint and let the learner retry from the same position. Do not reveal the answer immediately.                                                                |
+| M7-D05 | Correct answer            | Show a concise editorial explanation and offer the next exercise.                                                                                                        |
+| M7-D06 | Progress                  | Persist completion locally in the current browser with `localStorage`; do not synchronize it across devices or users.                                                    |
 | M7-D07 | Catalog composition       | Publish two mate-in-one, two win-material, and two find-the-best-move exercises. Each has FEN, title, prompt, solution, and explanation in English, Spanish, and French. |
-| M7-D08 | Navigation                | Add a public Study entry to the application navigation and provide catalog and per-exercise routes. The lobby remains a separate experience. |
-| M7-D09 | Validation authority      | The server validates attempts using the exercise identifier and submitted move. The browser displays outcomes but does not decide correctness. |
+| M7-D08 | Navigation                | Add a public Study entry to the application navigation and provide catalog and per-exercise routes. The lobby remains a separate experience.                             |
+| M7-D09 | Validation authority      | The server validates attempts using the exercise identifier and submitted move. The browser displays outcomes but does not decide correctness.                           |
 | M7-D10 | Board orientation         | Orient the study board from the solver's side: White below for White-to-move exercises and Black below for Black-to-move exercises. Coordinates follow that orientation. |
-| M7-D11 | Progress reset            | The catalog exposes a discreet reset action with confirmation. It deletes only local study progress in that browser. |
-| M7-D12 | Content source            | Prompts, hints, explanations, and solutions are fixed editorial content in the repository. No Stockfish or real-time AI generation is used in this milestone. |
+| M7-D11 | Progress reset            | The catalog exposes a discreet reset action with confirmation. It deletes only local study progress in that browser.                                                     |
+| M7-D12 | Content source            | Prompts, hints, explanations, and solutions are fixed editorial content in the repository. No Stockfish or real-time AI generation is used in this milestone.            |
 
 ## Architecture
 
@@ -89,3 +89,7 @@ The catalog is a project-owned, typed fixture collection. Each record includes a
 3. Incorrect and correct feedback follows the approved behavior on desktop and phone.
 4. Orientation, coordinates, locale switching, and local progress behave consistently.
 5. Automated evidence proves the core study flow and the architecture preserves server authority.
+
+## Completion Record
+
+Yasmany completed the desktop and phone visual review and approved Milestone 7 on 2026-08-27. The approved scope, automated evidence, and documented constraints satisfy the milestone exit criteria.

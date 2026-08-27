@@ -1,11 +1,11 @@
 # Session 044 — M7 Educational Foundations Planning
 
-| Field        | Value                                                     |
-| ------------ | --------------------------------------------------------- |
-| Date         | 2026-08-27                                                |
-| Milestone    | Milestone 7 — Educational Foundations                     |
+| Field        | Value                                                      |
+| ------------ | ---------------------------------------------------------- |
+| Date         | 2026-08-27                                                 |
+| Milestone    | Milestone 7 — Educational Foundations                      |
 | Participants | Yasmany (decision owner), Codex (implementation assistant) |
-| Status       | Accepted for implementation planning                      |
+| Status       | Completed — approved by Yasmany on 2026-08-27              |
 
 ## Objective
 
@@ -29,12 +29,12 @@ This scope proves the educational direction without implying that dynamic machin
 
 ## Rejected or Deferred Alternatives
 
-| Alternative | Decision | Reason |
-| ----------- | -------- | ------ |
-| Accounts and synchronized progress | Deferred | They add identity, privacy, and product-scope decisions unrelated to proving the first learning interaction. |
-| Real-time Stockfish or AI explanations | Deferred | They introduce hosting, cost, correctness, and disclosure obligations. Fixed editorial content is reviewable and reproducible. |
-| Client-authoritative answer checks | Rejected | The browser could be modified to claim completion incorrectly and would violate the server-authority principle. |
-| Multiple variations and multi-move exercises | Deferred | One accepted move establishes the interaction and validation flow with a bounded initial catalog. |
+| Alternative                                  | Decision | Reason                                                                                                                         |
+| -------------------------------------------- | -------- | ------------------------------------------------------------------------------------------------------------------------------ |
+| Accounts and synchronized progress           | Deferred | They add identity, privacy, and product-scope decisions unrelated to proving the first learning interaction.                   |
+| Real-time Stockfish or AI explanations       | Deferred | They introduce hosting, cost, correctness, and disclosure obligations. Fixed editorial content is reviewable and reproducible. |
+| Client-authoritative answer checks           | Rejected | The browser could be modified to claim completion incorrectly and would violate the server-authority principle.                |
+| Multiple variations and multi-move exercises | Deferred | One accepted move establishes the interaction and validation flow with a bounded initial catalog.                              |
 
 ## Next Step
 
@@ -69,4 +69,4 @@ An initial test treated the legal queen move `Qf8` as illegal. The chess-rules a
 
 ## Milestone Status
 
-The approved Milestone 7 scope is implemented and has automated evidence. It is awaiting Yasmany's visual review on desktop and phone before it is marked complete and committed.
+The approved Milestone 7 scope is implemented, has automated evidence, and passed Yasmany's visual review on desktop and phone. Yasmany approved its completion on 2026-08-27.
