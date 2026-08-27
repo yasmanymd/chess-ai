@@ -126,6 +126,13 @@ export function Layout({ children }: { children: React.ReactNode }) {
             <a className="archive-nav" href={`/import?lang=${activeLanguage}`}>
               {t('importNav')}
             </a>
+            <details className="mobile-navigation">
+              <summary>{t('moreNavigation')}</summary>
+              <nav aria-label={t('moreNavigation')}>
+                <a href={`/archive?lang=${activeLanguage}`}>{t('archiveNav')}</a>
+                <a href={`/import?lang=${activeLanguage}`}>{t('importNav')}</a>
+              </nav>
+            </details>
             <form action={location.pathname} className="language-selector" method="get">
               {new URLSearchParams(location.search).get('intent') ? (
                 <input

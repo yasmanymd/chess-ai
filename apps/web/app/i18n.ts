@@ -130,6 +130,7 @@ const resources = {
       connectionUnavailable: 'Connection is temporarily unavailable. We will keep trying.',
       archiveNav: 'Archive',
       importNav: 'Import PGN',
+      moreNavigation: 'More',
       archiveEyebrow: 'Public game archive',
       archiveTitle: 'Revisit every finished game.',
       archiveDescription: 'Browse public completed games and replay every confirmed move.',
@@ -298,6 +299,7 @@ const resources = {
       connectionUnavailable: 'La conexión no está disponible temporalmente. Seguiremos intentando.',
       archiveNav: 'Archivo',
       importNav: 'Importar PGN',
+      moreNavigation: 'Más',
       archiveEyebrow: 'Archivo público de partidas',
       archiveTitle: 'Vuelve a cada partida terminada.',
       archiveDescription: 'Explora partidas públicas completadas y repasa cada jugada confirmada.',
@@ -467,6 +469,7 @@ const resources = {
         'La connexion est temporairement indisponible. Nous continuons à essayer.',
       archiveNav: 'Archives',
       importNav: 'Importer PGN',
+      moreNavigation: 'Plus',
       archiveEyebrow: 'Archives publiques des parties',
       archiveTitle: 'Revivez chaque partie terminée.',
       archiveDescription:
