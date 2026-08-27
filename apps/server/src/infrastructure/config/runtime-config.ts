@@ -4,11 +4,14 @@ const booleanFromEnvironment = z.enum(['true', 'false']).optional();
 
 const runtimeConfigSchema = z.object({
   DATABASE_URL: z.string().url(),
+  DATABASE_POOL_MAX: z.coerce.number().int().positive().max(100).default(10),
   LOG_LEVEL: z.enum(['fatal', 'error', 'warn', 'info', 'debug', 'trace']).default('info'),
   NODE_ENV: z.enum(['development', 'test', 'production']).default('development'),
   SERVER_PORT: z.coerce.number().int().positive().max(65535).default(3000),
   SESSION_COOKIE_NAME: z.string().min(1).default('chess_ai_session'),
   SESSION_COOKIE_SECURE: booleanFromEnvironment,
+  RATE_LIMIT_GAME_MAX_PER_MINUTE: z.coerce.number().int().positive().max(100_000).default(60),
+  RATE_LIMIT_IDENTITY_MAX_PER_MINUTE: z.coerce.number().int().positive().max(100_000).default(10),
   TRUST_PROXY: booleanFromEnvironment,
   WEB_ORIGINS: z.string().min(1).default('http://localhost:5173,http://127.0.0.1:5173'),
 });

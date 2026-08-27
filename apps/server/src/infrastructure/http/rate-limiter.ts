@@ -6,30 +6,28 @@ type RateLimitRule = {
 
 type RateLimitResult = { allowed: true } | { allowed: false; retryAfterSeconds: number };
 
-const identityRule: RateLimitRule = {
-  key: 'identity',
-  limit: 10,
-  windowMs: 60_000,
-};
-const gameRule: RateLimitRule = {
-  key: 'game',
-  limit: 60,
-  windowMs: 60_000,
+export type RateLimitConfiguration = {
+  identityMaxPerMinute: number;
+  gameMaxPerMinute: number;
 };
 
-export function ruleForRequest(method: string, url: string): RateLimitRule | undefined {
+export function ruleForRequest(
+  method: string,
+  url: string,
+  configuration: RateLimitConfiguration,
+): RateLimitRule | undefined {
   if (
     method === 'POST' &&
     (url === '/temporary-identities' || url === '/temporary-identities/recover')
   ) {
-    return identityRule;
+    return { key: 'identity', limit: configuration.identityMaxPerMinute, windowMs: 60_000 };
   }
   if (
     method === 'POST' &&
     (/^\/lobby\/waiting-games\/[\w-]+\/join$/.test(url) ||
       /^\/games\/[\w-]+\/(moves|actions)$/.test(url))
   ) {
-    return gameRule;
+    return { key: 'game', limit: configuration.gameMaxPerMinute, windowMs: 60_000 };
   }
   return undefined;
 }

@@ -89,62 +89,58 @@ async function claimOutboxRecord(
   id: string,
   now: Date,
 ): Promise<ClaimedOutboxRecord | null> {
-  return database.transaction().execute(async (transaction) => {
-    const record = await transaction
-      .selectFrom('game_outbox')
-      .selectAll()
-      .where('id', '=', id)
-      .forUpdate()
-      .executeTakeFirst();
-    if (
-      !record ||
-      record.delivered_at ||
-      record.available_at > now ||
-      (record.lease_token && record.lease_expires_at && record.lease_expires_at > now)
-    ) {
-      return null;
-    }
+  const leaseToken = randomUUID();
+  const record = await database
+    .updateTable('game_outbox')
+    .set({
+      attempts: sql<number>`attempts + 1`,
+      lease_token: leaseToken,
+      lease_expires_at: new Date(now.getTime() + 30_000),
+    })
+    .where('id', '=', id)
+    .where('event_type', 'in', ['game.updated', 'game.completed'])
+    .where('delivered_at', 'is', null)
+    .where('available_at', '<=', now)
+    .where((builder) =>
+      builder.or([builder('lease_token', 'is', null), builder('lease_expires_at', '<=', now)]),
+    )
+    .returningAll()
+    .executeTakeFirst();
+  if (!record) return null;
 
-    const payload = record.payload as { gameId?: string; recipientIdentityIds?: string[] };
-    const gameId = payload.gameId ?? record.game_id;
-    if (record.event_type !== 'game.updated' && record.event_type !== 'game.completed') {
-      return null;
-    }
-    let recipientIdentityIds: string[] | null = null;
-    if (record.event_type === 'game.updated') {
-      recipientIdentityIds = Array.isArray(payload.recipientIdentityIds)
-        ? payload.recipientIdentityIds
-        : null;
-    }
-    if (record.event_type === 'game.updated' && !recipientIdentityIds) {
-      const game = await transaction
-        .selectFrom('active_games')
-        .select(['white_identity_id', 'black_identity_id'])
-        .where('id', '=', gameId)
-        .executeTakeFirst();
-      recipientIdentityIds = game ? [game.white_identity_id, game.black_identity_id] : null;
-    }
-    if (record.event_type === 'game.updated' && !recipientIdentityIds) return null;
-    const leaseToken = randomUUID();
-    const attempts = record.attempts + 1;
-    await transaction
+  const payload = record.payload as { gameId?: string; recipientIdentityIds?: string[] };
+  const gameId = payload.gameId ?? record.game_id;
+  let recipientIdentityIds: string[] | null = null;
+  if (record.event_type === 'game.updated') {
+    recipientIdentityIds = Array.isArray(payload.recipientIdentityIds)
+      ? payload.recipientIdentityIds
+      : null;
+  }
+  if (record.event_type === 'game.updated' && !recipientIdentityIds) {
+    const game = await database
+      .selectFrom('active_games')
+      .select(['white_identity_id', 'black_identity_id'])
+      .where('id', '=', gameId)
+      .executeTakeFirst();
+    recipientIdentityIds = game ? [game.white_identity_id, game.black_identity_id] : null;
+  }
+  if (record.event_type === 'game.updated' && !recipientIdentityIds) {
+    await database
       .updateTable('game_outbox')
-      .set({
-        attempts: sql<number>`attempts + 1`,
-        lease_token: leaseToken,
-        lease_expires_at: new Date(now.getTime() + 30_000),
-      })
+      .set({ lease_token: null, lease_expires_at: null })
       .where('id', '=', record.id)
+      .where('lease_token', '=', leaseToken)
       .execute();
-    return {
-      id: record.id,
-      eventType: record.event_type,
-      gameId,
-      recipientIdentityIds: recipientIdentityIds ?? undefined,
-      leaseToken,
-      attempts,
-    };
-  });
+    return null;
+  }
+  return {
+    id: record.id,
+    eventType: record.event_type as GameOutboxEvent['type'],
+    gameId,
+    recipientIdentityIds: recipientIdentityIds ?? undefined,
+    leaseToken,
+    attempts: record.attempts,
+  };
 }
 
 function retryDelayMs(attempts: number): number {

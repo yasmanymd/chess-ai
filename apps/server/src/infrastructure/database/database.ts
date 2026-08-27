@@ -134,10 +134,10 @@ export interface DatabaseSchema {
   archived_game_moves: ArchivedGameMovesTable;
 }
 
-export function createDatabase(connectionString: string): Kysely<DatabaseSchema> {
+export function createDatabase(connectionString: string, poolMax?: number): Kysely<DatabaseSchema> {
   return new Kysely<DatabaseSchema>({
     dialect: new PostgresDialect({
-      pool: new Pool({ connectionString }),
+      pool: new Pool({ connectionString, max: poolMax }),
     }),
   });
 }

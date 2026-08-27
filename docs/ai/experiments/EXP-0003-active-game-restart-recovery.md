@@ -2,7 +2,7 @@
 
 | Field            | Value                  |
 | ---------------- | ---------------------- |
-| Status           | Planned                |
+| Status           | Passed                 |
 | Owner            | AI implementation team |
 | Decision owner   | Yasmany                |
 | Related decision | ADR-0001               |
@@ -18,6 +18,10 @@ The selected architecture can restore active sessions, positions, moves, turns, 
 - Clock behavior follows the accepted recovery rules.
 - Clients can reconnect and continue when the game remains active.
 
-## Pending Detail
+## Accepted Detail
 
-Failure injection and recovery procedure will be refined after persistence and clock design.
+The release-like experiment restarts the API during an active game, reconnects its participants, and verifies the authoritative position, history, side to move, clocks, and status. The recovery drill uses a disposable local database and records evidence separately from any future production backup service.
+
+## Result
+
+The automated local drill passed on 2026-08-27. It restarted the API, reconnected both participants, and verified the authoritative position, move history, side to move, status, version, time control, and clocks. It also created and restored a custom-format PostgreSQL backup into a second disposable database.

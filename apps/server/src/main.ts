@@ -38,7 +38,7 @@ import { createRateLimiter, ruleForRequest } from './infrastructure/http/rate-li
 
 const config = readRuntimeConfig();
 const logger = pino({ level: config.LOG_LEVEL });
-const database = createDatabase(config.DATABASE_URL);
+const database = createDatabase(config.DATABASE_URL, config.DATABASE_POOL_MAX);
 const chessRules = new ChessJsRulesAdapter();
 const app = await NestFactory.create<NestFastifyApplication>(
   AppModule,
@@ -117,7 +117,10 @@ fastify.addHook(
       reply.header('strict-transport-security', 'max-age=31536000; includeSubDomains');
     }
 
-    const rule = ruleForRequest(request.method, request.url);
+    const rule = ruleForRequest(request.method, request.url, {
+      identityMaxPerMinute: config.RATE_LIMIT_IDENTITY_MAX_PER_MINUTE,
+      gameMaxPerMinute: config.RATE_LIMIT_GAME_MAX_PER_MINUTE,
+    });
     if (!rule) return;
     const result = limitRequest(request.ip, rule);
     if (!result.allowed) {
