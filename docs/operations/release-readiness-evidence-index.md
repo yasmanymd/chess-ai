@@ -1,10 +1,10 @@
 # Release Readiness Evidence Index
 
-| Field        | Value                                                        |
-| ------------ | ------------------------------------------------------------ |
-| Status       | M6.4 automated evidence complete; manual matrix remains open |
-| Scope        | Future deployment readiness; not a launch                    |
-| Last updated | 2026-08-27                                                   |
+| Field        | Value                                                 |
+| ------------ | ----------------------------------------------------- |
+| Status       | M6.4 complete for the approved local evaluation scope |
+| Scope        | Future deployment readiness; not a launch             |
+| Last updated | 2026-08-27                                            |
 
 ## Evidence Map
 
@@ -16,7 +16,7 @@
 | Capacity                  | `scripts/run-capacity-scenario.sh`, `docs/plan/milestone-6-3-capacity-resilience-plan.md`                             | Passed locally: p95 21 ms                   |
 | Recovery and backup       | `scripts/run-resilience-drill.sh`, EXP-0003                                                                           | Passed against disposable databases         |
 | Automated browser quality | Playwright/Axe critical-route suite, including M6.4 locale, viewport, progressive-render, and replay-control coverage | Passed locally: 5 focused Playwright checks |
-| Manual compatibility      | `docs/operations/manual-compatibility-matrix.md`                                                                      | Partially recorded; final matrix open       |
+| Manual compatibility      | `docs/operations/manual-compatibility-matrix.md`                                                                      | Chrome/Safari scope observed and approved   |
 | Public-release materials  | `docs/operations/known-release-limitations.md`, development narrative outline                                         | Drafted; decisions remain open              |
 
 ## Interpretation

@@ -62,7 +62,7 @@ Produce reproducible technical and operational evidence that Chess AI can be eva
 
 **Evidence:** The target either passes under documented conditions or produces an explicit, human-approved revised target and mitigation plan.
 
-### M6.4 — Cross-Browser, Accessibility, and Release Evidence
+### M6.4 — Cross-Browser, Accessibility, and Release Evidence — Accepted and validated
 
 **Outcome:** A candidate release has a complete evidence index, known limitations, and public development narrative material.
 
@@ -71,6 +71,8 @@ Produce reproducible technical and operational evidence that Chess AI can be eva
 - Publish a concise release-readiness evidence index, known-limitations record, and development-process narrative outline suitable for future blog posts.
 
 **Evidence:** Exit evidence is complete, release blockers are explicit, and Yasmany accepts the readiness assessment.
+
+**Validated evidence:** On 2026-08-27, the five-check Playwright/Axe release-evidence suite passed. Yasmany also confirmed the French critical journeys in Chrome desktop, Safari desktop, and iPhone Safari. Firefox and Edge remain visible future public-release blockers.
 
 ## Explicitly Deferred
 

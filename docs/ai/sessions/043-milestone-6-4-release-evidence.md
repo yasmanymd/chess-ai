@@ -1,11 +1,11 @@
 # Session 043 — M6.4 Cross-Browser, Accessibility, and Release Evidence
 
-| Field        | Value                                                      |
-| ------------ | ---------------------------------------------------------- |
-| Date         | 2026-08-27                                                 |
-| Milestone    | M6.4 — Cross-Browser, Accessibility, and Release Evidence  |
-| Participants | Yasmany (decision owner), Codex (implementation assistant) |
-| Status       | Automated evidence complete; physical browser matrix open  |
+| Field        | Value                                                          |
+| ------------ | -------------------------------------------------------------- |
+| Date         | 2026-08-27                                                     |
+| Milestone    | M6.4 — Cross-Browser, Accessibility, and Release Evidence      |
+| Participants | Yasmany (decision owner), Codex (implementation assistant)     |
+| Status       | Accepted and validated for the approved local evaluation scope |
 
 ## Approved Scope
 
@@ -35,6 +35,8 @@
 - Added automated coverage that confirms the pre-hydration import form has no horizontal overflow and that `Next` and `End` update the displayed PGN position at a phone viewport.
 - The release-evidence suite now contains five focused browser checks.
 
-## Next Step
+## Closure
 
-Record Yasmany's final physical-browser observations for the remaining French Chrome, Safari, and iPhone Safari matrix cells. Firefox and Edge remain explicit future release blockers until environments are available.
+- Yasmany confirmed the remaining French physical checks in Chrome desktop, Safari desktop, and iPhone Safari on 2026-08-27.
+- M6.4 is accepted and complete for the approved local evaluation scope.
+- Firefox and Edge remain explicit future public-release blockers until environments are available.
