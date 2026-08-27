@@ -28,6 +28,13 @@
 - Replaced the hidden mobile navigation with a translated native `details` menu (`More`, `Más`, or `Plus`) that exposes both routes without requiring client-side JavaScript.
 - Added an automated phone-viewport route test. The complete Playwright suite now passes four tests.
 
+## Follow-up: Mobile PGN Replay Resilience
+
+- Corrected the phone-sized import layout so the header and PGN text area remain within the viewport before client-side JavaScript is available.
+- Increased the replay controls' touch targets and configured them for direct touch manipulation.
+- Added automated coverage that confirms the pre-hydration import form has no horizontal overflow and that `Next` and `End` update the displayed PGN position at a phone viewport.
+- The release-evidence suite now contains five focused browser checks.
+
 ## Next Step
 
 Record Yasmany's final physical-browser observations for the remaining French Chrome, Safari, and iPhone Safari matrix cells. Firefox and Edge remain explicit future release blockers until environments are available.
