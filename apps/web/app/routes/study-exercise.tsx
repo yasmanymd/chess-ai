@@ -4,7 +4,6 @@ import { useTranslation } from 'react-i18next';
 import { completeStudyExercise } from '../study-progress.client.js';
 
 type PieceColor = 'white' | 'black';
-type Move = { from: string; to: string; promotion?: 'queen' | 'rook' | 'bishop' | 'knight' };
 type StudyExercise = {
   id: string;
   category: 'mate-in-one' | 'win-material' | 'find-the-best-move';
