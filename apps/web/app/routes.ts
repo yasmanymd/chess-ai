@@ -7,6 +7,8 @@ export default [
   route('games/:gameId', './routes/game.tsx'),
   route('archive', './routes/archive.tsx'),
   route('import', './routes/import-pgn.tsx'),
+  route('study', './routes/study.tsx'),
+  route('study/:exerciseId', './routes/study-exercise.tsx'),
   route('archive/games/:gameId', './routes/archive-game.tsx'),
   route('archive/games/:gameId/pgn', './routes/archive-game-pgn.ts'),
   index('./routes/home.tsx'),

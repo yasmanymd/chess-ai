@@ -114,3 +114,28 @@ test('mobile PGN replay controls advance the displayed position', async ({ page 
   await page.getByRole('button', { name: 'End' }).click();
   await expect(page.getByRole('status')).toHaveText('Current position: 2… Nc6');
 });
+
+test('study exercises validate moves authoritatively and keep local progress', async ({ page }) => {
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.goto('/study?lang=en');
+
+  await expect(page.getByRole('heading', { name: 'Find the move that matters.' })).toBeVisible();
+  await expect(page.getByText('0 of 6 completed', { exact: true })).toBeVisible();
+  await page.getByRole('link', { name: 'Open exercise' }).first().click();
+
+  await page.getByRole('button', { name: 'Select f7' }).click();
+  await page.getByRole('button', { name: 'f7 to f8' }).click();
+  await expect(page.getByRole('heading', { name: 'Try again.' })).toBeVisible();
+
+  await page.getByRole('button', { name: 'Select f7' }).click();
+  await page.getByRole('button', { name: 'f7 to g7' }).click();
+  await expect(page.getByRole('heading', { name: 'Correct.' })).toBeVisible();
+
+  await page.getByRole('link', { name: 'Choose another exercise' }).click();
+  await expect(page.getByText('1 of 6 completed', { exact: true })).toBeVisible();
+  await expect(page.getByText('Completed', { exact: true })).toBeVisible();
+
+  page.once('dialog', (dialog) => dialog.accept());
+  await page.getByRole('button', { name: 'Reset progress' }).click();
+  await expect(page.getByText('0 of 6 completed', { exact: true })).toBeVisible();
+});

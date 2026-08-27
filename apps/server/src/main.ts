@@ -35,6 +35,14 @@ import {
 } from './temporary-identity/delivery/session-cookie.js';
 import { isAllowedWebOrigin, readRuntimeConfig } from './infrastructure/config/runtime-config.js';
 import { createRateLimiter, ruleForRequest } from './infrastructure/http/rate-limiter.js';
+import {
+  getStudyExercise,
+  publicStudyExercise,
+  studyExercises,
+  supportedStudyLocales,
+  type StudyLocale,
+} from './study/domain/study-exercise.js';
+import { validateStudyAttempt } from './study/application/validate-study-attempt.js';
 
 const config = readRuntimeConfig();
 const logger = pino({ level: config.LOG_LEVEL });
@@ -445,6 +453,38 @@ const moveCommandSchema = z.object({
   from: z.string().regex(/^[a-h][1-8]$/),
   to: z.string().regex(/^[a-h][1-8]$/),
   promotion: z.enum(['queen', 'rook', 'bishop', 'knight']).optional(),
+});
+const studyAttemptSchema = z.object({
+  from: z.string().regex(/^[a-h][1-8]$/),
+  to: z.string().regex(/^[a-h][1-8]$/),
+  promotion: z.enum(['queen', 'rook', 'bishop', 'knight']).optional(),
+});
+const studyLocaleSchema = z.enum(supportedStudyLocales);
+function readStudyLocale(value: unknown): StudyLocale {
+  return studyLocaleSchema.safeParse(value).data ?? 'en';
+}
+fastify.get('/study/exercises', async (request) => {
+  const locale = readStudyLocale((request.query as Record<string, unknown>).lang);
+  return { exercises: studyExercises.map((exercise) => publicStudyExercise(exercise, locale)) };
+});
+fastify.get('/study/exercises/:exerciseId', async (request, reply) => {
+  const exerciseId = Object.values(request.params as Record<string, string>)[0] ?? '';
+  const exercise = getStudyExercise(exerciseId);
+  if (!exercise) return reply.code(404).send({ error: { code: 'STUDY_EXERCISE_NOT_FOUND' } });
+  const locale = readStudyLocale((request.query as Record<string, unknown>).lang);
+  return { exercise: publicStudyExercise(exercise, locale) };
+});
+fastify.post('/study/exercises/:exerciseId/attempts', async (request, reply) => {
+  const body = studyAttemptSchema.safeParse(request.body);
+  if (!body.success) return reply.code(400).send({ error: { code: 'STUDY_MOVE_INVALID' } });
+  const exerciseId = Object.values(request.params as Record<string, string>)[0] ?? '';
+  const locale = readStudyLocale((request.query as Record<string, unknown>).lang);
+  const result = validateStudyAttempt(chessRules, exerciseId, body.data, locale);
+  if (!result.accepted) {
+    const status = result.code === 'STUDY_EXERCISE_NOT_FOUND' ? 404 : 422;
+    return reply.code(status).send({ error: { code: result.code } });
+  }
+  return result;
 });
 fastify.post('/games/:gameId/moves', async (request, reply) => {
   const identity = await resumeTemporaryIdentity(

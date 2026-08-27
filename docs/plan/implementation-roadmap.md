@@ -5,10 +5,10 @@
 | Field          | Value       |
 | -------------- | ----------- |
 | Status         | Accepted    |
-| Version        | 1.0         |
+| Version        | 1.1         |
 | Decision owner | Yasmany     |
-| Source         | Session 009 |
-| Date           | 2026-08-19  |
+| Source         | Sessions 009, 044 |
+| Date           | 2026-08-27  |
 
 ## Purpose
 
@@ -156,6 +156,25 @@ The roadmap does not impose calendar deadlines. Later milestones may be refined 
 3. Capacity, durability, restart, backup, and recovery evidence meets accepted targets or records an explicitly approved revision.
 4. Public-release legal, privacy, hosting, deployment, and observability-provider decisions are accepted.
 5. The release candidate has a complete evidence index and known-limitations record.
+
+### Milestone 7 — Educational Foundations
+
+**Outcome:** Public study positions provide a small, multilingual, server-validated learning experience without accounts or a live chess-analysis dependency.
+
+**Scope:**
+
+- Publish a small, version-controlled catalog of public study positions with FEN, one correct move, localized editorial content, and clear learning categories.
+- Add a public Study route, exercise catalog, and responsive exercise board that orients itself from the solver's side.
+- Validate each attempt on the server through an exercise-specific contract; the browser cannot declare a solution correct by itself.
+- Provide a hint and retry after an incorrect move, an explanation and next-exercise action after a correct move, and local per-browser completion progress.
+
+**Exit evidence:**
+
+1. The six approved exercises are available in English, Spanish, and French, with valid positions and authoritative single-move validation.
+2. A learner can solve, miss, retry, complete, and navigate between exercises on desktop and phone.
+3. Progress survives refresh in the same browser and can be reset only after confirmation.
+4. Automated tests prove server validation, localization, orientation, and the core study journey.
+5. The catalog is clearly editorial and reviewable; no real-time AI or chess-engine evaluation is represented as part of the feature.
 
 ## Deferred Decisions That Do Not Block Early Milestones
 
